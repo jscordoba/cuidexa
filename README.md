@@ -1,5 +1,7 @@
 # Cuidexa — MVP 1.0
 
+[![GitHub](https://img.shields.io/badge/GitHub-jscordoba%2Fcuidexa-blue?logo=github)](https://github.com/jscordoba/cuidexa)
+
 MVP que valida un único flujo: cuando Admin da de alta a un residente,
 el sistema genera automáticamente los avisos que Cocina y Auxiliares
 necesitan ver, sin que nadie tenga que comunicarlo manualmente.
