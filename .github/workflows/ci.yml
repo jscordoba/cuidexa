@@ -23,3 +23,6 @@ jobs:
 
       - name: Compilar
         run: dotnet build Cuidexa.Web/Cuidexa.Web.csproj --no-restore --configuration Release
+
+      - name: Ejecutar tests
+        run: dotnet test Cuidexa.Web.Tests/Cuidexa.Web.Tests.csproj --configuration Release
