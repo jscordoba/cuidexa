@@ -1,0 +1,492 @@
+:root {
+    /* Acento propio de los enlaces/acciones secundarias — deliberadamente
+       índigo, no el azul de Bootstrap (#0d6efd) que ya usan los botones
+       primarios (Dar de alta, Nuevo usuario...). Así un enlace nunca se
+       confunde con un botón de acción principal, y tampoco se ve como el
+       típico hipervínculo azul subrayado del navegador. */
+    --enlace-color: #4f46e5;
+    --enlace-color-hover: #3730a3;
+    --enlace-bg-sutil: #eef2ff;
+    --enlace-bg-sutil-hover: #e0e7ff;
+
+    /* Barra superior/inferior: un único azul-marino de marca, para que las
+       dos franjas de navegación se lean como una sola app, no como piezas
+       sueltas. */
+    --navy: #101a30;
+
+    /* Altura "de contenido" (sin la zona segura del dispositivo) de la barra
+       inferior móvil — una única fuente de verdad usada tanto por la barra
+       (para no encogerse por debajo de esto) como por el padding del
+       contenido que la esquiva, así nunca pueden desincronizarse entre sí. */
+    --altura-nav-movil: 4.25rem;
+
+    /* Igual que arriba pero para la barra lateral de escritorio: el ancho
+       fijo de la barra y el margen del contenido que la esquiva comparten
+       esta única variable. */
+    --ancho-sidebar: 16rem;
+
+    /* Color de identidad por rol — solo para el avatar de "Hola, {Nombre}"
+       de cada panel, así se reconoce de un vistazo en qué panel estás. Las
+       demás piezas de navegación usan un único acento (--enlace-color) para
+       no competir visualmente con esto. */
+    --color-admin: #2563eb;
+    --color-cocina: #f59e0b;
+    --color-auxiliar: #06b6d4;
+    --color-direccion: #16a34a;
+    --color-enfermeria: #e11d48;
+    --color-profesional: #7c3aed;
+    --color-limpieza: #0d9488;
+    --color-directororg: #1e293b;
+}
+
+body { background-color: #f8f9fa; }
+.card { margin-bottom: 1rem; }
+
+/* Cabecera superior e inferior comparten el mismo azul-marino de marca. */
+.navbar.bg-dark {
+    background-color: var(--navy) !important;
+}
+
+/* Barra lateral de escritorio: mismo "shell" que la barra inferior móvil
+   (marca, navegación, cuenta) pero a lo largo en vez de abajo — para que la
+   app se sienta igual en los dos tamaños, no como dos herramientas
+   distintas. Solo visible en ≥768px (ver d-none d-md-flex en el marcado). */
+.sidebar-escritorio {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--ancho-sidebar);
+    background: var(--navy);
+    padding: 1.25rem 1rem;
+    z-index: 1030;
+    overflow-y: auto;
+}
+.marca-sidebar {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    color: #fff;
+    text-decoration: none;
+    padding: .35rem .25rem 1.25rem;
+    margin-bottom: .75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.logo-cuidexa-mini {
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #06b6d4, #4f46e5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    color: #fff;
+}
+/* Cuando el centro sube su propio logo (Fase 8), se sustituye el degradado
+   por la imagen — fondo blanco para que logos con transparencia se lean
+   bien sobre la barra oscura/clara según dónde se use. */
+.logo-cuidexa-imagen {
+    background: #fff;
+    padding: 3px;
+}
+.logo-cuidexa-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+.nav-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+.nav-sidebar a {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .65rem .9rem;
+    border-radius: .6rem;
+    color: #aab2c5;
+    text-decoration: none;
+    font-size: .92rem;
+    font-weight: 500;
+    transition: background-color .15s ease, color .15s ease;
+}
+.nav-sidebar a i {
+    font-size: 1.05rem;
+    width: 1.2rem;
+    text-align: center;
+}
+.nav-sidebar a:hover {
+    background: rgba(255, 255, 255, .06);
+    color: #fff;
+}
+.nav-sidebar a.activo {
+    background: var(--enlace-color);
+    color: #fff;
+}
+.cuenta-sidebar {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .75rem .6rem;
+    margin-top: .75rem;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    color: #e2e8f0;
+    text-decoration: none;
+}
+.cuenta-sidebar:hover {
+    color: #fff;
+}
+.cuenta-sidebar .nombre {
+    font-size: .85rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+.cuenta-sidebar .rol {
+    font-size: .72rem;
+    color: #8a93a6;
+}
+.avatar-rol.pequeno {
+    width: 2.15rem;
+    height: 2.15rem;
+    font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+    /* El contenido cede exactamente el ancho de la barra lateral — misma
+       variable que .sidebar-escritorio, nunca pueden desincronizarse. */
+    .con-sidebar {
+        margin-left: var(--ancho-sidebar);
+        width: calc(100% - var(--ancho-sidebar));
+        max-width: 1600px;
+    }
+}
+
+/* Cabecera "Hola, {Nombre}" que abre cada panel — sustituye al antiguo
+   "Panel de X" plano, y su avatar de color identifica el rol de un vistazo. */
+.saludo-cabecera {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+}
+.avatar-rol {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.3rem;
+}
+.avatar-admin { background: var(--color-admin); }
+.avatar-cocina { background: var(--color-cocina); }
+.avatar-auxiliar { background: var(--color-auxiliar); }
+.avatar-direccion { background: var(--color-direccion); }
+.avatar-enfermeria { background: var(--color-enfermeria); }
+.avatar-profesional { background: var(--color-profesional); }
+.avatar-limpieza { background: var(--color-limpieza); }
+.avatar-directororg { background: var(--color-directororg); }
+
+/* Estilo base de CUALQUIER enlace de la app, actual o futuro: nunca azul
+   subrayado por defecto. Los botones (.btn, .navbar-brand, .nav-link...)
+   tienen sus propias reglas de Bootstrap con más especificidad, así que
+   esto no los toca — solo afecta a los <a> "sueltos" (Volver, tarjetas de
+   listado, filas de tabla...). */
+a {
+    color: var(--enlace-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color .15s ease;
+}
+a:hover, a:focus-visible {
+    color: var(--enlace-color-hover);
+    text-decoration: none;
+}
+
+/* Filas de tabla que navegan a una ficha de detalle al hacer clic, sin
+   depender de que el texto se vea como un enlace azul subrayado. */
+.tabla-clicable tbody tr {
+    cursor: pointer;
+}
+.tabla-clicable .chevron {
+    color: #adb5bd;
+    font-size: 1.1rem;
+    transition: color .15s ease, transform .15s ease;
+}
+.tabla-clicable tbody tr:hover .chevron {
+    color: var(--enlace-color);
+    transform: translateX(3px);
+}
+
+/* Tarjetas de resumen al inicio de cada panel operativo: siempre visibles
+   arriba, para que no dependan de cuánto haya que bajar entre avisos. */
+.tarjeta-resumen {
+    transition: transform .1s ease;
+}
+.tarjeta-resumen:hover {
+    transform: translateY(-2px);
+}
+
+/* Botón "ver leídos/completados": una píldora con fondo sutil, no el
+   .btn-link de Bootstrap (que también es azul subrayado por defecto). */
+.toggle-colapsable {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: var(--enlace-bg-sutil);
+    color: var(--enlace-color-hover);
+    border: none;
+    border-radius: 999px;
+    padding: .35rem .9rem;
+    font-size: .875rem;
+    font-weight: 500;
+}
+.toggle-colapsable:hover {
+    background: var(--enlace-bg-sutil-hover);
+    color: var(--enlace-color-hover);
+}
+/* La flecha — Bootstrap ya alterna aria-expanded solo al abrir/cerrar el
+   colapso, aquí solo se gira el icono según ese estado. */
+.toggle-colapsable .caret {
+    display: inline-block;
+    transition: transform .15s ease;
+}
+.toggle-colapsable[aria-expanded="true"] .caret {
+    transform: rotate(180deg);
+}
+
+/* Barra de navegación inferior en móvil — pensada para el pulgar: fija,
+   iconos grandes, objetivos de toque amplios. Desaparece en escritorio
+   (d-md-none en el marcado), donde ya existe el menú superior. */
+.nav-inferior-movil {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    min-height: var(--altura-nav-movil);
+    background: var(--navy);
+    border-top: none;
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, .18);
+    z-index: 1030;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.nav-inferior-movil a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .2rem;
+    padding: .55rem 0 .45rem;
+    color: #8a93a6;
+    font-size: .7rem;
+    font-weight: 500;
+}
+.nav-inferior-movil a i {
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: .3rem .7rem;
+    border-radius: .7rem;
+    transition: background-color .15s ease, color .15s ease;
+}
+.nav-inferior-movil a.activo {
+    color: #fff;
+}
+.nav-inferior-movil a.activo i {
+    background: var(--enlace-color);
+    color: #fff;
+}
+@media (max-width: 767.98px) {
+    /* !important porque el contenedor también lleva la utilidad `pb-5` de
+       Bootstrap (padding-bottom: 3rem !important) — sin esto, esa regla
+       siempre ganaba por especificidad y el contenido quedaba parcialmente
+       tapado por la barra fija, aunque el cálculo de aquí fuera correcto. */
+    .pb-nav-movil {
+        padding-bottom: calc(var(--altura-nav-movil) + env(safe-area-inset-bottom, 0px) + 1rem) !important;
+    }
+}
+
+/* Tarjetas grandes del dashboard de cada rol: la tarjeta entera es el
+   objetivo de toque (no un enlace de texto dentro), con icono propio para
+   reconocerlas de un vistazo. */
+.tarjeta-dashboard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .9rem;
+    padding: 1.1rem;
+}
+/* Base compartida por CUALQUIER .icono-dashboard (dentro de una tarjeta
+   grande o de una fila de acceso rápido): fondo de color + dibujo blanco y
+   centrado. Cada contexto solo ajusta tamaño/radio encima de esto — antes
+   `.fila-acceso .icono-dashboard` no heredaba nada de esto y el icono salía
+   sin centrar y del color de texto por defecto en vez de blanco. */
+.icono-dashboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #94a3b8;
+    color: #fff;
+}
+.tarjeta-dashboard .icono-dashboard {
+    width: 3rem;
+    height: 3rem;
+    border-radius: .9rem;
+    font-size: 1.4rem;
+}
+/* Cada tarjeta lleva un color de icono fijo según su contenido (no su
+   urgencia) — así se reconocen entre sí de un vistazo aunque cambien los
+   números. La urgencia (pendiente/al día) se indica aparte, con el borde. */
+.icono-dashboard.i-azul { background: #3b82f6; }
+.icono-dashboard.i-cian { background: #06b6d4; }
+.icono-dashboard.i-verde { background: #22c55e; }
+.icono-dashboard.i-ambar { background: #f59e0b; }
+.icono-dashboard.i-rosa { background: #f43f5e; }
+.icono-dashboard.i-morado { background: #8b5cf6; }
+
+/* Urgencia como franja lateral de color, en vez de teñir la tarjeta entera
+   (eso competía con el color del icono y recargaba la vista). */
+.tarjeta-dashboard {
+    border-left: 4px solid transparent;
+}
+.tarjeta-dashboard.urgencia-ok { border-left-color: #22c55e; }
+.tarjeta-dashboard.urgencia-media { border-left-color: #f59e0b; }
+.tarjeta-dashboard.urgencia-alta { border-left-color: #ef4444; }
+
+/* Panel de Admin: accesos rápidos como filas de lista (icono + texto +
+   flecha), más compacto que tarjetas grandes cuando son muchos enlaces. */
+.fila-acceso {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .7rem .25rem;
+    color: #212529;
+    border-bottom: 1px solid #f1f3f5;
+}
+.fila-acceso:last-child { border-bottom: none; }
+.fila-acceso:hover { color: var(--enlace-color); }
+.fila-acceso .icono-dashboard {
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.1rem;
+    border-radius: .65rem;
+}
+.fila-acceso .bi-chevron-right {
+    margin-left: auto;
+    color: #adb5bd;
+    font-size: .9rem;
+}
+
+/* Actividad reciente: lista simple con icono redondo pequeño por tipo de
+   acción, igual de compacta que los accesos rápidos. */
+.fila-actividad {
+    display: flex;
+    align-items: flex-start;
+    gap: .7rem;
+    padding: .6rem .25rem;
+    border-bottom: 1px solid #f1f3f5;
+}
+.fila-actividad:last-child { border-bottom: none; }
+.fila-actividad .icono-actividad {
+    width: 2.1rem;
+    height: 2.1rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--enlace-bg-sutil);
+    color: var(--enlace-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .95rem;
+}
+
+/* Distribución de residentes: donut sin librerías, solo conic-gradient
+   (evita añadir una dependencia de gráficos para un único gráfico). */
+.donut {
+    width: 9rem;
+    height: 9rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+}
+.donut::after {
+    content: "";
+    position: absolute;
+    inset: 24%;
+    border-radius: 50%;
+    background: #fff;
+}
+.leyenda-donut {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .875rem;
+}
+.leyenda-donut .punto {
+    width: .7rem;
+    height: .7rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Pestañas de las pantallas de Admin > Turnos (Calendario/Turnos/Plantillas/
+   Vacaciones/Reemplazos/Cambios) — scroll horizontal en móvil en vez de
+   apilarse, para no empujar el contenido hacia abajo. */
+.subnav-turnos {
+    display: flex;
+    gap: .4rem;
+    overflow-x: auto;
+    padding-bottom: .25rem;
+}
+.subnav-turnos a {
+    flex-shrink: 0;
+    padding: .4rem .9rem;
+    border-radius: 2rem;
+    background: #f1f3f5;
+    color: #495057;
+    font-size: .875rem;
+    font-weight: 600;
+}
+.subnav-turnos a.activo {
+    background: var(--navy);
+    color: #fff;
+}
+
+/* Franja de un turno dentro de una celda del calendario semanal — reutiliza
+   los mismos colores por rol que los avatares (avatar-cocina, etc.) para que
+   el calendario y el resto de la app compartan la misma paleta. */
+.chip-turno {
+    display: inline-block;
+    padding: .15rem .5rem;
+    border-radius: .4rem;
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-bottom: .2rem;
+}
+/* Turno por defecto (sin excepción ese día): deliberadamente discreto — solo
+   los cambios reales (reemplazo/cambio, con su color e icono) deben llamar
+   la atención en el calendario. */
+.chip-turno.chip-defecto {
+    background: #f1f3f5;
+    color: #495057;
+    font-weight: 500;
+    border: 1px solid #e3e6ea;
+}
+/* Turno cedido a otro compañero ese día: ni color ni negrita, para que se
+   lea claramente como "esta persona no trabaja hoy". */
+.chip-turno.chip-cedido {
+    background: transparent;
+    color: #868e96;
+    font-weight: 500;
+    font-style: italic;
+    border: 1px dashed #ced4da;
+}

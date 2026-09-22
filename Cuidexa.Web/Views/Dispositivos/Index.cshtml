@@ -1,0 +1,62 @@
+@using Cuidexa.Web.Services
+@model List<CuentaDispositivo>
+@{
+    var mostrarCentro = (bool)ViewBag.MostrarCentro;
+}
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
+    <h4 class="mb-0">Dispositivos</h4>
+    <a class="btn btn-primary" href="/Dispositivos/Create">+ Nueva tablet</a>
+</div>
+<p class="text-muted small">Tablets compartidas fijas por departamento, para consulta rápida durante el turno (avisos, personal en turno, comensales/medicación pendiente). No pueden marcar avisos leídos ni realizar ninguna acción de gestión.</p>
+<input type="search" id="filtroDispositivos" class="form-control mb-3" placeholder="Buscar por nombre o rol..." />
+<div class="table-responsive">
+    <table class="table table-bordered bg-white">
+        <thead>
+            <tr>
+                <th>Nombre</th><th>Departamento</th>
+                @if (mostrarCentro)
+                {
+                    <th>Centro</th>
+                }
+                <th>Último acceso</th><th>Estado</th><th></th>
+            </tr>
+        </thead>
+        <tbody id="listaDispositivos">
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Nombre</td>
+                    <td>@c.Rol</td>
+                    @if (mostrarCentro)
+                    {
+                        <td>@c.Centro?.Nombre</td>
+                    }
+                    <td>@(c.UltimoAcceso?.ToString("dd/MM/yyyy HH:mm") ?? "Nunca")</td>
+                    <td>
+                        <span class="badge @(c.Activo ? "bg-success" : "bg-secondary")">@(c.Activo ? "Activa" : "Inactiva")</span>
+                        @if (BloqueoCuenta.EstaBloqueada(c))
+                        {
+                            <span class="badge bg-warning text-dark" title="Bloqueada por fuerza bruta — resetea su contraseña en Editar para desbloquearla al instante.">Bloqueada</span>
+                        }
+                    </td>
+                    <td class="d-flex flex-column flex-sm-row gap-2">
+                        <a href="/Dispositivos/Edit/@c.Id" class="btn btn-sm btn-outline-secondary text-nowrap">Editar</a>
+                        <form method="post" action="/Dispositivos/CambiarEstado">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@c.Id" />
+                            <input type="hidden" name="activo" value="@(!c.Activo ? "true" : "false")" />
+                            <button class="btn btn-sm @(c.Activo ? "btn-outline-danger" : "btn-outline-success") text-nowrap">
+                                @(c.Activo ? "Desactivar" : "Activar")
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p id="dispositivosSinResultados" class="text-muted" hidden>Ninguna tablet coincide con la búsqueda.</p>
+</div>
+
+@section Scripts {
+    <script>activarFiltro('#filtroDispositivos', '#listaDispositivos tr', { vacio: '#dispositivosSinResultados' });</script>
+}

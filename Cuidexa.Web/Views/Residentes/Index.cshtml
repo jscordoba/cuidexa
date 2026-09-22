@@ -1,0 +1,51 @@
+@model List<Residente>
+@{
+    var mostrarCentro = (bool)ViewBag.MostrarCentro;
+}
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
+    <h4 class="mb-0">Residentes</h4>
+    <a class="btn btn-primary" href="/Residentes/Create">+ Dar de alta</a>
+</div>
+<input type="search" id="filtroResidentes" class="form-control mb-3" placeholder="Buscar por nombre, habitación, dieta, alergia..." />
+<div class="table-responsive">
+    <table class="table table-bordered table-hover bg-white tabla-clicable">
+        <thead>
+            <tr>
+                <th>Nombre</th><th>Tipo</th><th>Habitación</th><th>Movilidad</th><th>Dieta actual</th><th>Alergias</th>
+                @if (mostrarCentro)
+                {
+                    <th>Centro</th>
+                }
+                <th>Estado</th><th></th>
+            </tr>
+        </thead>
+        <tbody id="listaResidentes">
+            @foreach (var r in Model)
+            {
+                var dietaActual = r.Dietas.FirstOrDefault(d => d.FechaFin == null)?.Dieta?.Nombre ?? "-";
+                <tr data-href="/Residentes/Details/@r.Id">
+                    <td class="fw-semibold">@r.Nombre @r.Apellidos</td>
+                    <td>@r.TipoResidente</td>
+                    <td>@(r.Habitacion?.Numero ?? "-")</td>
+                    <td>@r.Movilidad</td>
+                    <td>@dietaActual</td>
+                    <td>@string.Join(", ", r.Alergias.Select(a => a.Alergia?.Nombre))</td>
+                    @if (mostrarCentro)
+                    {
+                        <td>@r.Centro?.Nombre</td>
+                    }
+                    <td><span class="badge @(r.Estado == EstadoResidente.Activo ? "bg-success" : "bg-secondary")">@r.Estado</span></td>
+                    <td class="chevron">&rsaquo;</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p id="residentesSinResultados" class="text-muted" hidden>Ningún residente coincide con la búsqueda.</p>
+</div>
+
+@section Scripts {
+    <script>
+        activarFiltro('#filtroResidentes', '#listaResidentes tr', { vacio: '#residentesSinResultados' });
+        activarFilasClicables('#listaResidentes tr');
+    </script>
+}

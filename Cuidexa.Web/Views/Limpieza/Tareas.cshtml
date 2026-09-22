@@ -1,0 +1,71 @@
+@model List<TareaLimpieza>
+@{
+    var completadas = (List<TareaLimpieza>)ViewBag.Completadas;
+}
+<a href="/Limpieza" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<h4 class="mb-3"><i class="bi bi-clipboard-check me-2 text-muted"></i>Tareas</h4>
+
+<h6 class="text-muted">Pendientes</h6>
+@if (!Model.Any())
+{
+    <p class="text-muted">No hay tareas pendientes.</p>
+}
+else
+{
+    <input type="search" id="filtroTareas" class="form-control mb-2" placeholder="Buscar tareas..." />
+    <div class="mb-1" id="listaTareas">
+        @foreach (var t in Model)
+        {
+            <div class="card mb-2">
+                <div class="card-body d-flex justify-content-between align-items-center gap-2">
+                    <div>
+                        <strong>@(t.Habitacion != null ? $"Habitación {t.Habitacion.Numero}" : t.Zona)</strong>
+                        <div class="text-muted small">@t.Descripcion</div>
+                    </div>
+                    <form method="post" action="/Limpieza/MarcarCompletada">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="tareaId" value="@t.Id" />
+                        <button class="btn btn-sm btn-outline-primary text-nowrap">Completada</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+    <p id="tareasSinResultados" class="text-muted mb-4" hidden>Ninguna tarea coincide con la búsqueda.</p>
+}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h6 class="text-muted">Nueva tarea de zona común</h6>
+        <form method="post" action="/Limpieza/CrearTareaZona" class="d-flex flex-column flex-sm-row gap-2">
+            @Html.AntiForgeryToken()
+            <input name="zona" class="form-control" placeholder="Zona (ej. Comedor, Pasillo Planta 1...)" required />
+            <input name="descripcion" class="form-control" placeholder="Qué hay que hacer" required />
+            <button class="btn btn-outline-primary text-nowrap flex-shrink-0">Crear tarea</button>
+        </form>
+    </div>
+</div>
+
+@if (completadas.Any())
+{
+    <h6 class="text-muted">Completadas recientemente</h6>
+    <input type="search" id="filtroCompletadas" class="form-control mb-2" placeholder="Buscar en completadas..." />
+    <ul class="list-group mb-3" id="listaCompletadas">
+        @foreach (var t in completadas)
+        {
+            <li class="list-group-item">
+                <strong>@(t.Habitacion != null ? $"Habitación {t.Habitacion.Numero}" : t.Zona)</strong> — @t.Descripcion
+                <br />
+                <small class="text-muted">@t.FechaCompletada?.ToLocalTime().ToString("dd/MM/yyyy HH:mm") @(t.Empleado != null ? $"· {t.Empleado.Nombre}" : "")</small>
+            </li>
+        }
+    </ul>
+    <p id="completadasSinResultados" class="text-muted" hidden>Ninguna tarea coincide con la búsqueda.</p>
+}
+
+@section Scripts {
+    <script>
+        activarFiltro('#filtroTareas', '#listaTareas > .card', { vacio: '#tareasSinResultados' });
+        activarFiltro('#filtroCompletadas', '#listaCompletadas li', { vacio: '#completadasSinResultados' });
+    </script>
+}

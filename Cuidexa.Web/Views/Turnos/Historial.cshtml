@@ -1,0 +1,34 @@
+@model List<AuditLog>
+@{
+    var turno = (Turno)ViewBag.Turno;
+}
+<a href="/Turnos" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Turnos</a>
+<h4 class="mb-1">Historial del turno</h4>
+<p class="text-muted mb-3">
+    @turno.Rol — @turno.FechaInicio.ToString("dd/MM/yyyy HH:mm") a @turno.FechaFin.ToString("HH:mm")
+    (@(turno.Empleado?.Nombre ?? turno.NombreExterno ?? "sin titular"))
+</p>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Sin registros de auditoría todavía.</p>
+}
+else
+{
+    @foreach (var log in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between flex-wrap gap-2">
+                    <strong>@log.Accion</strong>
+                    <small class="text-muted">@log.FechaHora.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
+                </div>
+                <p class="mb-1 mt-1">@log.Detalle</p>
+                @if (log.Empleado != null)
+                {
+                    <small class="text-muted">Por: @log.Empleado.Nombre</small>
+                }
+            </div>
+        </div>
+    }
+}

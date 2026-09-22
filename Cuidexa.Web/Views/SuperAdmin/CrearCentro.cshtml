@@ -1,0 +1,57 @@
+@{
+    Layout = "_LayoutSuperAdmin";
+    var organizacion = (Organizacion)ViewBag.Organizacion;
+}
+<a href="/SuperAdmin/Index" class="d-inline-block mb-2 text-decoration-none">&larr; Volver</a>
+<h4 class="mb-1">Nuevo centro</h4>
+<p class="text-muted mb-3">Organización: <strong>@organizacion.Nombre</strong></p>
+<form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 520px;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="organizacionId" value="@organizacion.Id" />
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@e.ErrorMessage</div>
+            }
+        </div>
+    }
+    <div class="mb-3">
+        <label class="form-label">Nombre del centro</label>
+        <input name="nombre" class="form-control" required autofocus placeholder="Ej. Centro Tres Cantos" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Código de centro (para el login)</label>
+        <input name="codigo" class="form-control text-uppercase" required placeholder="Ej. TRESCANTOS" />
+        <div class="form-text">Único en todo Cuidexa — el personal lo teclea al iniciar sesión.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Dirección</label>
+        <input name="direccion" class="form-control" />
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Teléfono</label>
+            <input name="telefono" class="form-control" />
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Responsable</label>
+            <input name="responsableNombre" class="form-control" />
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Cargo del responsable</label>
+            <input name="responsableCargo" class="form-control" />
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Crear centro</button>
+        <a href="/SuperAdmin/Index" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>

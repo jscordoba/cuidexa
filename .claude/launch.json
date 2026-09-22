@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "cuidexa-web",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "Cuidexa.Web", "--urls", "http://0.0.0.0:58735"],
+      "port": 58735
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+@model Residente
+@{
+    var historial = (List<AuditLog>)ViewBag.Historial;
+    var patologiasDisponibles = (List<Patologia>)ViewBag.Patologias;
+    var patologiasAsignadas = Model.Patologias.Select(p => p.PatologiaId).ToHashSet();
+    var medicacionesActivas = Model.Medicaciones.Where(m => m.FechaFin == null).OrderBy(m => m.Nombre).ToList();
+    var medicacionesFinalizadas = Model.Medicaciones.Where(m => m.FechaFin != null).OrderByDescending(m => m.FechaFin).ToList();
+}
+<a href="/Enfermeria" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<h4 class="mb-3">@Model.Nombre @Model.Apellidos</h4>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h6 class="text-muted">Patologías</h6>
+        @if (!Model.Patologias.Any())
+        {
+            <p class="text-muted">Ninguna registrada.</p>
+        }
+        else
+        {
+            @foreach (var p in Model.Patologias)
+            {
+                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                    <div>
+                        <strong>@p.Patologia?.Nombre</strong>
+                        @if (!string.IsNullOrWhiteSpace(p.Observaciones))
+                        {
+                            <div class="text-muted small">@p.Observaciones</div>
+                        }
+                    </div>
+                    <form method="post" action="/Enfermeria/QuitarPatologia">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="residenteId" value="@Model.Id" />
+                        <input type="hidden" name="patologiaId" value="@p.PatologiaId" />
+                        <button class="btn btn-sm btn-outline-danger text-nowrap">Quitar</button>
+                    </form>
+                </div>
+            }
+        }
+
+        <form method="post" action="/Enfermeria/AgregarPatologia" class="d-flex flex-column flex-sm-row gap-2 mt-3">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="residenteId" value="@Model.Id" />
+            <select name="patologiaId" class="form-select" required>
+                <option value="">-- Añadir patología --</option>
+                @foreach (var p in patologiasDisponibles.Where(p => !patologiasAsignadas.Contains(p.Id)))
+                {
+                    <option value="@p.Id">@p.Nombre</option>
+                }
+            </select>
+            <input name="observaciones" class="form-control" placeholder="Observaciones (opcional)" />
+            <button class="btn btn-outline-primary text-nowrap flex-shrink-0">Añadir</button>
+        </form>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h6 class="text-muted">Medicación activa</h6>
+        @if (!medicacionesActivas.Any())
+        {
+            <p class="text-muted">Ninguna registrada.</p>
+        }
+        else
+        {
+            @foreach (var m in medicacionesActivas)
+            {
+                <div class="border-bottom py-2">
+                    <strong>@m.Nombre</strong> — @m.Dosis
+                    <br />
+                    <span class="text-muted small">@m.Horario</span>
+                    @if (!string.IsNullOrWhiteSpace(m.Instrucciones))
+                    {
+                        <div class="text-muted small">@m.Instrucciones</div>
+                    }
+                    <div class="d-flex flex-column flex-sm-row gap-2 mt-2">
+                        <form method="post" action="/Enfermeria/RegistrarAdministracion">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="residenteId" value="@Model.Id" />
+                            <input type="hidden" name="medicacionId" value="@m.Id" />
+                            <button class="btn btn-sm btn-outline-primary text-nowrap">Registrar administración</button>
+                        </form>
+                        <form method="post" action="/Enfermeria/FinalizarMedicacion" onsubmit="return confirm('¿Finalizar esta medicación?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="residenteId" value="@Model.Id" />
+                            <input type="hidden" name="medicacionId" value="@m.Id" />
+                            <button class="btn btn-sm btn-outline-secondary text-nowrap">Finalizar</button>
+                        </form>
+                    </div>
+                    @{ var ultimoRegistro = m.Registros.OrderByDescending(r => r.FechaHora).FirstOrDefault(); }
+                    @if (ultimoRegistro != null)
+                    {
+                        <div class="text-muted small mt-1">Última administración: @ultimoRegistro.FechaHora.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</div>
+                    }
+                </div>
+            }
+        }
+
+        <form method="post" action="/Enfermeria/AgregarMedicacion" class="mt-3">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="residenteId" value="@Model.Id" />
+            <div class="row g-2">
+                <div class="col-12 col-md-3"><input name="Nombre" class="form-control" placeholder="Medicamento" required /></div>
+                <div class="col-12 col-md-3"><input name="Dosis" class="form-control" placeholder="Dosis" required /></div>
+                <div class="col-12 col-md-3"><input name="Horario" class="form-control" placeholder="Horario (ej. 08:00, 20:00)" required /></div>
+                <div class="col-12 col-md-3"><input name="Instrucciones" class="form-control" placeholder="Instrucciones (opcional)" /></div>
+            </div>
+            <button class="btn btn-outline-primary mt-2">Añadir medicación</button>
+        </form>
+
+        @if (medicacionesFinalizadas.Any())
+        {
+            <h6 class="text-muted mt-4">Medicación finalizada</h6>
+            @foreach (var m in medicacionesFinalizadas)
+            {
+                <div class="text-muted small border-bottom py-1">
+                    @m.Nombre — @m.Dosis (hasta @m.FechaFin!.Value.ToString("dd/MM/yyyy"))
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<h6 class="mt-4">Historial clínico</h6>
+@if (!historial.Any())
+{
+    <p class="text-muted">Sin movimientos registrados.</p>
+}
+else
+{
+    <input type="search" id="filtroHistorialClinico" class="form-control mb-2" placeholder="Buscar en el historial..." />
+    <ul class="list-group" id="listaHistorialClinico">
+        @foreach (var h in historial)
+        {
+            <li class="list-group-item">
+                @h.Detalle
+                <br />
+                <small class="text-muted">@h.FechaHora.ToLocalTime().ToString("dd/MM/yyyy HH:mm") @(h.Empleado != null ? $"· {h.Empleado.Nombre}" : "")</small>
+            </li>
+        }
+    </ul>
+    <p id="historialClinicoSinResultados" class="text-muted mt-2" hidden>Ningún movimiento coincide con la búsqueda.</p>
+}
+
+@section Scripts {
+    <script>activarFiltro('#filtroHistorialClinico', '#listaHistorialClinico li', { vacio: '#historialClinicoSinResultados' });</script>
+}

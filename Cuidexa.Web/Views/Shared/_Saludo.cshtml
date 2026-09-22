@@ -1,0 +1,15 @@
+@using Cuidexa.Web.Models.Enums
+@using Cuidexa.Web.ViewHelpers
+@{
+    var nombre = User.Identity?.Name ?? "";
+    var rolTexto = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "";
+    Enum.TryParse<RolEmpleado>(rolTexto, out var rol);
+    var (icono, claseColor, etiqueta) = RolPresentacion.Obtener(rol);
+}
+<div class="saludo-cabecera mb-3">
+    <div class="avatar-rol @claseColor"><i class="bi @icono"></i></div>
+    <div>
+        <h5 class="mb-0">Hola, @nombre</h5>
+        <span class="text-muted small">@etiqueta</span>
+    </div>
+</div>

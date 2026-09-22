@@ -1,0 +1,48 @@
+@model Centro
+<a href="/Admin" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<h4 class="mb-1">Datos del centro</h4>
+<p class="text-muted small mb-3">Código de centro (login): <code>@Model.Codigo</code></p>
+<p class="text-muted small">
+    Estos datos son propios de este centro físico. El nombre de marca, el logo y el color de acento se comparten
+    con el resto de centros de tu organización y se gestionan aparte
+    @if (User.IsInRole("DirectorOrganizacion"))
+    {
+        <a href="/Organizacion/Marca">en Marca de organización</a>
+    }
+    else
+    {
+        <text>en "Marca de organización" (solo Director de Organización).</text>
+    }
+</p>
+
+<div class="card p-3 p-md-4" style="max-width: 560px;">
+    <form method="post" action="/Admin/ActualizarCentro" class="mb-0">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label class="form-label">Nombre del centro</label>
+            <input name="nombre" class="form-control" value="@Model.Nombre" required />
+            <div class="form-text">El nombre de este edificio/sede (ej. "Centro Tres Cantos") — distinto del nombre de marca.</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Dirección</label>
+            <input name="direccion" class="form-control" value="@Model.Direccion" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Teléfono</label>
+            <input name="telefono" class="form-control" value="@Model.Telefono" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="@Model.Email" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Responsable — nombre</label>
+            <input name="responsableNombre" class="form-control" value="@Model.ResponsableNombre" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Responsable — cargo</label>
+            <input name="responsableCargo" class="form-control" value="@Model.ResponsableCargo" placeholder="Ej. Directora del centro" />
+        </div>
+        <button class="btn btn-primary">Guardar datos</button>
+    </form>
+</div>

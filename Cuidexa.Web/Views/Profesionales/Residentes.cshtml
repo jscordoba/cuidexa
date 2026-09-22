@@ -1,0 +1,28 @@
+@model List<Residente>
+<a href="/Profesionales" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<h4 class="mb-3"><i class="bi bi-people-fill me-2 text-muted"></i>Residentes</h4>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No hay residentes activos.</p>
+}
+else
+{
+    <input type="search" id="filtroResidentes" class="form-control mb-2" placeholder="Buscar residente..." />
+    <div id="listaResidentes">
+        @foreach (var r in Model)
+        {
+            <a href="/Profesionales/Details/@r.Id" class="card mb-2 text-decoration-none text-body">
+                <div class="card-body">
+                    <strong>@r.Nombre @r.Apellidos</strong>
+                    <span class="text-muted"> — Hab. @(r.Habitacion?.Numero ?? "sin asignar")</span>
+                </div>
+            </a>
+        }
+    </div>
+    <p id="residentesSinResultados" class="text-muted" hidden>Ningún residente coincide con la búsqueda.</p>
+}
+
+@section Scripts {
+    <script>activarFiltro('#filtroResidentes', '#listaResidentes > a', { vacio: '#residentesSinResultados' });</script>
+}

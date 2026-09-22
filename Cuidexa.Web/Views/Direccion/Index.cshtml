@@ -1,0 +1,56 @@
+@model List<Residente>
+@{
+    var pendientesPorRol = (Dictionary<RolEmpleado, int>)ViewBag.PendientesPorRol;
+}
+@await Html.PartialAsync("_Saludo")
+<div class="row mb-4 g-3">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card h-100 tarjeta-dashboard">
+            <div class="icono-dashboard i-azul"><i class="bi bi-people-fill"></i></div>
+            <div>
+                <h6 class="text-muted mb-1">Residentes activos</h6>
+                <h2 class="mb-0">@ViewBag.TotalResidentes</h2>
+            </div>
+        </div>
+    </div>
+    @foreach (var (rol, pendientes) in pendientesPorRol)
+    {
+        var claseUrgencia = pendientes == 0 ? "urgencia-ok" : pendientes <= 2 ? "urgencia-media" : "urgencia-alta";
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100 tarjeta-dashboard @claseUrgencia">
+                <div class="icono-dashboard i-rosa"><i class="bi bi-bell-fill"></i></div>
+                <div>
+                    <h6 class="text-muted mb-1">Avisos pendientes · @rol</h6>
+                    <h2 class="mb-0">@pendientes</h2>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card h-100 tarjeta-dashboard">
+            <div class="icono-dashboard i-verde"><i class="bi bi-clipboard-check"></i></div>
+            <div>
+                <h6 class="text-muted mb-1">Tareas de limpieza pendientes</h6>
+                <h2 class="mb-0">@ViewBag.TareasLimpiezaPendientes</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<h5>Listado de residentes</h5>
+<input type="search" id="filtroResidentesDireccion" class="form-control mb-3" placeholder="Buscar por nombre, habitación, estado..." />
+<div class="table-responsive">
+    <table class="table table-bordered bg-white">
+        <thead><tr><th>Nombre</th><th>Tipo</th><th>Habitación</th><th>Estado</th></tr></thead>
+        <tbody id="listaResidentesDireccion">
+            @foreach (var r in Model)
+            {
+                <tr><td>@r.Nombre @r.Apellidos</td><td>@r.TipoResidente</td><td>@(r.Habitacion?.Numero ?? "-")</td><td>@r.Estado</td></tr>
+            }
+        </tbody>
+    </table>
+    <p id="residentesDireccionSinResultados" class="text-muted" hidden>Ningún residente coincide con la búsqueda.</p>
+</div>
+
+@section Scripts {
+    <script>activarFiltro('#filtroResidentesDireccion', '#listaResidentesDireccion tr', { vacio: '#residentesDireccionSinResultados' });</script>
+}

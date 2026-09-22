@@ -1,0 +1,127 @@
+@model List<TurnoEfectivo>
+@{
+    ViewBag.SeccionActual = "Calendario";
+    var inicioSemana = (DateOnly)ViewBag.InicioSemana;
+    var finSemana = (DateOnly)ViewBag.FinSemana;
+    var rolFiltro = ViewBag.RolFiltro as RolEmpleado?;
+    var empleados = (List<Empleado>)ViewBag.Empleados;
+    var dias = Enumerable.Range(0, 7).Select(i => inicioSemana.AddDays(i)).ToList();
+    var semanaAnterior = inicioSemana.AddDays(-7).ToString("yyyy-MM-dd");
+    var semanaSiguiente = inicioSemana.AddDays(7).ToString("yyyy-MM-dd");
+
+    TurnoEfectivo? TurnoDe(int empleadoId, DateOnly dia) =>
+        Model.FirstOrDefault(t => t.EmpleadoId == empleadoId && t.Fecha == dia);
+
+    var externos = Model.Where(t => t.EmpleadoId is null).OrderBy(t => t.Fecha).ToList();
+}
+@await Html.PartialAsync("_SubNav")
+
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h4 class="mb-0">Calendario de turnos</h4>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+        <form method="get" class="d-flex align-items-center gap-2">
+            <input type="hidden" name="desde" value="@inicioSemana.ToString("yyyy-MM-dd")" />
+            <select name="rol" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="">Todos los departamentos</option>
+                @foreach (var rol in Enum.GetValues<RolEmpleado>().Where(r => r != RolEmpleado.Admin && r != RolEmpleado.Direccion && r != RolEmpleado.DirectorOrganizacion))
+                {
+                    <option value="@rol" selected="@(rol == rolFiltro)">@rol</option>
+                }
+            </select>
+        </form>
+        <a href="/Turnos/Calendario?desde=@semanaAnterior&rol=@rolFiltro" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chevron-left"></i></a>
+        <span class="fw-semibold text-nowrap">@inicioSemana.ToString("dd/MM") – @finSemana.ToString("dd/MM/yyyy")</span>
+        <a href="/Turnos/Calendario?desde=@semanaSiguiente&rol=@rolFiltro" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chevron-right"></i></a>
+    </div>
+</div>
+
+<p class="text-muted small">Cada celda muestra el turno por defecto de cada persona (gris). Los días con un reemplazo o un cambio de turno aprobado se resaltan en color, con el icono del tipo de cambio; si a alguien le cubrieron su turno ese día, aparece como "Cedido".</p>
+
+@if (!empleados.Any())
+{
+    <p class="text-muted">No hay personal activo para este filtro.</p>
+}
+else
+{
+    <div class="overflow-auto">
+        <table class="table table-bordered bg-white align-middle mb-0" style="min-width: 900px;">
+            <thead>
+                <tr>
+                    <th style="min-width: 160px;">Empleado</th>
+                    @foreach (var dia in dias)
+                    {
+                        <th class="text-center @(dia == DateOnly.FromDateTime(DateTime.Today) ? "table-active" : "")">
+                            @dia.ToString("ddd", System.Globalization.CultureInfo.GetCultureInfo("es-ES"))<br />
+                            <span class="fw-normal small">@dia.ToString("dd/MM")</span>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var grupoRol in empleados.GroupBy(e => e.Rol))
+                {
+                    var (_, claseColor, etiquetaRol) = RolPresentacion.Obtener(grupoRol.Key);
+                    <tr class="table-light">
+                        <td colspan="8" class="fw-semibold small">@etiquetaRol</td>
+                    </tr>
+                    @foreach (var empleado in grupoRol)
+                    {
+                        <tr>
+                            <td class="small">@empleado.Nombre</td>
+                            @foreach (var dia in dias)
+                            {
+                                var t = TurnoDe(empleado.Id, dia);
+                                <td>
+                                    @if (t is null)
+                                    {
+                                        <span class="text-muted small">—</span>
+                                    }
+                                    else if (t.Cedido)
+                                    {
+                                        <div class="chip-turno chip-cedido" title="Turno cedido a @t.CedidoA">
+                                            Cedido a @t.CedidoA
+                                        </div>
+                                    }
+                                    else if (t.EsExcepcion)
+                                    {
+                                        <div class="chip-turno @claseColor" title="@t.Notas">
+                                            @t.HoraInicio.ToString("HH:mm")–@t.HoraFin.ToString("HH:mm")
+                                            @if (t.TipoExcepcion == "Reemplazo")
+                                            {
+                                                <i class="bi bi-arrow-repeat ms-1" title="Reemplazo"></i>
+                                            }
+                                            else if (t.TipoExcepcion == "Cambio")
+                                            {
+                                                <i class="bi bi-arrow-left-right ms-1" title="Cambio de turno"></i>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="chip-turno chip-defecto">
+                                            @t.HoraInicio.ToString("HH:mm")–@t.HoraFin.ToString("HH:mm")
+                                        </div>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@if (externos.Any())
+{
+    <h6 class="text-muted mt-4 mb-2">Cubiertos por personal externo esta semana</h6>
+    @foreach (var t in externos)
+    {
+        <div class="card mb-2">
+            <div class="card-body py-2">
+                <strong>@t.Rol</strong> — @t.EmpleadoNombre
+                <span class="text-muted small ms-2">@t.Fecha.ToString("dd/MM/yyyy") @t.HoraInicio.ToString("HH:mm")–@t.HoraFin.ToString("HH:mm")</span>
+            </div>
+        </div>
+    }
+}

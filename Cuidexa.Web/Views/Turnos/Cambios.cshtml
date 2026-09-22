@@ -1,0 +1,51 @@
+@model List<CambioTurno>
+@{
+    ViewBag.SeccionActual = "Cambios";
+    var candidatosPorRol = (Dictionary<RolEmpleado, List<Empleado>>)ViewBag.CandidatosPorRol;
+}
+@await Html.PartialAsync("_SubNav")
+<h4 class="mb-3">Cambios de turno pendientes</h4>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No hay solicitudes pendientes.</p>
+}
+else
+{
+    @foreach (var c in Model)
+    {
+        var candidatos = candidatosPorRol.GetValueOrDefault(c.Rol, new List<Empleado>());
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="mb-1">@c.Rol — @c.Fecha.ToString("dd/MM/yyyy")</h6>
+                <p class="mb-1"><strong>Solicita:</strong> @c.EmpleadoSolicitante?.Nombre</p>
+                <p class="mb-1"><strong>Motivo:</strong> @c.Motivo</p>
+                @if (c.EmpleadoSustitutoPropuesto != null)
+                {
+                    <p class="mb-2"><strong>Sustituto propuesto:</strong> @c.EmpleadoSustitutoPropuesto.Nombre</p>
+                }
+                <small class="text-muted d-block mb-2">Solicitado el @c.FechaSolicitud.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
+
+                <div class="d-flex flex-column flex-sm-row gap-2">
+                    <form method="post" action="/Turnos/AprobarCambio" class="d-flex flex-column flex-sm-row gap-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@c.Id" />
+                        <select name="empleadoSustitutoId" class="form-select" required>
+                            <option value="">-- Elegir sustituto --</option>
+                            @foreach (var candidato in candidatos)
+                            {
+                                <option value="@candidato.Id" selected="@(candidato.Id == c.EmpleadoSustitutoPropuestoId)">@candidato.Nombre</option>
+                            }
+                        </select>
+                        <button class="btn btn-outline-primary text-nowrap flex-shrink-0">Aprobar</button>
+                    </form>
+                    <form method="post" action="/Turnos/RechazarCambio">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@c.Id" />
+                        <button class="btn btn-outline-danger text-nowrap">Rechazar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+}

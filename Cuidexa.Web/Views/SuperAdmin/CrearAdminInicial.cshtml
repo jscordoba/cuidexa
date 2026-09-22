@@ -1,0 +1,39 @@
+@{
+    Layout = "_LayoutSuperAdmin";
+    var centro = (Centro)ViewBag.Centro;
+}
+<a href="/SuperAdmin/Index" class="d-inline-block mb-2 text-decoration-none">&larr; Volver</a>
+<h4 class="mb-1">Primer Admin del centro</h4>
+<p class="text-muted mb-3">
+    Centro: <strong>@centro.Nombre</strong> (código <code>@centro.Codigo</code>) ·
+    Organización: <strong>@centro.Organizacion?.Nombre</strong>
+</p>
+<form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 480px;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="centroId" value="@centro.Id" />
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@e.ErrorMessage</div>
+            }
+        </div>
+    }
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input name="nombre" class="form-control" required autofocus />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Contraseña inicial</label>
+        <input type="password" name="password" class="form-control" required minlength="8" />
+    </div>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Crear Admin</button>
+        <a href="/SuperAdmin/Index" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>

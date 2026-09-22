@@ -1,0 +1,161 @@
+@model ResidenteCreateDto
+@{
+    var habitaciones = (List<(int Id, string Etiqueta)>)ViewBag.Habitaciones;
+    var dietas = (List<Dieta>)ViewBag.Dietas;
+    var alergias = (List<Alergia>)ViewBag.Alergias;
+    var centrosOrganizacion = ViewBag.CentrosOrganizacion as List<Centro>;
+}
+<a href="/Residentes" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Residentes</a>
+<h4 class="mb-3">Dar de alta un residente</h4>
+<form method="post" class="bg-white p-3 p-md-4 border rounded">
+    @Html.AntiForgeryToken()
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@e.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    @if (centrosOrganizacion is not null)
+    {
+        <div class="alert alert-light border mb-3">
+            <label class="form-label mb-1">Centro</label>
+            <select name="centroId" class="form-select" required>
+                @foreach (var c in centrosOrganizacion)
+                {
+                    <option value="@c.Id">@c.Nombre (@c.Codigo)</option>
+                }
+            </select>
+            <div class="form-text">A qué centro de tu organización pertenece este residente.</div>
+        </div>
+    }
+
+    <h6 class="text-muted mt-2">Datos básicos</h6>
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Nombre</label>
+            <input name="Nombre" class="form-control" required />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Apellidos</label>
+            <input name="Apellidos" class="form-control" required />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Documento de identidad (DNI/NIE)</label>
+            <input name="DocumentoIdentidad" class="form-control" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Fecha de nacimiento</label>
+            <input type="date" name="FechaNacimiento" class="form-control" required />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Tipo de residente</label>
+            <select name="TipoResidente" class="form-select" id="tipoResidente">
+                <option value="Fijo">Fijo</option>
+                <option value="Dia">Día</option>
+                <option value="Pasajero">Pasajero</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Habitación <span class="text-muted" id="habitacionAyuda">(obligatoria para residentes Fijos)</span></label>
+            <select name="HabitacionId" class="form-select">
+                <option value="">-- Sin asignar --</option>
+                @foreach (var h in habitaciones)
+                {
+                    <option value="@h.Id">@h.Etiqueta</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <h6 class="text-muted mt-3">Atención y cuidados</h6>
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Movilidad</label>
+            <select name="Movilidad" class="form-select">
+                <option value="Autonomo">Autónomo</option>
+                <option value="SillaRuedas">Silla de ruedas</option>
+                <option value="AsistenciaTotal">Asistencia total</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-6 mb-3 d-flex align-items-end">
+            <div class="form-check">
+                <input type="checkbox" name="NecesitaAyudaLevantarse" value="true" class="form-check-input" />
+                <label class="form-check-label">Necesita ayuda para levantarse</label>
+            </div>
+        </div>
+        <div class="col-12 mb-3">
+            <label class="form-label">Equipamiento especial</label>
+            <input name="EquipamientoEspecial" class="form-control" placeholder="Ej. grúa, andador..." />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Dieta inicial</label>
+            <select name="DietaId" class="form-select">
+                @foreach (var d in dietas)
+                {
+                    <option value="@d.Id">@d.Nombre</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Alergias</label>
+            @foreach (var a in alergias)
+            {
+                <div class="form-check">
+                    <input type="checkbox" name="AlergiaIds" value="@a.Id" class="form-check-input" />
+                    <label class="form-check-label">@a.Nombre</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <h6 class="text-muted mt-3">Datos de contacto del residente</h6>
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Teléfono</label>
+            <input name="Telefono" class="form-control" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="Email" class="form-control" />
+        </div>
+    </div>
+
+    <h6 class="text-muted mt-3">Contacto de emergencia</h6>
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Nombre</label>
+            <input name="ContactoEmergenciaNombre" class="form-control" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Relación con el residente</label>
+            <input name="ContactoEmergenciaRelacion" class="form-control" placeholder="Ej. Hijo/a, Tutor legal..." />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Teléfono</label>
+            <input name="ContactoEmergenciaTelefono" class="form-control" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="ContactoEmergenciaEmail" class="form-control" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 w-md-auto">Dar de alta</button>
+</form>
+
+@section Scripts {
+    <script>
+        // Mejora de UX: avisa visualmente que la habitación es obligatoria solo si es Fijo.
+        // La validación real ocurre en el servidor (ResidenteCreateDto.EsValido), esto es solo ayuda visual.
+        const tipoSelect = document.getElementById('tipoResidente');
+        const ayuda = document.getElementById('habitacionAyuda');
+        tipoSelect.addEventListener('change', function () {
+            ayuda.style.display = this.value === 'Fijo' ? 'inline' : 'none';
+        });
+    </script>
+}

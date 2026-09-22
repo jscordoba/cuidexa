@@ -1,0 +1,36 @@
+@model List<Turno>
+@{ ViewBag.SeccionActual = "Reemplazos"; }
+@await Html.PartialAsync("_SubNav")
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
+    <h4 class="mb-0">Reemplazos por ausencia</h4>
+    <a class="btn btn-primary" href="/Turnos/CrearReemplazo">+ Asignar reemplazo</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No se ha asignado ningún reemplazo todavía.</p>
+}
+else
+{
+    @foreach (var t in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between flex-wrap gap-2">
+                    <strong>@t.Rol — @(t.Empleado?.Nombre ?? "-")</strong>
+                    <span class="badge @(t.Estado == EstadoTurno.Programado ? "bg-success" : t.Estado == EstadoTurno.Completado ? "bg-secondary" : "bg-danger")">@t.Estado</span>
+                </div>
+                <div class="text-muted small mt-1">@t.FechaInicio.ToString("dd/MM/yyyy HH:mm") — @t.FechaFin.ToString("HH:mm")</div>
+                @if (!string.IsNullOrWhiteSpace(t.MotivoReemplazo))
+                {
+                    <p class="mb-1 mt-2"><strong>Motivo:</strong> @t.MotivoReemplazo</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(t.Notas))
+                {
+                    <p class="mb-0 text-muted small">@t.Notas</p>
+                }
+            </div>
+        </div>
+    }
+}

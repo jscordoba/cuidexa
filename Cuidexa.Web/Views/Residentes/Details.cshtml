@@ -1,0 +1,249 @@
+@model Residente
+@using Cuidexa.Web.Models.Enums
+@{
+    var historial = (List<AuditLog>)ViewBag.Historial;
+    var habitaciones = (List<Habitacion>)ViewBag.Habitaciones;
+    var dietaActual = Model.Dietas.FirstOrDefault(d => d.FechaFin == null)?.Dieta?.Nombre ?? "-";
+    var medicacionActiva = Model.Medicaciones.Where(m => m.FechaFin == null).OrderBy(m => m.Nombre).ToList();
+    var medicacionFinalizada = Model.Medicaciones.Where(m => m.FechaFin != null).OrderByDescending(m => m.FechaFin).ToList();
+    var sesionesProgramadas = Model.SesionesTerapia.Where(s => s.Estado == EstadoSesion.Programada).OrderBy(s => s.FechaHora).ToList();
+    var sesionesPasadas = Model.SesionesTerapia.Where(s => s.Estado != EstadoSesion.Programada).OrderByDescending(s => s.FechaHora).ToList();
+}
+<a href="/Residentes" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Residentes</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">@Model.Nombre @Model.Apellidos</h4>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge @(Model.Estado == EstadoResidente.Activo ? "bg-success" : "bg-secondary")">@Model.Estado</span>
+        <a href="/Residentes/FichaPdf/@Model.Id" class="btn btn-sm btn-outline-secondary"><i class="bi bi-file-earmark-pdf me-1"></i>Descargar PDF</a>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="text-muted mb-0">Datos actuales</h6>
+            @if (Model.Estado == EstadoResidente.Activo)
+            {
+                <a href="/Residentes/Edit/@Model.Id" class="btn btn-sm btn-outline-secondary">Editar datos</a>
+            }
+        </div>
+        <div class="row">
+            <div class="col-6 col-md-3 mb-2"><strong>Tipo</strong><br />@Model.TipoResidente</div>
+            <div class="col-6 col-md-3 mb-2"><strong>Habitación</strong><br />@(Model.Habitacion?.Numero ?? "Sin asignar")</div>
+            <div class="col-6 col-md-3 mb-2"><strong>Movilidad</strong><br />@Model.Movilidad</div>
+            <div class="col-6 col-md-3 mb-2"><strong>Dieta actual</strong><br />@dietaActual</div>
+            <div class="col-12 mb-2"><strong>Alergias</strong><br />@(string.Join(", ", Model.Alergias.Select(a => a.Alergia?.Nombre)) is { Length: > 0 } al ? al : "Ninguna registrada")</div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Estado == EstadoResidente.Activo)
+{
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h6>Trasladar de habitación</h6>
+                    <form method="post" action="/Residentes/Trasladar" class="d-flex flex-column flex-sm-row gap-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <select name="nuevaHabitacionId" class="form-select" required>
+                            <option value="">-- Selecciona habitación --</option>
+                            @foreach (var h in habitaciones)
+                            {
+                                <option value="@h.Id" selected="@(h.Id == Model.HabitacionId)">@h.Numero (@h.Planta)</option>
+                            }
+                        </select>
+                        <button class="btn btn-outline-primary text-nowrap flex-shrink-0">Trasladar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h6>Dar de baja</h6>
+                    <form method="post" action="/Residentes/Baja" class="d-flex flex-column flex-sm-row gap-2" onsubmit="return confirm('¿Confirmas dar de baja a este residente?');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input name="motivo" class="form-control" placeholder="Motivo (opcional)" />
+                        <button class="btn btn-outline-danger text-nowrap flex-shrink-0">Dar de baja</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<h5 class="mt-4 mb-3">Información por departamento</h5>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h6 class="mb-2"><i class="bi bi-egg-fried me-2 text-warning"></i>Cocina</h6>
+        <div class="row mb-2">
+            <div class="col-6 col-md-4"><strong>Dieta actual</strong><br />@dietaActual</div>
+            <div class="col-6 col-md-8"><strong>Alergias</strong><br />@(string.Join(", ", Model.Alergias.Select(a => a.Alergia?.Nombre)) is { Length: > 0 } alTexto ? alTexto : "Ninguna registrada")</div>
+        </div>
+        @if (Model.Dietas.Count > 1)
+        {
+            <button class="toggle-colapsable mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#historicoDietas">
+                Ver histórico de dietas <span class="caret">&#9662;</span>
+            </button>
+            <div class="collapse mt-2" id="historicoDietas">
+                <table class="table table-sm">
+                    <thead><tr><th>Dieta</th><th>Desde</th><th>Hasta</th><th>Motivo</th></tr></thead>
+                    <tbody>
+                        @foreach (var d in Model.Dietas.OrderByDescending(d => d.FechaInicio))
+                        {
+                            <tr><td>@d.Dieta?.Nombre</td><td>@d.FechaInicio</td><td>@(d.FechaFin?.ToString() ?? "Vigente")</td><td>@d.Motivo</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h6 class="mb-2"><i class="bi bi-person-heart me-2 text-info"></i>Auxiliares</h6>
+        <div class="row">
+            <div class="col-6 col-md-4"><strong>Movilidad</strong><br />@Model.Movilidad</div>
+            <div class="col-6 col-md-4"><strong>Ayuda para levantarse</strong><br />@(Model.NecesitaAyudaLevantarse ? "Sí" : "No")</div>
+            <div class="col-12 col-md-4"><strong>Equipamiento especial</strong><br />@(string.IsNullOrWhiteSpace(Model.EquipamientoEspecial) ? "Ninguno" : Model.EquipamientoEspecial)</div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h6 class="mb-2"><i class="bi bi-heart-pulse-fill me-2 text-danger"></i>Enfermería</h6>
+
+        <strong>Patologías</strong>
+        @if (!Model.Patologias.Any())
+        {
+            <p class="text-muted small mb-2">Ninguna registrada.</p>
+        }
+        else
+        {
+            <ul class="mb-2">
+                @foreach (var p in Model.Patologias)
+                {
+                    <li>@p.Patologia?.Nombre @(string.IsNullOrWhiteSpace(p.Observaciones) ? "" : $"— {p.Observaciones}")</li>
+                }
+            </ul>
+        }
+
+        <strong>Medicación activa</strong>
+        @if (!medicacionActiva.Any())
+        {
+            <p class="text-muted small mb-2">Ninguna.</p>
+        }
+        else
+        {
+            <div class="table-responsive mb-2">
+                <table class="table table-sm">
+                    <thead><tr><th>Nombre</th><th>Dosis</th><th>Horario</th><th>Instrucciones</th><th>Última dosis</th></tr></thead>
+                    <tbody>
+                        @foreach (var m in medicacionActiva)
+                        {
+                            var ultima = m.Registros.OrderByDescending(r => r.FechaHora).FirstOrDefault();
+                            <tr>
+                                <td>@m.Nombre</td><td>@m.Dosis</td><td>@m.Horario</td><td>@m.Instrucciones</td>
+                                <td>@(ultima != null ? ultima.FechaHora.ToString("dd/MM HH:mm") : "Sin registrar")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @if (medicacionFinalizada.Any())
+        {
+            <button class="toggle-colapsable mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#medicacionHistorica">
+                Ver @medicacionFinalizada.Count medicación(es) finalizada(s) <span class="caret">&#9662;</span>
+            </button>
+            <div class="collapse mt-2" id="medicacionHistorica">
+                <table class="table table-sm">
+                    <thead><tr><th>Nombre</th><th>Dosis</th><th>Desde</th><th>Hasta</th></tr></thead>
+                    <tbody>
+                        @foreach (var m in medicacionFinalizada)
+                        {
+                            <tr><td>@m.Nombre</td><td>@m.Dosis</td><td>@m.FechaInicio</td><td>@m.FechaFin</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h6 class="mb-2"><i class="bi bi-clipboard2-pulse-fill me-2" style="color:#7c3aed"></i>Profesionales</h6>
+
+        <strong>Próximas sesiones</strong>
+        @if (!sesionesProgramadas.Any())
+        {
+            <p class="text-muted small mb-2">Ninguna programada.</p>
+        }
+        else
+        {
+            <ul class="mb-2">
+                @foreach (var s in sesionesProgramadas)
+                {
+                    <li>@s.FechaHora.ToString("dd/MM/yyyy HH:mm") — @s.Empleado?.Nombre (@(s.Empleado?.Especialidad?.Nombre ?? "Sin especialidad"))</li>
+                }
+            </ul>
+        }
+
+        @if (sesionesPasadas.Any())
+        {
+            <button class="toggle-colapsable mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#sesionesHistoricas">
+                Ver @sesionesPasadas.Count sesión(es) anterior(es) <span class="caret">&#9662;</span>
+            </button>
+            <div class="collapse mt-2" id="sesionesHistoricas">
+                <table class="table table-sm">
+                    <thead><tr><th>Fecha</th><th>Profesional</th><th>Especialidad</th><th>Estado</th><th>Observaciones</th></tr></thead>
+                    <tbody>
+                        @foreach (var s in sesionesPasadas)
+                        {
+                            <tr>
+                                <td>@s.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@s.Empleado?.Nombre</td>
+                                <td>@(s.Empleado?.Especialidad?.Nombre ?? "-")</td>
+                                <td>@s.Estado</td>
+                                <td>@s.Observaciones</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<h6 class="mt-4">Historial</h6>
+@if (!historial.Any())
+{
+    <p class="text-muted">Sin movimientos registrados.</p>
+}
+else
+{
+    <input type="search" id="filtroHistorial" class="form-control mb-2" placeholder="Buscar en el historial..." />
+    <ul class="list-group" id="listaHistorial">
+        @foreach (var h in historial)
+        {
+            <li class="list-group-item">
+                <strong>@h.Accion</strong> — @h.Detalle
+                <br />
+                <small class="text-muted">@h.FechaHora.ToLocalTime().ToString("dd/MM/yyyy HH:mm") @(h.Empleado != null ? $"· {h.Empleado.Nombre}" : "")</small>
+            </li>
+        }
+    </ul>
+    <p id="historialSinResultados" class="text-muted mt-2" hidden>Ningún movimiento coincide con la búsqueda.</p>
+}
+
+@section Scripts {
+    <script>activarFiltro('#filtroHistorial', '#listaHistorial li', { vacio: '#historialSinResultados' });</script>
+}

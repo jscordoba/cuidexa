@@ -1,0 +1,91 @@
+@model EmpleadoEditDto
+@{
+    var empleadoId = (int)ViewBag.EmpleadoId;
+    var especialidades = (List<Especialidad>)ViewBag.Especialidades;
+    var plantillas = (List<PlantillaTurno>)ViewBag.Plantillas;
+}
+<a href="/Empleados" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Usuarios</a>
+<h4 class="mb-3">Editar usuario</h4>
+<form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 480px;">
+    @Html.AntiForgeryToken()
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@e.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input name="Nombre" class="form-control" value="@Model.Nombre" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="Email" class="form-control" value="@Model.Email" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Rol</label>
+        <select name="Rol" class="form-select" id="rolSelect">
+            @foreach (var rol in Enum.GetValues<RolEmpleado>())
+            {
+                <option value="@rol" selected="@(rol == Model.Rol)">@rol</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3" id="especialidadGrupo">
+        <label class="form-label">Especialidad</label>
+        <select name="EspecialidadId" class="form-select">
+            <option value="">-- Selecciona --</option>
+            @foreach (var e in especialidades)
+            {
+                <option value="@e.Id" selected="@(e.Id == Model.EspecialidadId)">@e.Nombre</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3" id="plantillaGrupo">
+        <label class="form-label">Turno por defecto</label>
+        <select name="PlantillaTurnoDefectoId" id="plantillaSelect" class="form-select">
+            <option value="">-- Selecciona --</option>
+            @foreach (var p in plantillas)
+            {
+                <option value="@p.Id" selected="@(p.Id == Model.PlantillaTurnoDefectoId)">@p.Nombre (@p.TipoDia) @p.HoraInicio.ToString("HH:mm")–@p.HoraFin.ToString("HH:mm")</option>
+            }
+        </select>
+        <div class="form-text">Se asume que este usuario cubre esta franja todos los días, salvo un reemplazo o cambio de turno concreto.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Nueva contraseña</label>
+        <input type="password" name="NuevaPassword" class="form-control" minlength="8" placeholder="Dejar en blanco para no cambiarla" />
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row gap-2">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="/Empleados" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        const rolSelect = document.getElementById('rolSelect');
+        const especialidadGrupo = document.getElementById('especialidadGrupo');
+        const plantillaGrupo = document.getElementById('plantillaGrupo');
+        const plantillaSelect = document.getElementById('plantillaSelect');
+
+        function esRolOperativo(rol) {
+            return rol !== 'Admin' && rol !== 'Direccion' && rol !== 'DirectorOrganizacion';
+        }
+
+        function actualizarCampos() {
+            especialidadGrupo.style.display = rolSelect.value === 'Profesional' ? 'block' : 'none';
+            const operativo = esRolOperativo(rolSelect.value);
+            plantillaGrupo.style.display = operativo ? 'block' : 'none';
+            plantillaSelect.required = operativo;
+        }
+        rolSelect.addEventListener('change', actualizarCampos);
+        actualizarCampos();
+    </script>
+}

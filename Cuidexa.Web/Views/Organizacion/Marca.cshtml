@@ -1,0 +1,51 @@
+@model Organizacion
+<a href="/" class="d-inline-block mb-2 text-decoration-none">&larr; Volver</a>
+<h4 class="mb-3">Marca de organización</h4>
+<p class="text-muted small">Nombre, logo y color de acento se aplican en el login, la barra de navegación y los informes/fichas exportados a PDF de <strong>todos los centros</strong> de esta organización.</p>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-6">
+        <div class="card p-3 p-md-4">
+            <h6 class="mb-3">Identidad</h6>
+            <form method="post" action="/Organizacion/ActualizarMarca" class="mb-0">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label class="form-label">Nombre de la organización</label>
+                    <input name="nombre" class="form-control" value="@Model.Nombre" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Color de acento</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="color" name="colorAcento" class="form-control form-control-color" value="@(string.IsNullOrWhiteSpace(Model.ColorAcento) ? "#4f46e5" : Model.ColorAcento)" title="Color de acento" />
+                        <span class="text-muted small">Enlaces, botones secundarios y acentos de la app.</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary">Guardar datos</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="card p-3 p-md-4">
+            <h6 class="mb-3">Logo</h6>
+            @if (!string.IsNullOrWhiteSpace(Model.LogoRuta))
+            {
+                <div class="mb-3">
+                    <img src="@Model.LogoRuta" alt="Logo actual" style="max-width:160px;max-height:160px;" class="border rounded p-2 bg-white" />
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small">Sin logo propio todavía — se muestra el icono por defecto de Cuidexa.</p>
+            }
+            <form method="post" action="/Organizacion/SubirLogo" enctype="multipart/form-data" class="mb-0">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <input type="file" name="logo" class="form-control" accept=".png,.jpg,.jpeg" required />
+                    <div class="form-text">PNG o JPG, máximo 2MB.</div>
+                </div>
+                <button class="btn btn-outline-primary">Subir logo</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+@{
+    var empleados = (List<Empleado>)ViewBag.Empleados;
+}
+<a href="/Turnos/Reemplazos" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Reemplazos</a>
+<h4 class="mb-3">Asignar reemplazo por ausencia</h4>
+<p class="text-muted">El turno se asigna de inmediato al empleado elegido y aparecerá resaltado como "Reemplazo" en su pantalla de Mis turnos.</p>
+<form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 560px;">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label class="form-label">Departamento (rol) a cubrir</label>
+        <select name="rol" id="rolSelect" class="form-select">
+            @foreach (var rol in Enum.GetValues<RolEmpleado>().Where(r => r != RolEmpleado.Admin && r != RolEmpleado.Direccion && r != RolEmpleado.DirectorOrganizacion))
+            {
+                <option value="@rol">@rol</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Empleado que cubre el reemplazo</label>
+        <select name="empleadoDestinoId" id="empleadoSelect" class="form-select" required>
+            <option value="">-- Elegir empleado --</option>
+            @foreach (var e in empleados)
+            {
+                var (_, _, etiqueta) = RolPresentacion.Obtener(e.Rol);
+                <option value="@e.Id" data-rol="@e.Rol">@e.Nombre (@etiqueta)</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Ausente (opcional, solo para contexto)</label>
+        <input name="ausente" class="form-control" placeholder="Nombre de quien está ausente" />
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Inicio</label>
+            <input type="datetime-local" name="fechaInicio" class="form-control" required />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Fin</label>
+            <input type="datetime-local" name="fechaFin" class="form-control" required />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Motivo</label>
+        <input name="motivo" class="form-control" placeholder="Ej. Baja médica, ausencia imprevista..." required />
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row gap-2">
+        <button type="submit" class="btn btn-primary">Asignar reemplazo</button>
+        <a href="/Turnos/Reemplazos" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        const rolSelect = document.getElementById('rolSelect');
+        const empleadoSelect = document.getElementById('empleadoSelect');
+
+        function filtrarEmpleadosPorRol() {
+            Array.from(empleadoSelect.options).forEach(opt => {
+                if (!opt.dataset.rol) return;
+                const visible = opt.dataset.rol === rolSelect.value;
+                opt.hidden = !visible;
+            });
+            if (empleadoSelect.selectedOptions[0]?.hidden) {
+                empleadoSelect.value = '';
+            }
+        }
+
+        rolSelect.addEventListener('change', filtrarEmpleadosPorRol);
+        filtrarEmpleadosPorRol();
+    </script>
+}

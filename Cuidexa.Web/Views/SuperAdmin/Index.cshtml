@@ -1,0 +1,55 @@
+@model List<Organizacion>
+@{
+    Layout = "_LayoutSuperAdmin";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Organizaciones</h4>
+    <a href="/SuperAdmin/CrearOrganizacion" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Nueva organización</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Todavía no hay ninguna organización — crea la primera.</p>
+}
+else
+{
+    @foreach (var org in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="card-title mb-1">@org.Nombre</h5>
+                        <p class="text-muted small mb-0">@org.Centros.Count centro(s)</p>
+                    </div>
+                    <a href="/SuperAdmin/CrearCentro?organizacionId=@org.Id" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-lg"></i> Nuevo centro
+                    </a>
+                </div>
+                @if (org.Centros.Any())
+                {
+                    <table class="table table-sm mt-3 mb-0">
+                        <thead>
+                            <tr><th>Centro</th><th>Código</th><th>Estado</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var centro in org.Centros.OrderBy(c => c.Nombre))
+                            {
+                                <tr>
+                                    <td>@centro.Nombre</td>
+                                    <td><code>@centro.Codigo</code></td>
+                                    <td>@(centro.Activo ? "Activo" : "Inactivo")</td>
+                                    <td class="text-end">
+                                        <a href="/SuperAdmin/CrearAdminInicial?centroId=@centro.Id" class="btn btn-outline-secondary btn-sm">
+                                            <i class="bi bi-person-plus"></i> Admin inicial
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    }
+}

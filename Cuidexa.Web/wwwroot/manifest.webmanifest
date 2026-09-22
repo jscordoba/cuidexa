@@ -1,0 +1,15 @@
+{
+  "name": "Cuidexa",
+  "short_name": "Cuidexa",
+  "description": "Gestión de residencia — avisos, turnos y cuidados.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#101a30",
+  "lang": "es",
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

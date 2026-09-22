@@ -1,0 +1,141 @@
+@model ComensalesHoyViewModel
+@{
+    var esHoy = Model.Fecha == DateOnly.FromDateTime(DateTime.Today);
+    var fechaAnterior = Model.Fecha.AddDays(-1).ToString("yyyy-MM-dd");
+    var fechaSiguiente = Model.Fecha.AddDays(1).ToString("yyyy-MM-dd");
+}
+<a href="/Cocina" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h4 class="mb-0"><i class="bi bi-cup-hot-fill me-2 text-muted"></i>Comensales</h4>
+    <div class="d-flex align-items-center gap-2">
+        <a href="/Cocina/Comensales?fecha=@fechaAnterior" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chevron-left"></i></a>
+        <span class="fw-semibold">@Model.Fecha.ToString("dddd, dd/MM/yyyy") @(esHoy ? "· Hoy" : "")</span>
+        <a href="/Cocina/Comensales?fecha=@fechaSiguiente" class="btn btn-sm btn-outline-secondary"><i class="bi bi-chevron-right"></i></a>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-sm-4">
+        <div class="card h-100 tarjeta-dashboard">
+            <div class="icono-dashboard i-morado"><i class="bi bi-cup-hot-fill"></i></div>
+            <div>
+                <h6 class="text-muted mb-1">Total comensales</h6>
+                <h2 class="mb-0">@Model.TotalComensales</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-4">
+        <div class="card h-100 tarjeta-dashboard">
+            <div class="icono-dashboard i-azul"><i class="bi bi-people-fill"></i></div>
+            <div>
+                <h6 class="text-muted mb-1">Residentes</h6>
+                <h2 class="mb-0">@Model.TotalResidentes</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-4">
+        <div class="card h-100 tarjeta-dashboard">
+            <div class="icono-dashboard i-verde"><i class="bi bi-person-badge"></i></div>
+            <div>
+                <h6 class="text-muted mb-1">Personal en turno</h6>
+                <h2 class="mb-0">@Model.TotalEmpleados</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="mb-2"><i class="bi bi-egg-fried me-2 text-warning"></i>Residentes por dieta</h6>
+                @if (!Model.PorDieta.Any())
+                {
+                    <p class="text-muted small mb-0">Sin residentes activos.</p>
+                }
+                else
+                {
+                    <table class="table table-sm mb-2">
+                        <tbody>
+                            @foreach (var (dieta, cantidad) in Model.PorDieta)
+                            {
+                                <tr><td>@dieta</td><td class="text-end fw-semibold">@cantidad</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                    <button class="toggle-colapsable" type="button" data-bs-toggle="collapse" data-bs-target="#listaResidentes">
+                        Ver listado de residentes <span class="caret">&#9662;</span>
+                    </button>
+                    <div class="collapse mt-2" id="listaResidentes">
+                        <table class="table table-sm">
+                            <thead><tr><th>Nombre</th><th>Habitación</th><th>Dieta</th></tr></thead>
+                            <tbody>
+                                @foreach (var r in Model.Residentes)
+                                {
+                                    <tr><td>@r.Nombre</td><td>@(r.Habitacion ?? "-")</td><td>@r.Dieta</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="mb-2"><i class="bi bi-person-badge me-2 text-info"></i>Personal por departamento y turno</h6>
+                @if (!Model.Empleados.Any())
+                {
+                    <p class="text-muted small mb-0">Sin turnos programados este día.</p>
+                }
+                else
+                {
+                    <strong class="small text-muted">Por departamento</strong>
+                    <table class="table table-sm mb-2">
+                        <tbody>
+                            @foreach (var (rol, cantidad) in Model.PorDepartamento)
+                            {
+                                var (_, _, etiqueta) = RolPresentacion.Obtener(rol);
+                                <tr><td>@etiqueta</td><td class="text-end fw-semibold">@cantidad</td></tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <strong class="small text-muted">Por turno</strong>
+                    <table class="table table-sm mb-2">
+                        <tbody>
+                            @foreach (var (bloque, cantidad) in Model.PorTurno)
+                            {
+                                <tr><td>@bloque</td><td class="text-end fw-semibold">@cantidad</td></tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <button class="toggle-colapsable" type="button" data-bs-toggle="collapse" data-bs-target="#listaEmpleados">
+                        Ver listado de personal <span class="caret">&#9662;</span>
+                    </button>
+                    <div class="collapse mt-2" id="listaEmpleados">
+                        <table class="table table-sm">
+                            <thead><tr><th>Nombre</th><th>Departamento</th><th>Turno</th><th>Horario</th></tr></thead>
+                            <tbody>
+                                @foreach (var e in Model.Empleados)
+                                {
+                                    var (_, _, etiquetaRol) = RolPresentacion.Obtener(e.Rol);
+                                    <tr>
+                                        <td>@e.Nombre</td>
+                                        <td>@etiquetaRol</td>
+                                        <td>@e.BloqueHorario</td>
+                                        <td>@e.HoraInicio.ToString("HH:mm")–@e.HoraFin.ToString("HH:mm")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

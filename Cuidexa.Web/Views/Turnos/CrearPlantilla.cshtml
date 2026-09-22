@@ -1,0 +1,32 @@
+<a href="/Turnos/Plantillas" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Plantillas</a>
+<h4 class="mb-3">Nueva plantilla de turno</h4>
+<form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 480px;">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input name="nombre" class="form-control" placeholder="Ej. Mañana, Noche fin de semana..." required />
+    </div>
+    <div class="row">
+        <div class="col-6 mb-3">
+            <label class="form-label">Hora inicio</label>
+            <input type="time" name="horaInicio" class="form-control" required />
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label">Hora fin</label>
+            <input type="time" name="horaFin" class="form-control" required />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Tipo de día</label>
+        <select name="tipoDia" class="form-select">
+            @foreach (var tipo in Enum.GetValues<TipoDia>())
+            {
+                <option value="@tipo">@tipo</option>
+            }
+        </select>
+    </div>
+    <div class="d-flex flex-column flex-sm-row gap-2">
+        <button type="submit" class="btn btn-primary">Crear plantilla</button>
+        <a href="/Turnos/Plantillas" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>

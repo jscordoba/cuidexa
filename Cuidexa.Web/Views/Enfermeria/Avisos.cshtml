@@ -1,0 +1,76 @@
+@model List<EventoDistribucion>
+@{
+    var pendientes = Model.Where(e => !e.Leido).OrderByDescending(e => e.Urgente).ThenByDescending(e => e.FechaCreacion).ToList();
+    var leidos = Model.Where(e => e.Leido).ToList();
+}
+<a href="/Enfermeria" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-bell-fill me-2 text-muted"></i>Avisos</h4>
+    <a href="/Enfermeria/CrearAviso" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo aviso</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No hay avisos pendientes.</p>
+}
+else
+{
+    <input type="search" id="filtroAvisos" class="form-control mb-2" placeholder="Buscar en los avisos..." />
+    <div id="listaAvisos">
+        @if (!pendientes.Any())
+        {
+            <p class="text-muted small">Sin avisos pendientes — al día.</p>
+        }
+        @foreach (var e in pendientes)
+        {
+            <div class="card mb-2 @(e.Urgente ? "border-danger" : "border-warning")">
+                <div class="card-body">
+                    @if (e.RolOrigen.HasValue)
+                    {
+                        var (_, _, etiquetaOrigen) = RolPresentacion.Obtener(e.RolOrigen.Value);
+                        <span class="badge rounded-pill text-bg-light border mb-2"><i class="bi bi-send me-1"></i>@etiquetaOrigen@(e.EmpleadoOrigen != null ? $" · {e.EmpleadoOrigen.Nombre}" : "")</span>
+                    }
+                    @if (e.Urgente)
+                    {
+                        <span class="badge bg-danger mb-2 ms-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>Urgente</span>
+                    }
+                    <p class="mb-1">@e.Descripcion</p>
+                    <small class="text-muted">@e.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</small>
+                    <form method="post" action="/Enfermeria/MarcarLeido" class="mt-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@e.Id" />
+                        <button class="btn btn-sm btn-outline-secondary">Marcar como leído</button>
+                    </form>
+                </div>
+            </div>
+        }
+
+        @if (leidos.Any())
+        {
+            <button class="toggle-colapsable mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#avisosLeidos" aria-expanded="false" aria-controls="avisosLeidos">
+                Ver @leidos.Count aviso(s) ya leído(s) <span class="caret">&#9662;</span>
+            </button>
+            <div class="collapse" id="avisosLeidos">
+                @foreach (var e in leidos)
+                {
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            @if (e.RolOrigen.HasValue)
+                            {
+                                var (_, _, etiquetaOrigen) = RolPresentacion.Obtener(e.RolOrigen.Value);
+                                <span class="badge rounded-pill text-bg-light border mb-2"><i class="bi bi-send me-1"></i>@etiquetaOrigen@(e.EmpleadoOrigen != null ? $" · {e.EmpleadoOrigen.Nombre}" : "")</span>
+                            }
+                            <p class="mb-1">@e.Descripcion</p>
+                            <small class="text-muted">@e.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <p id="avisosSinResultados" class="text-muted" hidden>Ningún aviso coincide con la búsqueda.</p>
+}
+
+@section Scripts {
+    <script>activarFiltro('#filtroAvisos', '#listaAvisos .card', { vacio: '#avisosSinResultados' });</script>
+}

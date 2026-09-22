@@ -1,0 +1,27 @@
+@inject ITurnoService TurnosServicio
+@{
+    var seccionActual = ViewBag.SeccionActual as string ?? "";
+    var cambiosPendientes = (await TurnosServicio.ObtenerCambiosPendientesAsync()).Count;
+
+    (string Etiqueta, string Href, string Clave)[] pestanas =
+    {
+        ("Calendario", "/Turnos/Calendario", "Calendario"),
+        ("Turnos", "/Turnos", "Turnos"),
+        ("Plantillas", "/Turnos/Plantillas", "Plantillas"),
+        ("Vacaciones", "/Turnos/Vacaciones", "Vacaciones"),
+        ("Reemplazos", "/Turnos/Reemplazos", "Reemplazos"),
+        ("Cambios", "/Turnos/Cambios", "Cambios"),
+    };
+}
+<div class="subnav-turnos mb-3">
+    @foreach (var p in pestanas)
+    {
+        <a href="@p.Href" class="@(seccionActual == p.Clave ? "activo" : "")">
+            @p.Etiqueta
+            @if (p.Clave == "Cambios" && cambiosPendientes > 0)
+            {
+                <span class="badge rounded-pill bg-danger ms-1">@cambiosPendientes</span>
+            }
+        </a>
+    }
+</div>

@@ -1,0 +1,117 @@
+@model Turno
+@{
+    var empleados = (List<Empleado>)ViewBag.Empleados;
+    var plantillas = (List<PlantillaTurno>)ViewBag.Plantillas;
+}
+<a href="/Turnos" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Turnos</a>
+<div class="d-flex justify-content-between align-items-center mb-3" style="max-width: 560px;">
+    <h4 class="mb-0">Editar turno</h4>
+    <a href="/Turnos/Historial?turnoId=@Model.Id" class="btn btn-sm btn-outline-secondary">Ver historial</a>
+</div>
+<form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 560px;">
+    @Html.AntiForgeryToken()
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@e.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    <div class="mb-3">
+        <label class="form-label">Departamento (rol)</label>
+        <select name="rol" id="rolSelect" class="form-select">
+            @foreach (var rol in Enum.GetValues<RolEmpleado>().Where(r => r != RolEmpleado.Admin && r != RolEmpleado.Direccion && r != RolEmpleado.DirectorOrganizacion))
+            {
+                <option value="@rol" selected="@(rol == Model.Rol)">@rol</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Titular del turno</label>
+        <select name="empleadoId" id="empleadoSelect" class="form-select">
+            <option value="">-- Cubierto por personal externo --</option>
+            @foreach (var e in empleados)
+            {
+                <option value="@e.Id" data-rol="@e.Rol" selected="@(e.Id == Model.EmpleadoId)">@e.Nombre</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3" id="externoGrupo">
+        <label class="form-label">Nombre de quien cubre el turno</label>
+        <input name="nombreExterno" class="form-control" placeholder="Ej. Agencia López - María Ruiz" value="@Model.NombreExterno" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Plantilla de franja (opcional)</label>
+        <select id="plantillaSelect" name="plantillaTurnoId" class="form-select">
+            <option value="">-- Horario libre --</option>
+            @foreach (var p in plantillas)
+            {
+                <option value="@p.Id" data-inicio="@p.HoraInicio.ToString("HH:mm")" data-fin="@p.HoraFin.ToString("HH:mm")" selected="@(p.Id == Model.PlantillaTurnoId)">@p.Nombre (@p.TipoDia) @p.HoraInicio.ToString("HH:mm")–@p.HoraFin.ToString("HH:mm")</option>
+            }
+        </select>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Inicio</label>
+            <input type="datetime-local" name="fechaInicio" id="fechaInicioInput" class="form-control" value="@Model.FechaInicio.ToString("yyyy-MM-ddTHH:mm")" required />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Fin</label>
+            <input type="datetime-local" name="fechaFin" id="fechaFinInput" class="form-control" value="@Model.FechaFin.ToString("yyyy-MM-ddTHH:mm")" required />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Notas</label>
+        <input name="notas" class="form-control" placeholder="Opcional" value="@Model.Notas" />
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row gap-2">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="/Turnos" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        const rolSelect = document.getElementById('rolSelect');
+        const empleadoSelect = document.getElementById('empleadoSelect');
+        const externoGrupo = document.getElementById('externoGrupo');
+
+        function filtrarEmpleadosPorRol() {
+            Array.from(empleadoSelect.options).forEach(opt => {
+                if (!opt.dataset.rol) return;
+                opt.hidden = opt.dataset.rol !== rolSelect.value;
+            });
+        }
+
+        function actualizarExterno() {
+            externoGrupo.style.display = empleadoSelect.value === '' ? 'block' : 'none';
+        }
+
+        rolSelect.addEventListener('change', () => { filtrarEmpleadosPorRol(); actualizarExterno(); });
+        empleadoSelect.addEventListener('change', actualizarExterno);
+        filtrarEmpleadosPorRol();
+        actualizarExterno();
+
+        const plantillaSelect = document.getElementById('plantillaSelect');
+        const fechaInicioInput = document.getElementById('fechaInicioInput');
+        const fechaFinInput = document.getElementById('fechaFinInput');
+
+        plantillaSelect.addEventListener('change', () => {
+            const opt = plantillaSelect.selectedOptions[0];
+            if (!opt || !opt.dataset.inicio) return;
+            const fechaBase = fechaInicioInput.value ? fechaInicioInput.value.slice(0, 10) : new Date().toISOString().slice(0, 10);
+            fechaInicioInput.value = `${fechaBase}T${opt.dataset.inicio}`;
+            fechaFinInput.value = `${fechaBase}T${opt.dataset.fin}`;
+        });
+    </script>
+}

@@ -1,0 +1,37 @@
+@{
+    var avisosPendientes = (int)ViewBag.AvisosPendientes;
+    var turnosEspeciales = (int)ViewBag.TurnosEspeciales;
+    var comensalesHoy = (int)ViewBag.ComensalesHoy;
+    var claseUrgenciaAvisos = avisosPendientes == 0 ? "urgencia-ok" : avisosPendientes <= 2 ? "urgencia-media" : "urgencia-alta";
+}
+@await Html.PartialAsync("_Saludo")
+
+<div class="row g-3">
+    <div class="col-12 col-sm-6 col-lg-4">
+        <a href="/Cocina/Avisos" class="card h-100 text-decoration-none text-body tarjeta-resumen tarjeta-dashboard @claseUrgenciaAvisos">
+            <div class="icono-dashboard i-rosa"><i class="bi bi-bell-fill"></i></div>
+            <div>
+                <h6 class="text-muted mb-1">Avisos pendientes</h6>
+                <h2 class="mb-0">@avisosPendientes</h2>
+            </div>
+        </a>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-4">
+        <a href="/Cocina/Comensales" class="card h-100 text-decoration-none text-body tarjeta-resumen tarjeta-dashboard">
+            <div class="icono-dashboard i-verde"><i class="bi bi-cup-hot-fill"></i></div>
+            <div>
+                <h6 class="text-muted mb-1">Comensales hoy</h6>
+                <h2 class="mb-0">@comensalesHoy</h2>
+            </div>
+        </a>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-4">
+        <a href="/Cocina/Turnos" class="card h-100 text-decoration-none text-body tarjeta-resumen tarjeta-dashboard">
+            <div class="icono-dashboard i-morado"><i class="bi bi-calendar3"></i></div>
+            <div>
+                <h6 class="text-muted mb-1">Cambios y reemplazos</h6>
+                <h2 class="mb-0">@turnosEspeciales</h2>
+            </div>
+        </a>
+    </div>
+</div>

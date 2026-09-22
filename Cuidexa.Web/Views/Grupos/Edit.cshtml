@@ -1,0 +1,42 @@
+@model GrupoNotificacionDto
+@{
+    var empleados = (List<Empleado>)ViewBag.Empleados;
+}
+<a href="/Grupos" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Grupos</a>
+<h4 class="mb-3">Editar grupo</h4>
+<form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 480px;">
+    @Html.AntiForgeryToken()
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@e.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    <div class="mb-3">
+        <label class="form-label">Nombre del grupo</label>
+        <input name="Nombre" class="form-control" value="@Model.Nombre" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Miembros</label>
+        <div class="d-flex flex-column gap-1" style="max-height: 320px; overflow-y: auto;">
+            @foreach (var emp in empleados)
+            {
+                var (_, _, etiqueta) = RolPresentacion.Obtener(emp.Rol);
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="EmpleadoIds" value="@emp.Id" id="emp-@emp.Id" checked="@Model.EmpleadoIds.Contains(emp.Id)" />
+                    <label class="form-check-label" for="emp-@emp.Id">@emp.Nombre <span class="text-muted small">(@etiqueta)</span></label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row gap-2">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="/Grupos" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>

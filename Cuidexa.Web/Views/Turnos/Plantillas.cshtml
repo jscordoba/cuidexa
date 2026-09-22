@@ -1,0 +1,48 @@
+@model List<PlantillaTurno>
+@{ ViewBag.SeccionActual = "Plantillas"; }
+@await Html.PartialAsync("_SubNav")
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
+    <h4 class="mb-0">Plantillas de turno</h4>
+    <a class="btn btn-primary" href="/Turnos/CrearPlantilla">+ Nueva plantilla</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No hay plantillas configuradas.</p>
+}
+else
+{
+    @foreach (var grupo in Model.GroupBy(p => p.TipoDia))
+    {
+        <h6 class="text-muted mt-3 mb-2">@grupo.Key</h6>
+        <div class="row g-3 mb-2">
+            @foreach (var p in grupo)
+            {
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 @(p.Activo ? "" : "opacity-50")">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h6 class="mb-1">@p.Nombre</h6>
+                                @if (!p.Activo)
+                                {
+                                    <span class="badge bg-secondary">Inactiva</span>
+                                }
+                            </div>
+                            <p class="mb-2 text-muted">@p.HoraInicio.ToString("HH:mm")–@p.HoraFin.ToString("HH:mm")</p>
+                            <div class="d-flex gap-2">
+                                <a href="/Turnos/EditarPlantilla/@p.Id" class="btn btn-sm btn-outline-secondary">Editar</a>
+                                <form method="post" action="/Turnos/CambiarActivaPlantilla">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@p.Id" />
+                                    <input type="hidden" name="activo" value="@(!p.Activo ? "true" : "false")" />
+                                    <button class="btn btn-sm @(p.Activo ? "btn-outline-danger" : "btn-outline-success")">@(p.Activo ? "Desactivar" : "Activar")</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}

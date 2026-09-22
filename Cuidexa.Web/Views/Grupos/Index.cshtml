@@ -1,0 +1,47 @@
+@model List<GrupoNotificacion>
+@{
+    var mostrarCentro = (bool)ViewBag.MostrarCentro;
+}
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
+    <h4 class="mb-0">Grupos de notificación</h4>
+    <a class="btn btn-primary" href="/Grupos/Create">+ Nuevo grupo</a>
+</div>
+<p class="text-muted small">Grupos ad-hoc de empleados de cualquier departamento — al crear un aviso manual, se puede dirigir a un grupo en vez de a un departamento entero.</p>
+<div class="table-responsive">
+    <table class="table table-bordered bg-white">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                @if (mostrarCentro)
+                {
+                    <th>Centro</th>
+                }
+                <th>Estado</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var g in Model)
+            {
+                <tr>
+                    <td>@g.Nombre</td>
+                    @if (mostrarCentro)
+                    {
+                        <td>@g.Centro?.Nombre</td>
+                    }
+                    <td><span class="badge @(g.Activo ? "bg-success" : "bg-secondary")">@(g.Activo ? "Activo" : "Inactivo")</span></td>
+                    <td class="d-flex flex-column flex-sm-row gap-2">
+                        <a href="/Grupos/Edit/@g.Id" class="btn btn-sm btn-outline-secondary text-nowrap">Editar</a>
+                        <form method="post" action="/Grupos/CambiarEstado">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@g.Id" />
+                            <input type="hidden" name="activo" value="@(!g.Activo ? "true" : "false")" />
+                            <button class="btn btn-sm @(g.Activo ? "btn-outline-danger" : "btn-outline-success") text-nowrap">
+                                @(g.Activo ? "Desactivar" : "Activar")
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,129 @@
+@model ResidenteEditDto
+@{
+    var dietas = (List<Dieta>)ViewBag.Dietas;
+    var alergias = (List<Alergia>)ViewBag.Alergias;
+    var residenteId = (int)ViewBag.ResidenteId;
+}
+<a href="/Residentes/Details/@residenteId" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a la ficha</a>
+<h4 class="mb-3">Editar datos de @(ViewBag.Nombre ?? "residente")</h4>
+<form method="post" class="bg-white p-3 p-md-4 border rounded">
+    @Html.AntiForgeryToken()
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@e.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    <p class="text-muted small">La habitación se cambia desde "Trasladar" y la baja desde "Dar de baja", en la ficha del residente.</p>
+
+    <h6 class="text-muted mt-2">Datos básicos</h6>
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Nombre</label>
+            <input name="Nombre" class="form-control" value="@Model.Nombre" required />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Apellidos</label>
+            <input name="Apellidos" class="form-control" value="@Model.Apellidos" required />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Documento de identidad (DNI/NIE)</label>
+            <input name="DocumentoIdentidad" class="form-control" value="@Model.DocumentoIdentidad" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Fecha de nacimiento</label>
+            <input type="date" name="FechaNacimiento" class="form-control" value="@Model.FechaNacimiento.ToString("yyyy-MM-dd")" required />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Tipo de residente</label>
+            <select name="TipoResidente" class="form-select">
+                <option value="Fijo" selected="@(Model.TipoResidente == TipoResidente.Fijo)">Fijo</option>
+                <option value="Dia" selected="@(Model.TipoResidente == TipoResidente.Dia)">Día</option>
+                <option value="Pasajero" selected="@(Model.TipoResidente == TipoResidente.Pasajero)">Pasajero</option>
+            </select>
+        </div>
+    </div>
+
+    <h6 class="text-muted mt-3">Atención y cuidados</h6>
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Movilidad</label>
+            <select name="Movilidad" class="form-select">
+                <option value="Autonomo" selected="@(Model.Movilidad == Movilidad.Autonomo)">Autónomo</option>
+                <option value="SillaRuedas" selected="@(Model.Movilidad == Movilidad.SillaRuedas)">Silla de ruedas</option>
+                <option value="AsistenciaTotal" selected="@(Model.Movilidad == Movilidad.AsistenciaTotal)">Asistencia total</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-6 mb-3 d-flex align-items-end">
+            <div class="form-check">
+                <input type="checkbox" name="NecesitaAyudaLevantarse" value="true" class="form-check-input" checked="@Model.NecesitaAyudaLevantarse" />
+                <label class="form-check-label">Necesita ayuda para levantarse</label>
+            </div>
+        </div>
+        <div class="col-12 mb-3">
+            <label class="form-label">Equipamiento especial</label>
+            <input name="EquipamientoEspecial" class="form-control" placeholder="Ej. grúa, andador..." value="@Model.EquipamientoEspecial" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Dieta actual</label>
+            <select name="DietaId" class="form-select">
+                @foreach (var d in dietas)
+                {
+                    <option value="@d.Id" selected="@(d.Id == Model.DietaId)">@d.Nombre</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Alergias</label>
+            @foreach (var a in alergias)
+            {
+                <div class="form-check">
+                    <input type="checkbox" name="AlergiaIds" value="@a.Id" class="form-check-input" checked="@Model.AlergiaIds.Contains(a.Id)" />
+                    <label class="form-check-label">@a.Nombre</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <h6 class="text-muted mt-3">Datos de contacto del residente</h6>
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Teléfono</label>
+            <input name="Telefono" class="form-control" value="@Model.Telefono" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="Email" class="form-control" value="@Model.Email" />
+        </div>
+    </div>
+
+    <h6 class="text-muted mt-3">Contacto de emergencia</h6>
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Nombre</label>
+            <input name="ContactoEmergenciaNombre" class="form-control" value="@Model.ContactoEmergenciaNombre" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Relación con el residente</label>
+            <input name="ContactoEmergenciaRelacion" class="form-control" value="@Model.ContactoEmergenciaRelacion" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Teléfono</label>
+            <input name="ContactoEmergenciaTelefono" class="form-control" value="@Model.ContactoEmergenciaTelefono" />
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="ContactoEmergenciaEmail" class="form-control" value="@Model.ContactoEmergenciaEmail" />
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row gap-2">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="/Residentes/Details/@residenteId" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>

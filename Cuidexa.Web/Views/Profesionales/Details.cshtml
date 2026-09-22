@@ -1,0 +1,95 @@
+@model Residente
+@{
+    var sesiones = (List<SesionTerapia>)ViewBag.Sesiones;
+    var historial = (List<AuditLog>)ViewBag.Historial;
+    var programadas = sesiones.Where(s => s.Estado == EstadoSesion.Programada).ToList();
+    var pasadas = sesiones.Where(s => s.Estado != EstadoSesion.Programada).ToList();
+}
+<a href="/Profesionales" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<h4 class="mb-3">@Model.Nombre @Model.Apellidos</h4>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h6 class="text-muted">Sesiones programadas</h6>
+        @if (!programadas.Any())
+        {
+            <p class="text-muted">Ninguna.</p>
+        }
+        else
+        {
+            @foreach (var s in programadas)
+            {
+                <div class="border-bottom py-2">
+                    <strong>@s.FechaHora.ToString("dd/MM/yyyy HH:mm")</strong>
+                    <div class="d-flex flex-column flex-sm-row gap-2 mt-2">
+                        <form method="post" action="/Profesionales/MarcarRealizada" class="d-flex flex-column flex-sm-row gap-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="residenteId" value="@Model.Id" />
+                            <input type="hidden" name="sesionId" value="@s.Id" />
+                            <input name="observaciones" class="form-control" placeholder="Evolución / observaciones (opcional)" />
+                            <button class="btn btn-sm btn-outline-primary text-nowrap flex-shrink-0">Marcar realizada</button>
+                        </form>
+                        <form method="post" action="/Profesionales/CancelarSesion" onsubmit="return confirm('¿Cancelar esta sesión?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="residenteId" value="@Model.Id" />
+                            <input type="hidden" name="sesionId" value="@s.Id" />
+                            <button class="btn btn-sm btn-outline-danger text-nowrap">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+
+        <form method="post" action="/Profesionales/ProgramarSesion" class="d-flex flex-column flex-sm-row gap-2 mt-3">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="residenteId" value="@Model.Id" />
+            <input type="datetime-local" name="fechaHora" class="form-control" required />
+            <button class="btn btn-outline-primary text-nowrap flex-shrink-0">Programar sesión</button>
+        </form>
+    </div>
+</div>
+
+@if (pasadas.Any())
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h6 class="text-muted">Sesiones anteriores</h6>
+            @foreach (var s in pasadas)
+            {
+                <div class="border-bottom py-2">
+                    <strong>@s.FechaHora.ToString("dd/MM/yyyy HH:mm")</strong>
+                    <span class="badge @(s.Estado == EstadoSesion.Realizada ? "bg-success" : "bg-secondary")">@s.Estado</span>
+                    @if (!string.IsNullOrWhiteSpace(s.Observaciones))
+                    {
+                        <div class="text-muted small mt-1">@s.Observaciones</div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<h6 class="mt-4">Historial</h6>
+@if (!historial.Any())
+{
+    <p class="text-muted">Sin movimientos registrados.</p>
+}
+else
+{
+    <input type="search" id="filtroHistorialTerapia" class="form-control mb-2" placeholder="Buscar en el historial..." />
+    <ul class="list-group" id="listaHistorialTerapia">
+        @foreach (var h in historial)
+        {
+            <li class="list-group-item">
+                @h.Detalle
+                <br />
+                <small class="text-muted">@h.FechaHora.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
+            </li>
+        }
+    </ul>
+    <p id="historialTerapiaSinResultados" class="text-muted mt-2" hidden>Ningún movimiento coincide con la búsqueda.</p>
+}
+
+@section Scripts {
+    <script>activarFiltro('#filtroHistorialTerapia', '#listaHistorialTerapia li', { vacio: '#historialTerapiaSinResultados' });</script>
+}

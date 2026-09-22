@@ -1,0 +1,177 @@
+@model DispositivoDashboardViewModel
+@using Cuidexa.Web.Services
+@inject IOrganizacionService OrganizacionService
+@{
+    Layout = null;
+    var (icono, claseColor, etiqueta) = RolPresentacion.Obtener(Model.Rol);
+    var trabajandoHoy = Model.PersonalHoy.Where(p => !p.Cedido).ToList();
+    var cedidosHoy = Model.PersonalHoy.Where(p => p.Cedido).ToList();
+    var organizacionDashboard = await OrganizacionService.ObtenerAsync();
+    var nombreCentroDashboard = string.IsNullOrWhiteSpace(organizacionDashboard.Nombre) ? "Cuidexa" : organizacionDashboard.Nombre;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content="60" />
+    <title>@nombreCentroDashboard · @etiqueta</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        body { background: #f8f9fa; }
+        .cabecera-tablet {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            background: var(--navy);
+            color: #fff;
+        }
+        .cabecera-tablet .avatar-rol { width: 3.25rem; height: 3.25rem; font-size: 1.5rem; }
+        .contenedor-tablet { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+        .tarjeta-tablet { padding: 1.5rem; }
+        .tarjeta-tablet .icono-dashboard { width: 4rem; height: 4rem; font-size: 1.9rem; border-radius: 1rem; }
+        .tarjeta-tablet .cifra { font-size: 2.5rem; font-weight: 700; line-height: 1; }
+        .tarjeta-tablet .etiqueta { font-size: 1.05rem; color: #495057; }
+        .lista-tablet .item { padding: .9rem 0; border-bottom: 1px solid #e9ecef; font-size: 1.1rem; }
+        .lista-tablet .item:last-child { border-bottom: none; }
+        .panel-tablet h5 { font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="cabecera-tablet">
+        <div class="d-flex align-items-center gap-3">
+            <div class="avatar-rol @claseColor"><i class="bi @icono"></i></div>
+            <div>
+                <div class="fw-bold fs-5">@Model.NombreDispositivo</div>
+                <div class="small" style="opacity:.8">@etiqueta &middot; se actualiza solo cada minuto</div>
+            </div>
+        </div>
+        <a href="/Tablet/Salir" class="btn btn-outline-light btn-sm">Salir</a>
+    </div>
+
+    <div class="contenedor-tablet">
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card tarjeta-dashboard tarjeta-tablet urgencia-@(Model.AvisosPendientesCount == 0 ? "ok" : Model.AvisosPendientesCount <= 2 ? "media" : "alta")">
+                    <div class="icono-dashboard i-rosa"><i class="bi bi-bell-fill"></i></div>
+                    <div>
+                        <div class="cifra">@Model.AvisosPendientesCount</div>
+                        <div class="etiqueta">Avisos pendientes</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card tarjeta-dashboard tarjeta-tablet">
+                    <div class="icono-dashboard i-morado"><i class="bi bi-people-fill"></i></div>
+                    <div>
+                        <div class="cifra">@trabajandoHoy.Count</div>
+                        <div class="etiqueta">Personal en turno hoy</div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.ComensalesHoy is not null)
+            {
+                <div class="col-md-4">
+                    <div class="card tarjeta-dashboard tarjeta-tablet">
+                        <div class="icono-dashboard i-cian"><i class="bi bi-cup-hot-fill"></i></div>
+                        <div>
+                            <div class="cifra">@Model.ComensalesHoy.TotalComensales</div>
+                            <div class="etiqueta">Comensales hoy</div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.MedicacionPendienteHoy is not null)
+            {
+                <div class="col-md-4">
+                    <div class="card tarjeta-dashboard tarjeta-tablet urgencia-@(Model.MedicacionPendienteHoy == 0 ? "ok" : "media")">
+                        <div class="icono-dashboard i-verde"><i class="bi bi-capsule"></i></div>
+                        <div>
+                            <div class="cifra">@Model.MedicacionPendienteHoy</div>
+                            <div class="etiqueta">Medicación pendiente hoy</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="row g-3">
+            <div class="col-lg-6">
+                <div class="card p-3 panel-tablet">
+                    <h5 class="mb-3"><i class="bi bi-bell-fill me-1"></i> Últimos avisos pendientes</h5>
+                    @if (!Model.AvisosPendientes.Any())
+                    {
+                        <p class="text-muted mb-0">Sin avisos pendientes.</p>
+                    }
+                    else
+                    {
+                        <div class="lista-tablet">
+                            @foreach (var a in Model.AvisosPendientes)
+                            {
+                                <div class="item">
+                                    <div class="fw-semibold">
+                                        @(a.Residente?.Nombre ?? "Puesto de trabajo")
+                                        @if (a.Urgente)
+                                        {
+                                            <span class="badge bg-danger ms-1">Urgente</span>
+                                        }
+                                    </div>
+                                    <div>@a.Descripcion</div>
+                                    <div class="text-muted small">@a.FechaCreacion.ToLocalTime().ToString("dd/MM HH:mm")</div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card p-3 panel-tablet">
+                    <h5 class="mb-3"><i class="bi bi-people-fill me-1"></i> Personal en turno hoy</h5>
+                    @if (!trabajandoHoy.Any() && !cedidosHoy.Any())
+                    {
+                        <p class="text-muted mb-0">Sin personal asignado hoy.</p>
+                    }
+                    else
+                    {
+                        <div class="lista-tablet">
+                            @foreach (var t in trabajandoHoy)
+                            {
+                                <div class="item">
+                                    <span class="fw-semibold">@t.EmpleadoNombre</span>
+                                    <span class="text-muted">&middot; @t.HoraInicio.ToString("HH:mm")–@t.HoraFin.ToString("HH:mm")</span>
+                                    @if (t.EsExcepcion)
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">@t.TipoExcepcion</span>
+                                    }
+                                </div>
+                            }
+                            @foreach (var t in cedidosHoy)
+                            {
+                                <div class="item text-muted">
+                                    <del>@t.EmpleadoNombre</del> &mdash; cedido a @t.CedidoA
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (Model.ComensalesHoy is not null && Model.ComensalesHoy.PorDieta.Any())
+        {
+            <div class="card p-3 mt-3 panel-tablet">
+                <h5 class="mb-3"><i class="bi bi-cup-hot-fill me-1"></i> Comensales por dieta</h5>
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach (var (dieta, cantidad) in Model.ComensalesHoy.PorDieta)
+                    {
+                        <span class="badge bg-light text-dark border fs-6">@dieta: @cantidad</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>
