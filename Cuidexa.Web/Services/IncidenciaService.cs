@@ -49,7 +49,7 @@ public class IncidenciaService : IIncidenciaService
     }
 
     public async Task CrearAsync(TipoIncidencia tipo, int? residenteId, string titulo, string descripcion,
-        GravedadIncidencia gravedad, RolEmpleado rolOrigen, int? empleadoOrigenId)
+        GravedadIncidencia gravedad, CaracterIncidencia caracter, RolEmpleado rolOrigen, int? empleadoOrigenId)
     {
         if (string.IsNullOrWhiteSpace(titulo) || string.IsNullOrWhiteSpace(descripcion))
         {
@@ -73,6 +73,11 @@ public class IncidenciaService : IIncidenciaService
             residenteId = null;
         }
 
+        // Informativa: se da por cerrada al crearla — nunca ocupa la bandeja
+        // de "pendientes" de nadie ni el contador de Dirección, aunque queda
+        // igual en el historial del centro.
+        var esInformativa = caracter == CaracterIncidencia.Informativa;
+
         var incidencia = new Incidencia
         {
             CentroId = _tenant.CentroId,
@@ -81,6 +86,8 @@ public class IncidenciaService : IIncidenciaService
             Titulo = titulo,
             Descripcion = descripcion,
             Gravedad = gravedad,
+            Caracter = caracter,
+            Estado = esInformativa ? EstadoIncidencia.Resuelta : EstadoIncidencia.Abierta,
             RolOrigen = rolOrigen,
             EmpleadoOrigenId = empleadoOrigenId
         };
@@ -88,9 +95,11 @@ public class IncidenciaService : IIncidenciaService
         await _db.SaveChangesAsync();
 
         await _auditoria.RegistrarAsync(empleadoOrigenId, "Alta", "Incidencia", incidencia.Id,
-            $"Incidencia de {tipo} reportada: {titulo}");
+            $"Incidencia de {tipo} reportada: {titulo}" + (esInformativa ? " (informativa)" : ""));
 
-        if (gravedad == GravedadIncidencia.Urgente)
+        // Informativa nunca notifica — por definición no requiere que nadie
+        // actúe, así que no tiene sentido interrumpir a nadie con un push.
+        if (!esInformativa && gravedad == GravedadIncidencia.Urgente)
         {
             await _push.NotificarIncidenciaAsync(incidencia, RolResponsable(tipo));
         }

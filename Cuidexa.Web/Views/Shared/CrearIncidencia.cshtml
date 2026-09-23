@@ -52,6 +52,17 @@
     </div>
 
     <div class="mb-3">
+        <label class="form-label d-block">¿Necesita que alguien actúe?</label>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="caracter" id="caracterSeguimiento" value="@CaracterIncidencia.RequiereSeguimiento" checked>
+            <label class="btn btn-outline-secondary btn-sm" for="caracterSeguimiento">Requiere seguimiento</label>
+            <input type="radio" class="btn-check" name="caracter" id="caracterInformativa" value="@CaracterIncidencia.Informativa">
+            <label class="btn btn-outline-secondary btn-sm" for="caracterInformativa">Solo informativa</label>
+        </div>
+        <div class="form-text">"Solo informativa" queda registrada para el histórico, sin quedar pendiente ni avisar a nadie — para dejar constancia sin abrir un caso.</div>
+    </div>
+
+    <div class="mb-3" id="campoGravedad">
         <label class="form-label">Gravedad</label>
         <select name="gravedad" class="form-select">
             <option value="@GravedadIncidencia.Baja">Baja</option>
@@ -79,6 +90,14 @@
 
             document.querySelectorAll('input[name="tipo"]').forEach(function (r) {
                 r.addEventListener('change', actualizar);
+            });
+
+            var campoGravedad = document.getElementById('campoGravedad');
+            function actualizarGravedad() {
+                campoGravedad.hidden = document.getElementById('caracterInformativa').checked;
+            }
+            document.querySelectorAll('input[name="caracter"]').forEach(function (r) {
+                r.addEventListener('change', actualizarGravedad);
             });
         })();
     </script>

@@ -192,11 +192,11 @@ public class ProfesionalesController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CrearIncidencia(Models.Enums.TipoIncidencia tipo, int? residenteId, string titulo, string descripcion, Models.Enums.GravedadIncidencia gravedad)
+    public async Task<IActionResult> CrearIncidencia(Models.Enums.TipoIncidencia tipo, int? residenteId, string titulo, string descripcion, Models.Enums.GravedadIncidencia gravedad, Models.Enums.CaracterIncidencia caracter)
     {
         try
         {
-            await _incidencias.CrearAsync(tipo, residenteId, titulo, descripcion, gravedad, RolEmpleado.Profesional, EmpleadoIdActual);
+            await _incidencias.CrearAsync(tipo, residenteId, titulo, descripcion, gravedad, caracter, RolEmpleado.Profesional, EmpleadoIdActual);
             TempData["Mensaje"] = "Incidencia reportada.";
         }
         catch (InvalidOperationException ex)

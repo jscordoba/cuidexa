@@ -16,7 +16,7 @@ public interface IIncidenciaService
     Task<List<Incidencia>> ObtenerParaRolAsync(RolEmpleado rol);
 
     Task CrearAsync(TipoIncidencia tipo, int? residenteId, string titulo, string descripcion,
-        GravedadIncidencia gravedad, RolEmpleado rolOrigen, int? empleadoOrigenId);
+        GravedadIncidencia gravedad, CaracterIncidencia caracter, RolEmpleado rolOrigen, int? empleadoOrigenId);
 
     Task CambiarEstadoAsync(int id, EstadoIncidencia estado, string? notasResolucion, int? empleadoIdActor);
 }

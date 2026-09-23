@@ -26,6 +26,10 @@ public class Incidencia : ITieneCentro
     public GravedadIncidencia Gravedad { get; set; }
     public EstadoIncidencia Estado { get; set; } = EstadoIncidencia.Abierta;
 
+    // Informativa: se crea directamente Resuelta, sin acción pendiente ni
+    // push — ver IncidenciaService.CrearAsync.
+    public CaracterIncidencia Caracter { get; set; } = CaracterIncidencia.RequiereSeguimiento;
+
     // Quién la reporta — Admin siempre puede reportar/ver cualquiera además
     // del rol origen, igual que con los avisos manuales.
     public RolEmpleado RolOrigen { get; set; }

@@ -4,7 +4,12 @@
     var abiertas = Model.Incidencias.Where(i => i.Estado != EstadoIncidencia.Resuelta)
         .OrderByDescending(i => i.Gravedad == GravedadIncidencia.Urgente)
         .ThenByDescending(i => i.FechaCreacion).ToList();
-    var resueltas = Model.Incidencias.Where(i => i.Estado == EstadoIncidencia.Resuelta)
+    // Informativas se crean directamente Resueltas (ver IncidenciaService) —
+    // se separan de las que de verdad pasaron por el flujo de resolución,
+    // para no dar a entender que alguien "resolvió" algo que solo era una nota.
+    var informativas = Model.Incidencias.Where(i => i.Caracter == CaracterIncidencia.Informativa)
+        .OrderByDescending(i => i.FechaCreacion).ToList();
+    var resueltas = Model.Incidencias.Where(i => i.Estado == EstadoIncidencia.Resuelta && i.Caracter == CaracterIncidencia.RequiereSeguimiento)
         .OrderByDescending(i => i.FechaResolucion).ToList();
 
     string ClaseGravedad(GravedadIncidencia g) => g switch
@@ -89,6 +94,35 @@ else
                         </div>
                     </form>
                 </div>
+            </div>
+        }
+
+        @if (informativas.Any())
+        {
+            <button class="toggle-colapsable mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#incidenciasInformativas" aria-expanded="false" aria-controls="incidenciasInformativas">
+                Ver @informativas.Count informativa(s) <span class="caret">&#9662;</span>
+            </button>
+            <div class="collapse" id="incidenciasInformativas">
+                @foreach (var i in informativas)
+                {
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                <span class="badge rounded-pill text-bg-light border"><i class="bi bi-tag me-1"></i>@EtiquetaTipo(i.Tipo)</span>
+                                <span class="badge rounded-pill text-bg-light border"><i class="bi bi-info-circle me-1"></i>Informativa</span>
+                            </div>
+                            <h6 class="mb-1">@i.Titulo</h6>
+                            @if (i.Residente is not null)
+                            {
+                                <p class="mb-1 small text-muted"><i class="bi bi-person me-1"></i>@i.Residente.Nombre @i.Residente.Apellidos</p>
+                            }
+                            <p class="mb-1">@i.Descripcion</p>
+                            <small class="text-muted">
+                                Reportada por @(i.EmpleadoOrigen?.Nombre ?? i.RolOrigen.ToString()) · @i.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                            </small>
+                        </div>
+                    </div>
+                }
             </div>
         }
 
