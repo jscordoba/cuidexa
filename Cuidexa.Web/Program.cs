@@ -70,6 +70,7 @@ builder.Services.AddScoped<ICuentaDispositivoService, CuentaDispositivoService>(
 builder.Services.AddScoped<IGrupoNotificacionService, GrupoNotificacionService>();
 builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 builder.Services.AddScoped<IInformesService, InformesService>();
+builder.Services.AddScoped<IIncidenciaService, IncidenciaService>();
 
 builder.Services.AddHttpClient<IFestivosApiService, FestivosApiService>(cliente =>
 {

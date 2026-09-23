@@ -1,0 +1,85 @@
+@model CrearIncidenciaViewModel
+@using Cuidexa.Web.Models.Enums
+@using Cuidexa.Web.ViewHelpers
+@{
+    var (_, _, etiquetaPropia) = RolPresentacion.Obtener(Model.RolOrigen);
+}
+<a href="/@Model.RutaBase/Incidencias" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Incidencias</a>
+<h4 class="mb-3"><i class="bi bi-exclamation-octagon-fill me-2 text-muted"></i>Reportar incidencia</h4>
+
+<div class="alert alert-light border d-flex align-items-start gap-2 mb-3">
+    <i class="bi bi-info-circle text-muted mt-1"></i>
+    <div>
+        Distinto de un aviso: una incidencia queda abierta hasta que el área responsable la resuelve, con seguimiento.
+        Reportada desde <strong>@etiquetaPropia</strong>.
+    </div>
+</div>
+
+<form method="post" action="/@Model.RutaBase/CrearIncidencia" class="card p-3">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label class="form-label d-block">¿A qué afecta?</label>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="tipo" id="tipoResidente" value="@TipoIncidencia.Residente" checked>
+            <label class="btn btn-outline-secondary btn-sm" for="tipoResidente">A un residente</label>
+            <input type="radio" class="btn-check" name="tipo" id="tipoPersonal" value="@TipoIncidencia.Personal">
+            <label class="btn btn-outline-secondary btn-sm" for="tipoPersonal">Personal/operativa</label>
+            <input type="radio" class="btn-check" name="tipo" id="tipoInstalaciones" value="@TipoIncidencia.Instalaciones">
+            <label class="btn btn-outline-secondary btn-sm" for="tipoInstalaciones">Instalaciones/seguridad</label>
+        </div>
+        <div class="form-text">Determina quién la resuelve: de residente la revisa Enfermería, las otras dos Administración.</div>
+    </div>
+
+    <div class="mb-3" id="campoResidente">
+        <label class="form-label">Residente</label>
+        <select name="residenteId" id="selectResidente" class="form-select" required>
+            <option value="">-- Selecciona un residente --</option>
+            @foreach (var r in Model.Residentes)
+            {
+                <option value="@r.Id">@r.Nombre @r.Apellidos @(r.Habitacion != null ? $"· Hab. {r.Habitacion.Numero}" : "")</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Título</label>
+        <input name="titulo" class="form-control" required maxlength="120" placeholder="Resumen corto de la incidencia" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea name="descripcion" class="form-control" rows="3" required placeholder="Qué ha pasado, cuándo, quién estaba presente..."></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Gravedad</label>
+        <select name="gravedad" class="form-select">
+            <option value="@GravedadIncidencia.Baja">Baja</option>
+            <option value="@GravedadIncidencia.Media" selected>Media</option>
+            <option value="@GravedadIncidencia.Alta">Alta</option>
+            <option value="@GravedadIncidencia.Urgente">Urgente — notifica al instante</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary align-self-start">Reportar incidencia</button>
+</form>
+
+@section Scripts {
+    <script>
+        (function () {
+            var campoResidente = document.getElementById('campoResidente');
+            var selectResidente = document.getElementById('selectResidente');
+
+            function actualizar() {
+                var esResidente = document.getElementById('tipoResidente').checked;
+                campoResidente.hidden = !esResidente;
+                selectResidente.required = esResidente;
+                if (!esResidente) { selectResidente.value = ''; }
+            }
+
+            document.querySelectorAll('input[name="tipo"]').forEach(function (r) {
+                r.addEventListener('change', actualizar);
+            });
+        })();
+    </script>
+}

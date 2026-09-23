@@ -45,6 +45,7 @@ public class CuidexaDbContext : DbContext
     public DbSet<GrupoNotificacion> GruposNotificacion => Set<GrupoNotificacion>();
     public DbSet<GrupoNotificacionEmpleado> GruposNotificacionEmpleados => Set<GrupoNotificacionEmpleado>();
     public DbSet<SuscripcionPush> SuscripcionesPush => Set<SuscripcionPush>();
+    public DbSet<Incidencia> Incidencias => Set<Incidencia>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -181,6 +182,10 @@ public class CuidexaDbContext : DbContext
 
         modelBuilder.Entity<AuditLog>().HasOne(e => e.Centro).WithMany().HasForeignKey(e => e.CentroId).OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<AuditLog>().HasQueryFilter(e =>
+            e.CentroId == _tenant.CentroId || (_tenant.AccesoOrganizacionCompleto && e.Centro!.OrganizacionId == _tenant.OrganizacionId));
+
+        modelBuilder.Entity<Incidencia>().HasOne(e => e.Centro).WithMany().HasForeignKey(e => e.CentroId).OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Incidencia>().HasQueryFilter(e =>
             e.CentroId == _tenant.CentroId || (_tenant.AccesoOrganizacionCompleto && e.Centro!.OrganizacionId == _tenant.OrganizacionId));
 
         // --- FK + filtro global de aislamiento por Organización (5 catálogos) ---
@@ -382,6 +387,24 @@ public class CuidexaDbContext : DbContext
             .HasOne(c => c.ResueltoPor)
             .WithMany()
             .HasForeignKey(c => c.ResueltoPorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Incidencia>()
+            .HasOne(i => i.Residente)
+            .WithMany()
+            .HasForeignKey(i => i.ResidenteId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Incidencia>()
+            .HasOne(i => i.EmpleadoOrigen)
+            .WithMany()
+            .HasForeignKey(i => i.EmpleadoOrigenId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Incidencia>()
+            .HasOne(i => i.ResueltoPor)
+            .WithMany()
+            .HasForeignKey(i => i.ResueltoPorId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // --- Datos de prueba (demo local, no usar en producción) ---

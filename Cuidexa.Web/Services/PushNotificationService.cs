@@ -74,6 +74,17 @@ public class PushNotificationService : IPushNotificationService
         _ => "/"
     };
 
+    private static string RutaIncidencias(RolEmpleado rol) => rol switch
+    {
+        RolEmpleado.Admin => "/Admin/Incidencias",
+        RolEmpleado.Cocina => "/Cocina/Incidencias",
+        RolEmpleado.Auxiliar => "/Auxiliares/Incidencias",
+        RolEmpleado.Enfermeria => "/Enfermeria/Incidencias",
+        RolEmpleado.Profesional => "/Profesionales/Incidencias",
+        RolEmpleado.Limpieza => "/Limpieza/Incidencias",
+        _ => "/"
+    };
+
     public async Task NotificarAsync(IEnumerable<EventoDistribucion> eventosNuevos)
     {
         foreach (var evento in eventosNuevos)
@@ -106,23 +117,42 @@ public class PushNotificationService : IPushNotificationService
                 url
             });
 
-            foreach (var destinatario in destinatarios)
+            await EnviarATodosAsync(destinatarios, payload);
+        }
+    }
+
+    public async Task NotificarIncidenciaAsync(Incidencia incidencia, RolEmpleado rolDestino)
+    {
+        var destinatarios = await _db.Empleados.Where(e => e.Activo && e.Rol == rolDestino).ToListAsync();
+        var payload = JsonSerializer.Serialize(new
+        {
+            titulo = "Cuidexa · Incidencia urgente",
+            cuerpo = incidencia.Titulo,
+            urgente = true,
+            url = RutaIncidencias(rolDestino)
+        });
+
+        await EnviarATodosAsync(destinatarios, payload);
+    }
+
+    private async Task EnviarATodosAsync(List<Empleado> destinatarios, string payload)
+    {
+        foreach (var destinatario in destinatarios)
+        {
+            var suscripciones = await _db.SuscripcionesPush.Where(s => s.EmpleadoId == destinatario.Id).ToListAsync();
+            foreach (var suscripcion in suscripciones)
             {
-                var suscripciones = await _db.SuscripcionesPush.Where(s => s.EmpleadoId == destinatario.Id).ToListAsync();
-                foreach (var suscripcion in suscripciones)
+                var pushSubscription = new PushSubscription(suscripcion.Endpoint, suscripcion.P256dh, suscripcion.Auth);
+                try
                 {
-                    var pushSubscription = new PushSubscription(suscripcion.Endpoint, suscripcion.P256dh, suscripcion.Auth);
-                    try
-                    {
-                        await _client.SendNotificationAsync(pushSubscription, payload, _vapidDetails);
-                    }
-                    catch (WebPushException ex) when (ex.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone)
-                    {
-                        // Suscripción caducada/inválida — se limpia sola en vez
-                        // de seguir reintentando contra un endpoint muerto.
-                        _db.SuscripcionesPush.Remove(suscripcion);
-                        await _db.SaveChangesAsync();
-                    }
+                    await _client.SendNotificationAsync(pushSubscription, payload, _vapidDetails);
+                }
+                catch (WebPushException ex) when (ex.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone)
+                {
+                    // Suscripción caducada/inválida — se limpia sola en vez
+                    // de seguir reintentando contra un endpoint muerto.
+                    _db.SuscripcionesPush.Remove(suscripcion);
+                    await _db.SaveChangesAsync();
                 }
             }
         }

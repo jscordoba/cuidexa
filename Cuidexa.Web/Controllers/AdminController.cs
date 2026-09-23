@@ -18,13 +18,15 @@ public class AdminController : Controller
     private readonly IEventoDistribucionService _eventos;
     private readonly ITurnoService _turnos;
     private readonly ICentroService _centro;
+    private readonly IIncidenciaService _incidencias;
 
-    public AdminController(CuidexaDbContext db, IEventoDistribucionService eventos, ITurnoService turnos, ICentroService centro)
+    public AdminController(CuidexaDbContext db, IEventoDistribucionService eventos, ITurnoService turnos, ICentroService centro, IIncidenciaService incidencias)
     {
         _db = db;
         _eventos = eventos;
         _turnos = turnos;
         _centro = centro;
+        _incidencias = incidencias;
     }
 
     private int? EmpleadoIdActual =>
@@ -101,5 +103,33 @@ public class AdminController : Controller
             TempData["Mensaje"] = ex.Message;
         }
         return RedirectToAction("Centro");
+    }
+
+    // Admin no reporta incidencias (igual que con Avisos) — solo las recibe
+    // y resuelve las que le tocan (Personal/Instalaciones, más oversight de
+    // cualquier otro tipo — ver IncidenciaService.RolResponsable).
+    public async Task<IActionResult> Incidencias()
+    {
+        return View("~/Views/Shared/Incidencias.cshtml", new IncidenciasViewModel
+        {
+            Incidencias = await _incidencias.ObtenerParaRolAsync(RolEmpleado.Admin),
+            RutaBase = "Admin",
+            PuedeCrear = false
+        });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResolverIncidencia(int id, Models.Enums.EstadoIncidencia estado, string? notasResolucion)
+    {
+        try
+        {
+            await _incidencias.CambiarEstadoAsync(id, estado, notasResolucion, EmpleadoIdActual);
+            TempData["Mensaje"] = "Incidencia actualizada.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Incidencias");
     }
 }

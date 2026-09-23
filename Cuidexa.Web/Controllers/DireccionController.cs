@@ -37,6 +37,7 @@ public class DireccionController : Controller
         ViewBag.PendientesPorRol = pendientesPorRol;
 
         ViewBag.TareasLimpiezaPendientes = await _db.TareasLimpieza.CountAsync(t => t.Estado == EstadoTarea.Pendiente);
+        ViewBag.IncidenciasAbiertas = await _db.Incidencias.CountAsync(i => i.Estado != EstadoIncidencia.Resuelta);
 
         var residentes = await _db.Residentes.Include(r => r.Habitacion).OrderBy(r => r.Nombre).ToListAsync();
         return View(residentes);

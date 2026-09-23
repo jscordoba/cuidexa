@@ -15,15 +15,17 @@ public class CocinaController : Controller
     private readonly IComensalesService _comensales;
     private readonly IVacacionService _vacaciones;
     private readonly IGrupoNotificacionService _grupos;
+    private readonly IIncidenciaService _incidencias;
     private readonly CuidexaDbContext _db;
 
-    public CocinaController(IEventoDistribucionService eventos, ITurnoService turnos, IComensalesService comensales, IVacacionService vacaciones, IGrupoNotificacionService grupos, CuidexaDbContext db)
+    public CocinaController(IEventoDistribucionService eventos, ITurnoService turnos, IComensalesService comensales, IVacacionService vacaciones, IGrupoNotificacionService grupos, IIncidenciaService incidencias, CuidexaDbContext db)
     {
         _eventos = eventos;
         _turnos = turnos;
         _comensales = comensales;
         _vacaciones = vacaciones;
         _grupos = grupos;
+        _incidencias = incidencias;
         _db = db;
     }
 
@@ -126,5 +128,55 @@ public class CocinaController : Controller
             TempData["Mensaje"] = ex.Message;
         }
         return RedirectToAction("Turnos");
+    }
+
+    public async Task<IActionResult> Incidencias()
+    {
+        return View("~/Views/Shared/Incidencias.cshtml", new IncidenciasViewModel
+        {
+            Incidencias = await _incidencias.ObtenerParaRolAsync(RolEmpleado.Cocina),
+            RutaBase = "Cocina"
+        });
+    }
+
+    public async Task<IActionResult> CrearIncidencia()
+    {
+        return View("~/Views/Shared/CrearIncidencia.cshtml", new CrearIncidenciaViewModel
+        {
+            Residentes = await _db.Residentes.Where(r => r.Estado == Models.Enums.EstadoResidente.Activo)
+                .Include(r => r.Habitacion).OrderBy(r => r.Nombre).ToListAsync(),
+            RolOrigen = RolEmpleado.Cocina,
+            RutaBase = "Cocina"
+        });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CrearIncidencia(Models.Enums.TipoIncidencia tipo, int? residenteId, string titulo, string descripcion, Models.Enums.GravedadIncidencia gravedad)
+    {
+        try
+        {
+            await _incidencias.CrearAsync(tipo, residenteId, titulo, descripcion, gravedad, RolEmpleado.Cocina, EmpleadoIdActual);
+            TempData["Mensaje"] = "Incidencia reportada.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Incidencias");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResolverIncidencia(int id, Models.Enums.EstadoIncidencia estado, string? notasResolucion)
+    {
+        try
+        {
+            await _incidencias.CambiarEstadoAsync(id, estado, notasResolucion, EmpleadoIdActual);
+            TempData["Mensaje"] = "Incidencia actualizada.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Incidencias");
     }
 }
