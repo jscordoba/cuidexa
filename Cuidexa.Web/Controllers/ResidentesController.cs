@@ -15,16 +15,18 @@ public class ResidentesController : Controller
     private readonly IOrganizacionService _organizacion;
     private readonly ICentroService _centro;
     private readonly ITenantContext _tenant;
+    private readonly IDocumentoFirmadoService _documentos;
     private readonly CuidexaDbContext _db;
 
     public ResidentesController(IResidenteService residentes, IAuditService auditoria, IOrganizacionService organizacion,
-        ICentroService centro, ITenantContext tenant, CuidexaDbContext db)
+        ICentroService centro, ITenantContext tenant, IDocumentoFirmadoService documentos, CuidexaDbContext db)
     {
         _residentes = residentes;
         _auditoria = auditoria;
         _organizacion = organizacion;
         _centro = centro;
         _tenant = tenant;
+        _documentos = documentos;
         _db = db;
     }
 
@@ -174,5 +176,44 @@ public class ResidentesController : Controller
         await _residentes.TrasladarAsync(id, nuevaHabitacionId, EmpleadoIdActual);
         TempData["Mensaje"] = "Residente trasladado. Auxiliares han sido informados.";
         return RedirectToAction("Details", new { id });
+    }
+
+    // Documentos firmados (consentimientos, admisión, entregas...) del
+    // residente — firma capturada en pantalla, no firma digital con validez
+    // legal (ver DocumentoFirmado). Sección propia en vez de mezclarse en
+    // Details/Edit: es un histórico que crece, no un dato del residente.
+    public async Task<IActionResult> Documentos(int id)
+    {
+        var residente = await _residentes.ObtenerPorIdAsync(id);
+        if (residente is null) return NotFound();
+
+        ViewBag.Residente = residente;
+        return View(await _documentos.ObtenerPorResidenteAsync(id));
+    }
+
+    public async Task<IActionResult> CrearDocumento(int id)
+    {
+        var residente = await _residentes.ObtenerPorIdAsync(id);
+        if (residente is null) return NotFound();
+
+        ViewBag.Residente = residente;
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CrearDocumento(int id, Models.Enums.CategoriaDocumentoFirmado categoria, string titulo,
+        string descripcion, string firmanteNombre, string firmanteRelacion, string firmaImagenBase64)
+    {
+        try
+        {
+            await _documentos.CrearAsync(categoria, titulo, descripcion, id, null, firmanteNombre, firmanteRelacion,
+                firmaImagenBase64, EmpleadoIdActual);
+            TempData["Mensaje"] = "Documento firmado guardado.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Documentos", new { id });
     }
 }

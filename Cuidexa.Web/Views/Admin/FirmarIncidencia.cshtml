@@ -1,0 +1,45 @@
+@{
+    var incidencia = (Incidencia)ViewBag.Incidencia;
+}
+<a href="/Admin/Incidencias" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Incidencias</a>
+<h4 class="mb-3">Firmar conformidad</h4>
+
+<div class="alert alert-light border mb-3">
+    <strong>@incidencia.Titulo</strong>
+    <p class="mb-0 small text-muted">@incidencia.Descripcion</p>
+</div>
+
+<form method="post" action="/Admin/FirmarIncidencia" id="formFirmaIncidencia" class="card p-3" style="max-width:560px;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="incidenciaId" value="@incidencia.Id" />
+
+    <div class="mb-3">
+        <label class="form-label">Título del documento</label>
+        <input name="titulo" class="form-control" required maxlength="150" value="Conformidad — @incidencia.Titulo" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Descripción / lo que se reconoce</label>
+        <textarea name="descripcion" class="form-control" rows="3" required placeholder="Ej. Se informó de lo ocurrido y se aceptan las medidas tomadas."></textarea>
+    </div>
+
+    <div class="row g-2 mb-1">
+        <div class="col-12 col-sm-6">
+            <label class="form-label">Nombre de quien firma</label>
+            <input name="firmanteNombre" class="form-control" required placeholder="Nombre completo" />
+        </div>
+        <div class="col-12 col-sm-6">
+            <label class="form-label">Relación</label>
+            <input name="firmanteRelacion" class="form-control" placeholder="Residente, hijo/a, representante legal..." />
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_FirmaPad")
+
+    <button type="submit" class="btn btn-primary align-self-start">Guardar firma</button>
+</form>
+
+@section Scripts {
+    <script src="~/js/firma-pad.js" asp-append-version="true"></script>
+    <script>iniciarFirmaPad('firmaCanvas', 'firmaImagenBase64Input', 'firmaLimpiar', 'formFirmaIncidencia');</script>
+}

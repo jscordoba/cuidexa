@@ -19,14 +19,17 @@ public class AdminController : Controller
     private readonly ITurnoService _turnos;
     private readonly ICentroService _centro;
     private readonly IIncidenciaService _incidencias;
+    private readonly IDocumentoFirmadoService _documentos;
 
-    public AdminController(CuidexaDbContext db, IEventoDistribucionService eventos, ITurnoService turnos, ICentroService centro, IIncidenciaService incidencias)
+    public AdminController(CuidexaDbContext db, IEventoDistribucionService eventos, ITurnoService turnos, ICentroService centro,
+        IIncidenciaService incidencias, IDocumentoFirmadoService documentos)
     {
         _db = db;
         _eventos = eventos;
         _turnos = turnos;
         _centro = centro;
         _incidencias = incidencias;
+        _documentos = documentos;
     }
 
     private int? EmpleadoIdActual =>
@@ -114,7 +117,8 @@ public class AdminController : Controller
         {
             Incidencias = await _incidencias.ObtenerParaRolAsync(RolEmpleado.Admin),
             RutaBase = "Admin",
-            PuedeCrear = false
+            PuedeCrear = false,
+            PuedeFirmar = true
         });
     }
 
@@ -131,5 +135,40 @@ public class AdminController : Controller
             TempData["Mensaje"] = ex.Message;
         }
         return RedirectToAction("Incidencias");
+    }
+
+    // Firma de conformidad opcional sobre una incidencia (ver DocumentoFirmado)
+    // — no toda incidencia la necesita, la decide Admin caso a caso al
+    // revisarla. De momento solo Admin gestiona esto (ver
+    // IncidenciasViewModel.PuedeFirmar); ampliar a otros roles si hace falta.
+    public async Task<IActionResult> FirmarIncidencia(int incidenciaId)
+    {
+        var incidencia = await _db.Incidencias.FindAsync(incidenciaId);
+        if (incidencia is null) return NotFound();
+
+        ViewBag.Incidencia = incidencia;
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> FirmarIncidencia(int incidenciaId, string titulo, string descripcion,
+        string firmanteNombre, string firmanteRelacion, string firmaImagenBase64)
+    {
+        try
+        {
+            await _documentos.CrearAsync(Models.Enums.CategoriaDocumentoFirmado.ConformidadIncidencia, titulo, descripcion,
+                null, incidenciaId, firmanteNombre, firmanteRelacion, firmaImagenBase64, EmpleadoIdActual);
+            TempData["Mensaje"] = "Firma de conformidad guardada.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Incidencias");
+    }
+
+    public async Task<IActionResult> DocumentosFirmados()
+    {
+        return View(await _documentos.ObtenerTodosAsync());
     }
 }

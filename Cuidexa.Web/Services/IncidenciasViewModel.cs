@@ -10,4 +10,8 @@ public class IncidenciasViewModel
     // false para Admin: recibe y resuelve incidencias, no las reporta —
     // mismo criterio que con Avisos (ver AdminController.Incidencias).
     public bool PuedeCrear { get; set; } = true;
+
+    // Solo Admin, por ahora (ver AdminController.FirmarIncidencia) — adjuntar
+    // una firma de conformidad es opcional, no todo rol necesita gestionarla.
+    public bool PuedeFirmar { get; set; }
 }

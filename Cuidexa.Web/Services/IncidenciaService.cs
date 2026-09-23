@@ -42,6 +42,7 @@ public class IncidenciaService : IIncidenciaService
             .Include(i => i.Residente)
             .Include(i => i.EmpleadoOrigen)
             .Include(i => i.ResueltoPor)
+            .Include(i => i.DocumentosFirmados)
             .OrderByDescending(i => i.FechaCreacion)
             .ToListAsync();
 

@@ -30,10 +30,16 @@
 <a href="/@Model.RutaBase" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0"><i class="bi bi-exclamation-octagon-fill me-2 text-muted"></i>Incidencias</h4>
-    @if (Model.PuedeCrear)
-    {
-        <a href="/@Model.RutaBase/CrearIncidencia" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Reportar incidencia</a>
-    }
+    <div class="d-flex gap-2">
+        @if (Model.PuedeFirmar)
+        {
+            <a href="/@Model.RutaBase/DocumentosFirmados" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pen me-1"></i>Documentos firmados</a>
+        }
+        @if (Model.PuedeCrear)
+        {
+            <a href="/@Model.RutaBase/CrearIncidencia" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Reportar incidencia</a>
+        }
+    </div>
 </div>
 
 @if (!Model.Incidencias.Any())
@@ -73,6 +79,19 @@ else
                     <small class="text-muted">
                         Reportada por @(i.EmpleadoOrigen?.Nombre ?? i.RolOrigen.ToString()) · @i.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
                     </small>
+                    @if (i.DocumentosFirmados.Any() || Model.PuedeFirmar)
+                    {
+                        <div class="mt-1">
+                            @if (i.DocumentosFirmados.Any())
+                            {
+                                <span class="badge rounded-pill text-bg-light border"><i class="bi bi-pen me-1"></i>@i.DocumentosFirmados.Count firma(s)</span>
+                            }
+                            @if (Model.PuedeFirmar)
+                            {
+                                <a href="/@Model.RutaBase/FirmarIncidencia?incidenciaId=@i.Id" class="small ms-1">Firmar conformidad</a>
+                            }
+                        </div>
+                    }
 
                     <form method="post" action="/@Model.RutaBase/ResolverIncidencia" class="mt-2 row g-2 align-items-end">
                         @Html.AntiForgeryToken()
@@ -120,6 +139,19 @@ else
                             <small class="text-muted">
                                 Reportada por @(i.EmpleadoOrigen?.Nombre ?? i.RolOrigen.ToString()) · @i.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
                             </small>
+                            @if (i.DocumentosFirmados.Any() || Model.PuedeFirmar)
+                            {
+                                <div class="mt-1">
+                                    @if (i.DocumentosFirmados.Any())
+                                    {
+                                        <span class="badge rounded-pill text-bg-light border"><i class="bi bi-pen me-1"></i>@i.DocumentosFirmados.Count firma(s)</span>
+                                    }
+                                    @if (Model.PuedeFirmar)
+                                    {
+                                        <a href="/@Model.RutaBase/FirmarIncidencia?incidenciaId=@i.Id" class="small ms-1">Firmar conformidad</a>
+                                    }
+                                </div>
+                            }
                         </div>
                     </div>
                 }
@@ -146,6 +178,19 @@ else
                             <small class="text-muted">
                                 Resuelta por @(i.ResueltoPor?.Nombre ?? "-") · @i.FechaResolucion?.ToString("dd/MM/yyyy HH:mm")
                             </small>
+                            @if (i.DocumentosFirmados.Any() || Model.PuedeFirmar)
+                            {
+                                <div class="mt-1">
+                                    @if (i.DocumentosFirmados.Any())
+                                    {
+                                        <span class="badge rounded-pill text-bg-light border"><i class="bi bi-pen me-1"></i>@i.DocumentosFirmados.Count firma(s)</span>
+                                    }
+                                    @if (Model.PuedeFirmar)
+                                    {
+                                        <a href="/@Model.RutaBase/FirmarIncidencia?incidenciaId=@i.Id" class="small ms-1">Firmar conformidad</a>
+                                    }
+                                </div>
+                            }
                         </div>
                     </div>
                 }

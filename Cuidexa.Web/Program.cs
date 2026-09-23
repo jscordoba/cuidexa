@@ -71,6 +71,7 @@ builder.Services.AddScoped<IGrupoNotificacionService, GrupoNotificacionService>(
 builder.Services.AddScoped<IPushNotificationService, PushNotificationService>();
 builder.Services.AddScoped<IInformesService, InformesService>();
 builder.Services.AddScoped<IIncidenciaService, IncidenciaService>();
+builder.Services.AddScoped<IDocumentoFirmadoService, DocumentoFirmadoService>();
 
 builder.Services.AddHttpClient<IFestivosApiService, FestivosApiService>(cliente =>
 {

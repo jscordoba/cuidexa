@@ -1,0 +1,55 @@
+@model List<DocumentoFirmado>
+@{
+    string EtiquetaCategoria(CategoriaDocumentoFirmado c) => c switch
+    {
+        CategoriaDocumentoFirmado.ConsentimientoInformado => "Consentimiento informado",
+        CategoriaDocumentoFirmado.Admision => "Admisión",
+        CategoriaDocumentoFirmado.ConformidadIncidencia => "Conformidad de incidencia",
+        CategoriaDocumentoFirmado.Entrega => "Entrega",
+        _ => "Otro"
+    };
+}
+<a href="/Admin" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<h4 class="mb-3"><i class="bi bi-pen me-2 text-muted"></i>Documentos firmados</h4>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Todavía no hay documentos firmados en este centro.</p>
+}
+else
+{
+    <input type="search" id="filtroDocumentos" class="form-control mb-2" placeholder="Buscar en los documentos..." />
+    <div id="listaDocumentos">
+        @foreach (var d in Model)
+        {
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-1 mb-2">
+                        <span class="badge rounded-pill text-bg-light border"><i class="bi bi-tag me-1"></i>@EtiquetaCategoria(d.Categoria)</span>
+                        @if (d.Residente is not null)
+                        {
+                            <a href="/Residentes/Documentos/@d.ResidenteId" class="badge rounded-pill text-bg-light border text-decoration-none"><i class="bi bi-person me-1"></i>@d.Residente.Nombre @d.Residente.Apellidos</a>
+                        }
+                        @if (d.Incidencia is not null)
+                        {
+                            <span class="badge rounded-pill text-bg-light border"><i class="bi bi-exclamation-octagon me-1"></i>@d.Incidencia.Titulo</span>
+                        }
+                    </div>
+                    <h6 class="mb-1">@d.Titulo</h6>
+                    <p class="mb-2">@d.Descripcion</p>
+                    <img src="@d.FirmaImagenBase64" alt="Firma de @d.FirmanteNombre" style="max-width:220px; max-height:80px;" class="border rounded bg-white mb-2 d-block" />
+                    <small class="text-muted">
+                        Firmado por @d.FirmanteNombre @(string.IsNullOrWhiteSpace(d.FirmanteRelacion) ? "" : $"({d.FirmanteRelacion})") ·
+                        @d.FechaFirma.ToString("dd/MM/yyyy HH:mm")
+                        @(d.EmpleadoRegistra != null ? $" · Gestionado por {d.EmpleadoRegistra.Nombre}" : "")
+                    </small>
+                </div>
+            </div>
+        }
+    </div>
+    <p id="documentosSinResultados" class="text-muted" hidden>Ningún documento coincide con la búsqueda.</p>
+}
+
+@section Scripts {
+    <script>activarFiltro('#filtroDocumentos', '#listaDocumentos .card', { vacio: '#documentosSinResultados' });</script>
+}

@@ -42,4 +42,8 @@ public class Incidencia : ITieneCentro
     public string? NotasResolucion { get; set; }
     public int? ResueltoPorId { get; set; }
     public Empleado? ResueltoPor { get; set; }
+
+    // Firmas de conformidad opcionales (ver DocumentoFirmado) — no toda
+    // incidencia necesita una.
+    public ICollection<DocumentoFirmado> DocumentosFirmados { get; set; } = new List<DocumentoFirmado>();
 }
