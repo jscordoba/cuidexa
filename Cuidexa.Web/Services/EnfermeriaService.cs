@@ -30,6 +30,7 @@ public class EnfermeriaService : IEnfermeriaService
             .Where(r => r.Estado == EstadoResidente.Activo)
             .Include(r => r.Patologias).ThenInclude(p => p.Patologia)
             .Include(r => r.Medicaciones)
+            .AsSplitQuery()
             .OrderBy(r => r.Nombre)
             .ToListAsync();
     }
@@ -39,6 +40,7 @@ public class EnfermeriaService : IEnfermeriaService
         return await _db.Residentes
             .Include(r => r.Patologias).ThenInclude(p => p.Patologia)
             .Include(r => r.Medicaciones).ThenInclude(m => m.Registros)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(r => r.Id == residenteId);
     }
 
