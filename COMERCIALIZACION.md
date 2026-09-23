@@ -39,14 +39,23 @@ qué queda.
 
 ## Checklist
 
-### 1. Monitorización/logging
-- [ ] Logging estructurado en producción (Serilog o similar) con niveles y
-      contexto (CentroId, EmpleadoId, ruta).
-- [ ] Captura de excepciones no controladas con alerta (Sentry/Application
-      Insights o equivalente autoalojado).
-- [ ] Panel o comando de salud (`/health`) para verificar BD y estado del
-      servicio.
-- [ ] Alertas básicas (caída del servicio, tasa de error elevada).
+### 1. Monitorización/logging ✅ (base local completada 2026-09-23)
+- [x] Logging estructurado (Serilog): consola + fichero con rotación diaria
+      (`logs/cuidexa-.log`, 30 días de retención), una línea por request
+      (método, ruta, código, duración) vía `UseSerilogRequestLogging`,
+      enriquecida con `CentroId`/`Usuario` — imprescindible en un SaaS
+      multi-tenant para filtrar logs de un cliente concreto.
+- [x] Endpoint `/health` (`Microsoft.Extensions.Diagnostics.HealthChecks`)
+      que comprueba conectividad real con PostgreSQL — listo para
+      monitores externos de disponibilidad (uptime) y para el propio
+      despliegue.
+- [ ] Captura de excepciones con alerta externa (Sentry/Application
+      Insights o equivalente) — pendiente de decisión de negocio (cuenta/
+      coste del servicio); el código ya está preparado, añadir un sink de
+      Serilog es la única pieza que falta.
+- [ ] Alertas activas de caída del servicio / tasa de error elevada —
+      depende de tener un monitor externo llamando a `/health` (ej.
+      UptimeRobot/Better Stack) o del servicio de alertas anterior.
 
 ### 2. Backups automatizados
 - [ ] Backup automático diario de PostgreSQL, cifrado en reposo.

@@ -6,12 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Infrastructure;
+using Serilog;
 
 // Community: gratuita para organizaciones pequeñas (el caso de este MVP).
 // Exigida por la librería antes de generar cualquier documento.
 QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Logging estructurado (config en appsettings.json, sección "Serilog") —
+// consola siempre, fichero con rotación diaria como red de seguridad local
+// mientras no haya un agregador externo (Sentry/Application Insights)
+// conectado; añadir uno más adelante es solo otro sink en la config, sin
+// tocar código.
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext());
 
 // AutoValidateAntiforgeryTokenAttribute como filtro global: exige el token
 // __RequestVerificationToken en TODO POST/PUT/DELETE/PATCH salvo que la
@@ -113,6 +124,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddAuthorization();
 
+// Comprueba conectividad real con PostgreSQL — usado por monitores externos
+// de disponibilidad (uptime) y por el propio despliegue para saber si el
+// servicio está listo antes de recibir tráfico.
+builder.Services.AddHealthChecks().AddDbContextCheck<CuidexaDbContext>();
+
 var app = builder.Build();
 
 // Aplica migraciones pendientes automáticamente al arrancar (cómodo en desarrollo;
@@ -128,6 +144,22 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+// Una línea estructurada por request (método, ruta, código, duración) — la
+// señal mínima para saber que el servicio está vivo y detectar errores/
+// lentitud sin instrumentar cada acción a mano. CentroId/Usuario se añaden
+// aquí (no vía LogContext) porque este middleware envuelve todo el resto
+// del pipeline y escribe su línea de resumen DESPUÉS de que ese "using" ya
+// se haya cerrado — EnrichDiagnosticContext se evalúa en el momento
+// correcto, justo antes de escribir la línea.
+app.UseSerilogRequestLogging(options =>
+{
+    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    {
+        diagnosticContext.Set("CentroId", httpContext.User.FindFirst("CentroId")?.Value);
+        diagnosticContext.Set("Usuario", httpContext.User.Identity?.Name);
+    };
+});
 
 app.UseHttpsRedirection();
 
@@ -164,6 +196,21 @@ app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Añade CentroId/usuario a todos los logs de la petición (mientras haya
+// sesión) — imprescindible en un SaaS multi-tenant para poder filtrar los
+// logs de un cliente concreto sin tener que correlacionar por IP/hora.
+app.Use(async (context, next) =>
+{
+    var centroId = context.User.FindFirst("CentroId")?.Value;
+    using (Serilog.Context.LogContext.PushProperty("CentroId", centroId))
+    using (Serilog.Context.LogContext.PushProperty("Usuario", context.User.Identity?.Name))
+    {
+        await next();
+    }
+});
+
+app.MapHealthChecks("/health");
 
 // La ruta raíz "/" aterriza en el login. Cualquier otra ruta de un solo
 // segmento ("/Residentes", "/Enfermeria"...) debe resolver a la acción
