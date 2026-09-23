@@ -268,3 +268,15 @@ mezclar miembros de dos centros distintos).
 Incidencias, firma digital, inventario, integración con otros sistemas, IA
 para informes/predicción de personal. No es necesario para llamar
 "completo" al producto SaaS v1 — es evolución continua.
+
+Incidencias ✅, firma digital ✅ e IA para informes/predicción de personal
+✅ completadas (2026-09-23). Quedan inventario e integraciones con otros
+sistemas, sin fecha fija — se retoman según demanda real de los primeros
+clientes.
+
+## Camino a comercialización
+
+Ver [COMERCIALIZACION.md](COMERCIALIZACION.md): lo que hace falta operar
+Cuidexa de forma segura con un cliente real (monitorización, backups,
+soporte, app instalable/offline, portal de familiares, multi-idioma,
+facturación), con su orden de prioridad razonado.
