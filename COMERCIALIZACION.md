@@ -99,12 +99,23 @@ qué queda.
       SLA real de respuesta. Requiere el mismo canal de alertas externo
       pendiente en el bloque 1.
 
-### 4. App instalable / pulir experiencia offline
-- [ ] Revisar manifest.webmanifest y service worker existentes.
-- [ ] Comportamiento offline explícito (qué funciona sin red, qué avisa al
-      usuario en vez de fallar en silencio).
-- [ ] Validado en dispositivo real (Android/iOS), no solo en navegador de
-      escritorio.
+### 4. App instalable / pulir experiencia offline ✅ (base completada 2026-09-23)
+- [x] Revisado `manifest.webmanifest` y `sw.js` existentes (Fase 7): ya
+      cumplían instalabilidad — sin cambios necesarios ahí.
+- [x] Comportamiento offline explícito: `wwwroot/offline.html` (pantalla
+      propia, con botón "Reintentar") servida por el service worker cuando
+      una navegación de página completa falla por falta de red, en vez del
+      error genérico del navegador. Deliberadamente SIN caché de datos
+      (avisos/turnos/residentes) — decisión ya tomada en Fase 7 y respetada:
+      cachearlos mostraría información obsoleta.
+- [x] Banner "Sin conexión" (`wwwroot/js/estado-conexion.js`, visible en
+      toda la app autenticada vía `_Layout.cshtml`) que aparece/desaparece
+      con los eventos `online`/`offline` del navegador — avisa antes de que
+      un formulario falle en silencio. Probado en desktop y en viewport
+      móvil (375px).
+- [ ] Validado en dispositivo real (Android/iOS) — solo verificado en el
+      navegador de este entorno; falta la prueba en un móvil físico antes
+      de darlo por definitivo.
 
 ### 5. Portal de familiares
 - [ ] Definir alcance (qué ve un familiar: documentos firmados,

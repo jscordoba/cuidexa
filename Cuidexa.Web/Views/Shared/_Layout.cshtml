@@ -216,6 +216,9 @@
     <div class="container-fluid pt-3 pt-md-4 pb-5 @(autenticado ? "con-sidebar" : "") @(navItems.Any() ? "pb-nav-movil" : "")">
         @if (autenticado)
         {
+            <div id="bannerSinConexion" class="alert alert-warning py-2 mb-3" hidden>
+                <i class="bi bi-wifi-off me-1"></i> Sin conexión — algunos datos pueden no estar actualizados y los formularios no se podrán enviar hasta que vuelva la red.
+            </div>
             <button id="botonNotificaciones" type="button" class="toggle-colapsable mb-3" hidden>
                 <i class="bi bi-bell"></i> Activar notificaciones
             </button>
@@ -245,6 +248,7 @@
     <script src="~/js/filas-clicables.js" asp-append-version="true"></script>
     @if (autenticado)
     {
+        <script src="~/js/estado-conexion.js" asp-append-version="true"></script>
         <script src="~/js/push.js" asp-append-version="true"></script>
     }
     @RenderSection("Scripts", required: false)
