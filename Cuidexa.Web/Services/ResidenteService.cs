@@ -27,6 +27,7 @@ public class ResidenteService : IResidenteService
             .Include(r => r.Centro)
             .Include(r => r.Dietas).ThenInclude(d => d.Dieta)
             .Include(r => r.Alergias).ThenInclude(a => a.Alergia)
+            .AsSplitQuery()
             .OrderBy(r => r.Nombre)
             .ToListAsync();
     }
@@ -37,6 +38,7 @@ public class ResidenteService : IResidenteService
             .Include(r => r.Habitacion)
             .Include(r => r.Dietas).ThenInclude(d => d.Dieta)
             .Include(r => r.Alergias).ThenInclude(a => a.Alergia)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 
@@ -49,6 +51,7 @@ public class ResidenteService : IResidenteService
             .Include(r => r.Patologias).ThenInclude(p => p.Patologia)
             .Include(r => r.Medicaciones).ThenInclude(m => m.Registros).ThenInclude(reg => reg.Empleado)
             .Include(r => r.SesionesTerapia).ThenInclude(s => s.Empleado).ThenInclude(e => e!.Especialidad)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 
@@ -372,6 +375,7 @@ public class ResidenteService : IResidenteService
         var residente = await _db.Residentes
             .Include(r => r.Dietas).ThenInclude(d => d.Dieta)
             .Include(r => r.Alergias).ThenInclude(a => a.Alergia)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(r => r.Id == residenteId)
             ?? throw new InvalidOperationException("Residente no encontrado.");
 
