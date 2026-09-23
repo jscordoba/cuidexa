@@ -2,6 +2,7 @@ using System.Threading.RateLimiting;
 using Cuidexa.Web.Data;
 using Cuidexa.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,15 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-});
+}).AddViewLocalization();
+
+// Multi-idioma (Fase 10 — comercialización, bloque 6): español como cultura
+// por defecto y "neutra" (las claves de SharedResource SON el texto en
+// español — sin SharedResource.resx no hace falta traducir nada para que
+// España siga funcionando igual que hoy), inglés como cultura añadida vía
+// Resources/SharedResource.en.resx. Todavía cubre solo login/layout/nav —
+// ver COMERCIALIZACION.md, bloque 6.
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 // Cabecera propia para el fetch() de wwwroot/js/push.js (el único POST por
 // JS de la app) — el resto de formularios usan el campo oculto que emite
@@ -178,6 +187,15 @@ app.UseSerilogRequestLogging(options =>
 });
 
 app.UseHttpsRedirection();
+
+// Cultura por cookie (CookieRequestCultureProvider, incluido en el
+// framework) — CulturaController.Cambiar la fija; sin cookie, español por
+// defecto. Solo ES/EN soportados por ahora.
+var culturasSoportadas = new[] { "es", "en" };
+app.UseRequestLocalization(new RequestLocalizationOptions()
+    .SetDefaultCulture("es")
+    .AddSupportedCultures(culturasSoportadas)
+    .AddSupportedUICultures(culturasSoportadas));
 
 // Cabeceras de seguridad en toda respuesta. El CSP permite 'unsafe-inline'
 // en script-src/style-src porque la app usa <script>/<style> embebidos en

@@ -2,9 +2,11 @@
 @using Cuidexa.Web.ViewHelpers
 @using Cuidexa.Web.Services
 @using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.Extensions.Localization
 @inject IConfiguration Configuracion
 @inject IOrganizacionService OrganizacionService
 @inject IAntiforgery Antiforgery
+@inject IStringLocalizer<SharedResource> Localizer
 @functions {
     // Un único lugar para la navegación de cada rol — se usa tanto en la
     // barra lateral (escritorio) como en la barra inferior (móvil), así las
@@ -16,7 +18,7 @@
         {
             // Común a cualquier rol reconocido — no depende de email/SMTP,
             // ver Controllers/SoporteController.cs.
-            items.Add(("bi-life-preserver", "Soporte", "/Soporte"));
+            items.Add(("bi-life-preserver", Localizer["Soporte"], "/Soporte"));
         }
         return items;
     }
@@ -27,80 +29,80 @@
         {
             return new()
             {
-                ("bi-bell-fill", "Avisos", "/Admin/Avisos"),
-                ("bi-exclamation-octagon-fill", "Incidencias", "/Admin/Incidencias"),
-                ("bi-people-fill", "Residentes", "/Residentes"),
-                ("bi-person-badge", "Usuarios", "/Empleados"),
-                ("bi-calendar3", "Turnos", "/Turnos"),
-                ("bi-tablet", "Dispositivos", "/Dispositivos"),
-                ("bi-diagram-3-fill", "Grupos", "/Grupos"),
-                ("bi-file-earmark-bar-graph-fill", "Informes", "/Informes"),
-                ("bi-pen", "Documentos", "/Admin/DocumentosFirmados"),
-                ("bi-building-gear", "Centro", "/Admin/Centro"),
+                ("bi-bell-fill", Localizer["Avisos"], "/Admin/Avisos"),
+                ("bi-exclamation-octagon-fill", Localizer["Incidencias"], "/Admin/Incidencias"),
+                ("bi-people-fill", Localizer["Residentes"], "/Residentes"),
+                ("bi-person-badge", Localizer["Usuarios"], "/Empleados"),
+                ("bi-calendar3", Localizer["Turnos"], "/Turnos"),
+                ("bi-tablet", Localizer["Dispositivos"], "/Dispositivos"),
+                ("bi-diagram-3-fill", Localizer["Grupos"], "/Grupos"),
+                ("bi-file-earmark-bar-graph-fill", Localizer["Informes"], "/Informes"),
+                ("bi-pen", Localizer["Documentos"], "/Admin/DocumentosFirmados"),
+                ("bi-building-gear", Localizer["Centro"], "/Admin/Centro"),
             };
         }
         if (User.IsInRole("Cocina"))
         {
             return new()
             {
-                ("bi-bell-fill", "Avisos", "/Cocina/Avisos"),
-                ("bi-exclamation-octagon-fill", "Incidencias", "/Cocina/Incidencias"),
-                ("bi-cup-hot-fill", "Comensales", "/Cocina/Comensales"),
-                ("bi-calendar3", "Turnos", "/Cocina/Turnos"),
+                ("bi-bell-fill", Localizer["Avisos"], "/Cocina/Avisos"),
+                ("bi-exclamation-octagon-fill", Localizer["Incidencias"], "/Cocina/Incidencias"),
+                ("bi-cup-hot-fill", Localizer["Comensales"], "/Cocina/Comensales"),
+                ("bi-calendar3", Localizer["Turnos"], "/Cocina/Turnos"),
             };
         }
         if (User.IsInRole("Auxiliar"))
         {
             return new()
             {
-                ("bi-bell-fill", "Avisos", "/Auxiliares/Avisos"),
-                ("bi-exclamation-octagon-fill", "Incidencias", "/Auxiliares/Incidencias"),
-                ("bi-calendar3", "Turnos", "/Auxiliares/Turnos"),
+                ("bi-bell-fill", Localizer["Avisos"], "/Auxiliares/Avisos"),
+                ("bi-exclamation-octagon-fill", Localizer["Incidencias"], "/Auxiliares/Incidencias"),
+                ("bi-calendar3", Localizer["Turnos"], "/Auxiliares/Turnos"),
             };
         }
         if (User.IsInRole("Enfermeria"))
         {
             return new()
             {
-                ("bi-bell-fill", "Avisos", "/Enfermeria/Avisos"),
-                ("bi-exclamation-octagon-fill", "Incidencias", "/Enfermeria/Incidencias"),
-                ("bi-capsule", "Agenda", "/Enfermeria/Agenda"),
-                ("bi-people-fill", "Residentes", "/Enfermeria/Residentes"),
-                ("bi-calendar3", "Turnos", "/Enfermeria/Turnos"),
+                ("bi-bell-fill", Localizer["Avisos"], "/Enfermeria/Avisos"),
+                ("bi-exclamation-octagon-fill", Localizer["Incidencias"], "/Enfermeria/Incidencias"),
+                ("bi-capsule", Localizer["Agenda"], "/Enfermeria/Agenda"),
+                ("bi-people-fill", Localizer["Residentes"], "/Enfermeria/Residentes"),
+                ("bi-calendar3", Localizer["Turnos"], "/Enfermeria/Turnos"),
             };
         }
         if (User.IsInRole("Profesional"))
         {
             return new()
             {
-                ("bi-bell-fill", "Avisos", "/Profesionales/Avisos"),
-                ("bi-exclamation-octagon-fill", "Incidencias", "/Profesionales/Incidencias"),
-                ("bi-calendar2-week", "Agenda", "/Profesionales/Agenda"),
-                ("bi-people-fill", "Residentes", "/Profesionales/Residentes"),
-                ("bi-calendar3", "Turnos", "/Profesionales/Turnos"),
+                ("bi-bell-fill", Localizer["Avisos"], "/Profesionales/Avisos"),
+                ("bi-exclamation-octagon-fill", Localizer["Incidencias"], "/Profesionales/Incidencias"),
+                ("bi-calendar2-week", Localizer["Agenda"], "/Profesionales/Agenda"),
+                ("bi-people-fill", Localizer["Residentes"], "/Profesionales/Residentes"),
+                ("bi-calendar3", Localizer["Turnos"], "/Profesionales/Turnos"),
             };
         }
         if (User.IsInRole("Limpieza"))
         {
             return new()
             {
-                ("bi-bell-fill", "Avisos", "/Limpieza/Avisos"),
-                ("bi-exclamation-octagon-fill", "Incidencias", "/Limpieza/Incidencias"),
-                ("bi-clipboard-check", "Tareas", "/Limpieza/Tareas"),
-                ("bi-calendar3", "Turnos", "/Limpieza/Turnos"),
+                ("bi-bell-fill", Localizer["Avisos"], "/Limpieza/Avisos"),
+                ("bi-exclamation-octagon-fill", Localizer["Incidencias"], "/Limpieza/Incidencias"),
+                ("bi-clipboard-check", Localizer["Tareas"], "/Limpieza/Tareas"),
+                ("bi-calendar3", Localizer["Turnos"], "/Limpieza/Turnos"),
             };
         }
         if (User.IsInRole("DirectorOrganizacion"))
         {
             return new()
             {
-                ("bi-people-fill", "Residentes", "/Residentes"),
-                ("bi-person-badge", "Usuarios", "/Empleados"),
-                ("bi-calendar3", "Turnos", "/Turnos"),
-                ("bi-tablet", "Dispositivos", "/Dispositivos"),
-                ("bi-diagram-3-fill", "Grupos", "/Grupos"),
-                ("bi-file-earmark-bar-graph-fill", "Informes", "/Informes"),
-                ("bi-building-gear", "Marca", "/Organizacion/Marca"),
+                ("bi-people-fill", Localizer["Residentes"], "/Residentes"),
+                ("bi-person-badge", Localizer["Usuarios"], "/Empleados"),
+                ("bi-calendar3", Localizer["Turnos"], "/Turnos"),
+                ("bi-tablet", Localizer["Dispositivos"], "/Dispositivos"),
+                ("bi-diagram-3-fill", Localizer["Grupos"], "/Grupos"),
+                ("bi-file-earmark-bar-graph-fill", Localizer["Informes"], "/Informes"),
+                ("bi-building-gear", Localizer["Marca"], "/Organizacion/Marca"),
             };
         }
         return new();
@@ -122,7 +124,7 @@
     var nombreCentro = string.IsNullOrWhiteSpace(organizacion?.Nombre) ? "Cuidexa" : organizacion.Nombre;
 }
 <!DOCTYPE html>
-<html lang="es">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -159,9 +161,10 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navMenu">
-                    <div class="d-flex flex-column mt-2">
-                        <span class="text-light mb-2">@User.Identity!.Name (@etiquetaRol)</span>
-                        <a class="btn btn-outline-light btn-sm" href="/Account/Logout">Salir</a>
+                    <div class="d-flex flex-column mt-2 gap-2">
+                        <span class="text-light mb-1">@User.Identity!.Name (@etiquetaRol)</span>
+                        @await Html.PartialAsync("_SelectorIdioma")
+                        <a class="btn btn-outline-light btn-sm" href="/Account/Logout">@Localizer["Salir"]</a>
                     </div>
                 </div>
             </div>
@@ -183,7 +186,7 @@
                 }
                 <div>
                     <div class="fw-bold">@nombreCentro</div>
-                    <div class="text-muted" style="font-size:.68rem">Mejores cuidados</div>
+                    <div class="text-muted" style="font-size:.68rem">@Localizer["Mejores cuidados"]</div>
                 </div>
             </a>
 
@@ -199,6 +202,10 @@
                     }
                 </div>
             }
+
+            <div class="px-3 mb-2">
+                @await Html.PartialAsync("_SelectorIdioma")
+            </div>
 
             <div class="flex-grow-1"></div>
 

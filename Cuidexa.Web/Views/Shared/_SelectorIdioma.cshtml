@@ -1,0 +1,18 @@
+@{
+    var culturaActual = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var volverA = Context.Request.Path + Context.Request.QueryString;
+}
+<div class="d-flex gap-1">
+    <form method="post" action="/Cultura/Cambiar">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="cultura" value="es" />
+        <input type="hidden" name="returnUrl" value="@volverA" />
+        <button type="submit" class="btn btn-sm @(culturaActual == "es" ? "btn-light" : "btn-outline-light")" @(culturaActual == "es" ? "disabled" : "")>ES</button>
+    </form>
+    <form method="post" action="/Cultura/Cambiar">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="cultura" value="en" />
+        <input type="hidden" name="returnUrl" value="@volverA" />
+        <button type="submit" class="btn btn-sm @(culturaActual == "en" ? "btn-light" : "btn-outline-light")" @(culturaActual == "en" ? "disabled" : "")>EN</button>
+    </form>
+</div>

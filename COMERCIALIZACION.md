@@ -137,11 +137,26 @@ qué queda.
       tiene que entrar a mirar; requiere el mismo canal de alertas externo
       pendiente en los bloques 1 y 3.
 
-### 6. Multi-idioma (ES/EN)
-- [ ] Infraestructura de recursos de idioma (resx o similar) en vistas
-      compartidas primero (login, layout, nav).
-- [ ] Selector de idioma por usuario/dispositivo.
-- [ ] Traducción completa de los flujos operativos (no solo Admin).
+### 6. Multi-idioma (ES/EN) — infraestructura y selector completados (2026-09-23)
+- [x] Infraestructura de recursos de idioma: `IStringLocalizer<SharedResource>`
+      + `Resources/SharedResource.en.resx` (español = claves sin traducir,
+      cero fichero necesario para que España siga igual). Aplicada a
+      `_Layout.cshtml` (navegación completa de los 7 roles + "Salir" +
+      tagline) y `Views/Account/Login.cshtml` (campos, botón, título).
+- [x] Selector de idioma (`CulturaController.Cambiar`, cookie estándar de
+      ASP.NET Core `CookieRequestCultureProvider`) — persiste por
+      navegador/dispositivo, visible en el login y en toda la app
+      autenticada (`Views/Shared/_SelectorIdioma.cshtml`). Probado de
+      extremo a extremo: ES→EN→ES, con el idioma sobreviviendo al login.
+- [ ] Traducción completa de los flujos operativos (contenido de cada
+      pantalla más allá del login/nav — Avisos, Turnos, Residentes...) —
+      deliberadamente fuera de este alcance inicial, tal como ya marcaba
+      este mismo checklist ("no bloquea al primer piloto si es en España").
+      Con la infraestructura ya en pie, es trabajo incremental: añadir
+      `Localizer["..."]` vista a vista y su traducción en el .resx.
+- [ ] Etiquetas de rol (`ViewHelpers/RolPresentacion.cs`) siguen en español
+      — es una clase estática sin acceso a `IStringLocalizer` hoy; requiere
+      convertirla en un servicio inyectable si se quiere traducir.
 
 ### 7. Sistema de facturación — deliberadamente aplazado (2026-09-23)
 Decisión explícita: nada todavía. La primera empresa de pruebas se da de
