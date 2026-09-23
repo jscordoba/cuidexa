@@ -4,6 +4,9 @@
     var turnos = (InformeTurnosPersonal)ViewBag.TurnosPersonal;
     var residentes = (InformeResidentesCuidados)ViewBag.ResidentesCuidados;
     var actividad = (InformeActividadIncidencias)ViewBag.ActividadIncidencias;
+    var resumen = (List<string>)ViewBag.ResumenEjecutivo;
+    var patrones = (List<string>)ViewBag.PatronesIncidencias;
+    var prediccion = (AnalisisPersonal)ViewBag.PrediccionPersonal;
     var qs = $"desde={desde:yyyy-MM-dd}&hasta={hasta:yyyy-MM-dd}";
 }
 <h4 class="mb-3">Informes</h4>
@@ -21,6 +24,68 @@
         <button class="btn btn-primary w-100">Filtrar</button>
     </div>
 </form>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="mb-1"><i class="bi bi-stars me-2 text-muted"></i>Análisis del periodo</h5>
+        <p class="text-muted small">Generado localmente a partir de los datos del centro — sin IA externa, sin enviar datos a terceros.</p>
+
+        <h6 class="text-muted">Resumen ejecutivo</h6>
+        <ul class="small mb-3">
+            @foreach (var punto in resumen)
+            {
+                <li>@punto</li>
+            }
+        </ul>
+
+        @if (patrones.Any())
+        {
+            <h6 class="text-muted">Patrones detectados en incidencias</h6>
+            <ul class="small mb-0">
+                @foreach (var patron in patrones)
+                {
+                    <li>@patron</li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="mb-1"><i class="bi bi-graph-up me-2 text-muted"></i>Predicción de personal — próximos 7 días</h5>
+        <p class="text-muted small">"Recomendado" es el promedio histórico de personal distinto que trabajó ese mismo día de la semana en semanas anteriores — no considera vacaciones ya aprobadas ni eventos futuros excepcionales.</p>
+        @if (!prediccion.Filas.Any())
+        {
+            <p class="text-muted small mb-0">Todavía no hay suficiente historial de turnos para calcular una predicción.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm bg-white mb-0">
+                    <thead><tr><th>Fecha</th><th>Rol</th><th>Programado</th><th>Recomendado</th><th></th></tr></thead>
+                    <tbody>
+                        @foreach (var f in prediccion.Filas)
+                        {
+                            <tr class="@(f.PosibleFaltaPersonal ? "table-warning" : "")">
+                                <td>@f.Fecha.ToString("ddd dd/MM")</td>
+                                <td>@f.Rol</td>
+                                <td>@f.PersonalProgramado</td>
+                                <td>@f.PersonalRecomendado.ToString("0.0")</td>
+                                <td>
+                                    @if (f.PosibleFaltaPersonal)
+                                    {
+                                        <span class="badge bg-warning text-dark">Posible falta de personal</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
 
 <div class="card mb-4">
     <div class="card-body">

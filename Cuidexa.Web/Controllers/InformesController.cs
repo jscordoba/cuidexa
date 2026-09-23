@@ -11,11 +11,13 @@ public class InformesController : Controller
 
     private readonly IInformesService _informes;
     private readonly IOrganizacionService _organizacion;
+    private readonly IAnalisisService _analisis;
 
-    public InformesController(IInformesService informes, IOrganizacionService organizacion)
+    public InformesController(IInformesService informes, IOrganizacionService organizacion, IAnalisisService analisis)
     {
         _informes = informes;
         _organizacion = organizacion;
+        _analisis = analisis;
     }
 
     // Rango por defecto: el mes en curso, si no se pide uno explícito.
@@ -32,9 +34,16 @@ public class InformesController : Controller
 
         ViewBag.Desde = d;
         ViewBag.Hasta = h;
-        ViewBag.TurnosPersonal = await _informes.ObtenerTurnosPersonalAsync(d, h);
-        ViewBag.ResidentesCuidados = await _informes.ObtenerResidentesCuidadosAsync(d, h);
-        ViewBag.ActividadIncidencias = await _informes.ObtenerActividadIncidenciasAsync(d, h);
+        var turnosPersonal = await _informes.ObtenerTurnosPersonalAsync(d, h);
+        var residentesCuidados = await _informes.ObtenerResidentesCuidadosAsync(d, h);
+        var actividadIncidencias = await _informes.ObtenerActividadIncidenciasAsync(d, h);
+        ViewBag.TurnosPersonal = turnosPersonal;
+        ViewBag.ResidentesCuidados = residentesCuidados;
+        ViewBag.ActividadIncidencias = actividadIncidencias;
+
+        ViewBag.ResumenEjecutivo = await _analisis.ObtenerResumenEjecutivoAsync(turnosPersonal, residentesCuidados, actividadIncidencias);
+        ViewBag.PatronesIncidencias = await _analisis.DetectarPatronesIncidenciasAsync(d, h);
+        ViewBag.PrediccionPersonal = await _analisis.PredecirPersonalNecesarioAsync();
         return View();
     }
 
