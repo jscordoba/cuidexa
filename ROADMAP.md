@@ -190,33 +190,78 @@ Completada y validada en navegador el 2026-09-11: ciclo completo probado
 turno reasignado → Admin cancela), incluida auditoría de cada paso y
 comprobación en móvil.
 
-## Fase 6 — Dashboards para dispositivos compartidos
+## Fase 6 — Dashboards para dispositivos compartidos ✅ completada
 
-Vistas simplificadas para tablets en cocina/enfermería/auxiliares, pensadas
-para consulta rápida durante el turno (no para gestión). Refuerza fases
-anteriores más que añadir dominio nuevo.
+- `CuentaDispositivo`: cuenta de "tablet compartida" por departamento
+  (Cocina/Enfermería/Auxiliares), sin representar a un empleado concreto.
+- Tercer esquema de cookie ("Dispositivo"), separado a propósito del de
+  Empleado — nunca satisface un `[Authorize(Roles = "...")]` operativo, así
+  que "solo consulta" queda garantizado a nivel de framework, no por checks
+  sueltos en cada acción.
+- Dashboard de solo lectura: personal en turno hoy, avisos pendientes,
+  comensales/medicación según el rol de la tablet — pensado para consulta
+  rápida durante el turno, no para gestión.
 
-## Fase 7 — Notificaciones inteligentes + app móvil
+Completada el 2026-09-21.
 
-- Notificaciones segmentadas (individuo, departamento, grupo, centro,
-  urgente).
-- App móvil — decisión pendiente de producto: nativa vs. PWA vs. solo web
-  responsive. Se decide con una base de usabilidad móvil ya validada desde
-  la Fase 0, no saltando directo como en el primer intento.
+## Fase 7 — Notificaciones inteligentes + app móvil ✅ completada
 
-## Fase 8 — Administración avanzada, informes y personalización
+- Notificaciones segmentadas: además de por departamento (ya existente desde
+  fases anteriores), grupos de notificación ad-hoc (`GrupoNotificacion`) que
+  mezclan empleados de cualquier rol dentro de un mismo centro.
+- Web Push real (VAPID): un empleado activa notificaciones con un gesto
+  explícito (nunca al cargar la página) y recibe avisos aunque no tenga la
+  app abierta.
+- App móvil resuelta como **PWA responsive**, no nativa: `manifest.webmanifest`
+  + service worker (`sw.js`) sobre la base mobile-first ya validada desde la
+  Fase 0, sin el salto directo a complejidad completa del primer intento.
 
-Informes completos (usuarios, personal, turnos, incidencias, dietas,
-medicación, históricos) y personalización por centro (logo, identidad
-corporativa) — todavía en single-tenant, preparando el terreno de datos
-para multi-tenant.
+Completada el 2026-09-21.
 
-## Fase 9 — Multi-tenant real (SaaS)
+## Fase 8 — Administración avanzada, informes y personalización ✅ completada
 
-La fase arquitectónicamente más grande: aislamiento de datos por centro,
-onboarding de nuevos centros por configuración. Aquí se reevalúa Docker como
-tema de despliegue. Se mantiene el monolito en capas — no se pasa a
-microservicios.
+- Informes exportables a Excel: turnos/personal, residentes/cuidados,
+  actividad/incidencias.
+- Personalización de marca (logo, color de acento) — construida primero en
+  single-tenant sobre `ConfiguracionCentro`, y reestructurada en la Fase 9 al
+  separarse en `Organizacion` (marca compartida) y `Centro` (datos físicos).
+
+Completada el 2026-09-21.
+
+## Fase 9 — Multi-tenant real (SaaS) ✅ completada
+
+La fase arquitectónicamente más grande: de "un único centro" a un modelo
+real de dos niveles, **Organización** (marca) → uno o varios **Centro**s
+físicos, sobre una única base de datos compartida con filtros globales de
+aislamiento (`HasQueryFilter`) en las 19 tablas por centro y las 5 catálogos
+compartidos por organización — se mantiene el monolito en capas, sin pasar a
+microservicios ni bases de datos separadas por centro.
+
+- Login con código de centro (Empleado y Tablet) + rol nuevo
+  `DirectorOrganizacion`: acceso de lectura y escritura completo a todos los
+  centros de su organización (Residentes, Usuarios, Turnos, Dispositivos,
+  Grupos, Informes), nunca a los de otra organización.
+- Esquema de cookie propio para **SuperAdmin**, por encima del modelo de
+  tenant: provisión manual de organizaciones/centros nuevos y su primer
+  Admin — sin autoservicio público, sin facturación/planes.
+- Marca por organización editable tanto por `DirectorOrganizacion` como por
+  `SuperAdmin` desde su propio panel (cierra el hueco de una organización
+  recién provisionada sin nadie todavía ascendido a `DirectorOrganizacion`),
+  válido igual para una organización de un único centro que para una con
+  varios.
+- Endurecimiento de seguridad de paso: protección CSRF global, rate limiting
+  por IP + bloqueo de cuenta tras fallos repetidos (con recuperación vía
+  reseteo de contraseña por Admin, sin necesitar email), secretos movidos de
+  `appsettings.json` a `dotnet user-secrets`, cabeceras de seguridad HTTP,
+  política mínima de contraseña, y bloqueo de subida de SVG en el logo.
+- Docker se deja fuera de esta fase (tema de despliegue a reevaluar aparte,
+  no de arquitectura), tal como marca la restricción del roadmap.
+
+Completada y validada en navegador el 2026-09-22/23: aislamiento cruzado
+probado entre tres centros (dos organizaciones, una de ellas con dos
+centros) en Residentes/Usuarios/Turnos/Dispositivos/Grupos, incluyendo
+casos negativos explícitos (por ejemplo, un grupo de notificación no puede
+mezclar miembros de dos centros distintos).
 
 ## Fase 10 — Backlog evolutivo (abierto, no bloqueante)
 
