@@ -15,6 +15,7 @@
     <div class="d-flex align-items-center gap-2">
         <span class="badge @(Model.Estado == EstadoResidente.Activo ? "bg-success" : "bg-secondary")">@Model.Estado</span>
         <a href="/Residentes/Documentos/@Model.Id" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pen me-1"></i>Documentos firmados</a>
+        <a href="/Residentes/Familiares/@Model.Id" class="btn btn-sm btn-outline-secondary"><i class="bi bi-people me-1"></i>Portal de familiares</a>
         <a href="/Residentes/FichaPdf/@Model.Id" class="btn btn-sm btn-outline-secondary"><i class="bi bi-file-earmark-pdf me-1"></i>Descargar PDF</a>
     </div>
 </div>

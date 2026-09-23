@@ -1,0 +1,27 @@
+@{
+    var residente = (Residente)ViewBag.Residente;
+}
+<a href="/Residentes/Familiares/@residente.Id" class="d-inline-block mb-2 text-decoration-none">&larr; Volver</a>
+<h4 class="mb-3">Invitar familiar de @residente.Nombre @residente.Apellidos</h4>
+
+<form method="post" action="/Residentes/CrearFamiliar/@residente.Id" class="card p-3" style="max-width:480px;">
+    @Html.AntiForgeryToken()
+    <div class="mb-2">
+        <label class="form-label">Nombre</label>
+        <input name="nombre" class="form-control" required placeholder="Nombre completo" />
+    </div>
+    <div class="mb-2">
+        <label class="form-label">Relación</label>
+        <input name="relacion" class="form-control" placeholder="Hija, hijo, representante legal..." />
+    </div>
+    <div class="mb-2">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Contraseña inicial</label>
+        <input type="text" name="password" class="form-control" required minlength="8" placeholder="Mínimo 8 caracteres" />
+        <div class="form-text">Compártela con la familia por un canal aparte (no queda visible después de crear el acceso).</div>
+    </div>
+    <button class="btn btn-primary align-self-start">Crear acceso</button>
+</form>

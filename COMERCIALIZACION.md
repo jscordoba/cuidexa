@@ -117,13 +117,25 @@ qué queda.
       navegador de este entorno; falta la prueba en un móvil físico antes
       de darlo por definitivo.
 
-### 5. Portal de familiares
-- [ ] Definir alcance (qué ve un familiar: documentos firmados,
-      incidencias resueltas relevantes, fotos, contacto).
-- [ ] Nuevo tipo de acceso/autenticación (no es un Empleado ni un
-      Dispositivo — esquema de cookies propio, como SuperAdmin/Dispositivo).
-- [ ] Vistas de solo lectura, aisladas por residente (un familiar nunca ve
-      a otro residente).
+### 5. Portal de familiares ✅ (2026-09-23)
+- [x] Alcance definido y cerrado: documentos firmados e incidencias ya
+      resueltas del residente — nada de avisos internos ni datos clínicos
+      (decisión explícita, para no exponer información pensada para
+      personal).
+- [x] Cuarto esquema de cookie ("Familiar", `Controllers/FamiliarController.cs`)
+      — sin CentroId/OrganizacionId, alcance real un único Residente
+      (`Models/Familiar.cs`, sin `ITieneCentro`), aislado explícitamente por
+      `ResidenteId` en vez de por Centro.
+- [x] Alta por invitación: Admin crea el acceso desde
+      `/Residentes/Familiares/{id}` (nombre, relación, email, contraseña
+      inicial) — mismo patrón manual que Empleados/SuperAdmin, sin depender
+      de email transaccional.
+- [x] Vistas de solo lectura (`/Familiar/Login`, `/Familiar/Index`)
+      probadas de extremo a extremo: Admin invita → familiar entra con sus
+      credenciales → ve solo los datos de su residente.
+- [ ] Notificar al familiar cuando hay un documento/incidencia nuevo — hoy
+      tiene que entrar a mirar; requiere el mismo canal de alertas externo
+      pendiente en los bloques 1 y 3.
 
 ### 6. Multi-idioma (ES/EN)
 - [ ] Infraestructura de recursos de idioma (resx o similar) en vistas
@@ -131,7 +143,11 @@ qué queda.
 - [ ] Selector de idioma por usuario/dispositivo.
 - [ ] Traducción completa de los flujos operativos (no solo Admin).
 
-### 7. Sistema de facturación
+### 7. Sistema de facturación — deliberadamente aplazado (2026-09-23)
+Decisión explícita: nada todavía. La primera empresa de pruebas se da de
+alta a mano por SuperAdmin (flujo ya existente desde la Fase 9), sin cobro
+automático. Construir facturación real antes de tener un cliente de pago
+confirmado es esfuerzo prematuro — se retoma cuando llegue ese momento.
 - [ ] Definir planes (por centro, por residente, plano...).
 - [ ] Integración con pasarela de pago (Stripe o Redsys).
 - [ ] Facturación recurrente + gestión de impagos/cancelación.

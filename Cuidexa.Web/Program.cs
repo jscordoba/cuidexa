@@ -85,6 +85,7 @@ builder.Services.AddScoped<IIncidenciaService, IncidenciaService>();
 builder.Services.AddScoped<IDocumentoFirmadoService, DocumentoFirmadoService>();
 builder.Services.AddScoped<IAnalisisService, AnalisisService>();
 builder.Services.AddScoped<ISoporteService, SoporteService>();
+builder.Services.AddScoped<IFamiliarService, FamiliarService>();
 builder.Services.AddHostedService<BackupService>();
 
 builder.Services.AddHttpClient<IFestivosApiService, FestivosApiService>(cliente =>
@@ -122,6 +123,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.Name = "Cuidexa.SuperAdmin";
         options.LoginPath = "/SuperAdmin/Login";
         options.AccessDeniedPath = "/SuperAdmin/Login";
+    })
+    // Cuarto esquema, separado de Empleado/Dispositivo/SuperAdmin (Fase 10
+    // — portal de familiares): un Familiar no tiene CentroId/OrganizacionId
+    // propios y su alcance (un único Residente) es más estrecho que el de
+    // cualquier rol operativo — nunca debe satisfacer un
+    // [Authorize(Roles = "...")] de los controladores de personal.
+    .AddCookie(Cuidexa.Web.Controllers.FamiliarController.EsquemaFamiliar, options =>
+    {
+        options.Cookie.Name = "Cuidexa.Familiar";
+        options.LoginPath = "/Familiar/Login";
+        options.AccessDeniedPath = "/Familiar/Login";
+        options.ExpireTimeSpan = TimeSpan.FromDays(90);
+        options.SlidingExpiration = true;
     });
 
 builder.Services.AddAuthorization();

@@ -16,10 +16,11 @@ public class ResidentesController : Controller
     private readonly ICentroService _centro;
     private readonly ITenantContext _tenant;
     private readonly IDocumentoFirmadoService _documentos;
+    private readonly IFamiliarService _familiares;
     private readonly CuidexaDbContext _db;
 
     public ResidentesController(IResidenteService residentes, IAuditService auditoria, IOrganizacionService organizacion,
-        ICentroService centro, ITenantContext tenant, IDocumentoFirmadoService documentos, CuidexaDbContext db)
+        ICentroService centro, ITenantContext tenant, IDocumentoFirmadoService documentos, IFamiliarService familiares, CuidexaDbContext db)
     {
         _residentes = residentes;
         _auditoria = auditoria;
@@ -27,6 +28,7 @@ public class ResidentesController : Controller
         _centro = centro;
         _tenant = tenant;
         _documentos = documentos;
+        _familiares = familiares;
         _db = db;
     }
 
@@ -215,5 +217,42 @@ public class ResidentesController : Controller
             TempData["Mensaje"] = ex.Message;
         }
         return RedirectToAction("Documentos", new { id });
+    }
+
+    // Portal de familiares (Fase 10 — comercialización, bloque 5): Admin
+    // invita al familiar desde la ficha del residente (nombre, relación,
+    // email, contraseña inicial) — mismo patrón manual ya usado para
+    // Empleados/SuperAdmin, sin depender de email transaccional.
+    public async Task<IActionResult> Familiares(int id)
+    {
+        var residente = await _residentes.ObtenerPorIdAsync(id);
+        if (residente is null) return NotFound();
+
+        ViewBag.Residente = residente;
+        return View(await _familiares.ObtenerPorResidenteAsync(id));
+    }
+
+    public async Task<IActionResult> CrearFamiliar(int id)
+    {
+        var residente = await _residentes.ObtenerPorIdAsync(id);
+        if (residente is null) return NotFound();
+
+        ViewBag.Residente = residente;
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CrearFamiliar(int id, string nombre, string relacion, string email, string password)
+    {
+        try
+        {
+            await _familiares.CrearAsync(id, nombre, relacion, email, password, EmpleadoIdActual);
+            TempData["Mensaje"] = $"Acceso del portal creado para {nombre}. Comparte con la familia el email y la contraseña iniciales.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Familiares", new { id });
     }
 }

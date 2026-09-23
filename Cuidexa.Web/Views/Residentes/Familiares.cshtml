@@ -1,0 +1,37 @@
+@model List<Familiar>
+@{
+    var residente = (Residente)ViewBag.Residente;
+}
+<a href="/Residentes/Details/@residente.Id" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a @residente.Nombre @residente.Apellidos</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-people me-2 text-muted"></i>Portal de familiares</h4>
+    <a href="/Residentes/CrearFamiliar/@residente.Id" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Invitar familiar</a>
+</div>
+<p class="text-muted small">
+    Un familiar con acceso puede ver, desde su propia cuenta en <code>/Familiar/Login</code>,
+    los documentos firmados y las incidencias ya resueltas de @residente.Nombre — nada más.
+</p>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Todavía no hay ningún familiar con acceso.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-sm bg-white">
+            <thead><tr><th>Nombre</th><th>Relación</th><th>Email</th><th>Desde</th></tr></thead>
+            <tbody>
+                @foreach (var f in Model)
+                {
+                    <tr>
+                        <td>@f.Nombre</td>
+                        <td>@f.Relacion</td>
+                        <td>@f.Email</td>
+                        <td>@f.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

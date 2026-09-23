@@ -48,6 +48,7 @@ public class CuidexaDbContext : DbContext
     public DbSet<Incidencia> Incidencias => Set<Incidencia>();
     public DbSet<DocumentoFirmado> DocumentosFirmados => Set<DocumentoFirmado>();
     public DbSet<TicketSoporte> TicketsSoporte => Set<TicketSoporte>();
+    public DbSet<Familiar> Familiares => Set<Familiar>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -199,6 +200,12 @@ public class CuidexaDbContext : DbContext
         modelBuilder.Entity<TicketSoporte>().HasOne(e => e.RespondidoPorSuperAdmin).WithMany().HasForeignKey(e => e.RespondidoPorSuperAdminId).OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<TicketSoporte>().HasQueryFilter(e =>
             e.CentroId == _tenant.CentroId || (_tenant.AccesoOrganizacionCompleto && e.Centro!.OrganizacionId == _tenant.OrganizacionId));
+
+        // Familiar: sin HasQueryFilter (no implementa ITieneCentro) — su
+        // aislamiento real es por ResidenteId, aplicado explícitamente en
+        // FamiliarService/FamiliarController, no por Centro.
+        modelBuilder.Entity<Familiar>().HasOne(e => e.Residente).WithMany().HasForeignKey(e => e.ResidenteId).OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Familiar>().HasIndex(f => f.Email).IsUnique();
 
         // --- FK + filtro global de aislamiento por Organización (5 catálogos) ---
         // Compartidos por todos los Centros de una misma Organizacion — sin
