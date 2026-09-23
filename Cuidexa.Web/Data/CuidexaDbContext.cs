@@ -47,6 +47,7 @@ public class CuidexaDbContext : DbContext
     public DbSet<SuscripcionPush> SuscripcionesPush => Set<SuscripcionPush>();
     public DbSet<Incidencia> Incidencias => Set<Incidencia>();
     public DbSet<DocumentoFirmado> DocumentosFirmados => Set<DocumentoFirmado>();
+    public DbSet<TicketSoporte> TicketsSoporte => Set<TicketSoporte>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -191,6 +192,12 @@ public class CuidexaDbContext : DbContext
 
         modelBuilder.Entity<DocumentoFirmado>().HasOne(e => e.Centro).WithMany().HasForeignKey(e => e.CentroId).OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<DocumentoFirmado>().HasQueryFilter(e =>
+            e.CentroId == _tenant.CentroId || (_tenant.AccesoOrganizacionCompleto && e.Centro!.OrganizacionId == _tenant.OrganizacionId));
+
+        modelBuilder.Entity<TicketSoporte>().HasOne(e => e.Centro).WithMany().HasForeignKey(e => e.CentroId).OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<TicketSoporte>().HasOne(e => e.Empleado).WithMany().HasForeignKey(e => e.EmpleadoId).OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<TicketSoporte>().HasOne(e => e.RespondidoPorSuperAdmin).WithMany().HasForeignKey(e => e.RespondidoPorSuperAdminId).OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<TicketSoporte>().HasQueryFilter(e =>
             e.CentroId == _tenant.CentroId || (_tenant.AccesoOrganizacionCompleto && e.Centro!.OrganizacionId == _tenant.OrganizacionId));
 
         // --- FK + filtro global de aislamiento por Organización (5 catálogos) ---

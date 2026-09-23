@@ -23,13 +23,17 @@ public class SuperAdminController : Controller
     private readonly CuidexaDbContext _db;
     private readonly IEmpleadoService _empleados;
     private readonly IOrganizacionService _organizacion;
+    private readonly ISoporteService _soporte;
 
-    public SuperAdminController(CuidexaDbContext db, IEmpleadoService empleados, IOrganizacionService organizacion)
+    public SuperAdminController(CuidexaDbContext db, IEmpleadoService empleados, IOrganizacionService organizacion, ISoporteService soporte)
     {
         _db = db;
         _empleados = empleados;
         _organizacion = organizacion;
+        _soporte = soporte;
     }
+
+    private int SuperAdminIdActual() => int.Parse(User.FindFirst("SuperAdminId")!.Value);
 
     // Sin comprobación de "ya autenticado": HttpContext.User refleja el
     // esquema por defecto (Empleado), no el de SuperAdmin, así que aquí no
@@ -251,5 +255,28 @@ public class SuperAdminController : Controller
             TempData["Mensaje"] = ex.Message;
         }
         return RedirectToAction("Marca", new { organizacionId });
+    }
+
+    // Canal de soporte (COMERCIALIZACION.md, bloque 3): SuperAdmin ve los
+    // tickets de todos los centros/organizaciones, no solo del suyo (no
+    // tiene "el suyo" — opera por encima del modelo de tenant).
+    public async Task<IActionResult> Soporte()
+    {
+        return View(await _soporte.ObtenerTodosAsync());
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResponderTicket(int ticketId, string respuesta)
+    {
+        try
+        {
+            await _soporte.ResponderAsync(ticketId, respuesta, SuperAdminIdActual());
+            TempData["Mensaje"] = "Respuesta enviada.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Soporte");
     }
 }

@@ -81,10 +81,23 @@ qué queda.
       con backups diarios el RPO real hoy es de hasta 24h; falta
       documentarlo como política explícita.
 
-### 3. Canal de soporte para clientes
-- [ ] Punto de contacto visible dentro de la app (formulario o enlace).
-- [ ] Flujo de recepción (email dedicado o bandeja compartida).
-- [ ] Documentación mínima de usuario (cómo reportar un problema).
+### 3. Canal de soporte para clientes ✅ (2026-09-23)
+- [x] Punto de contacto visible dentro de la app: enlace "Soporte" en la
+      navegación de cualquier rol de Empleado (`Controllers/SoporteController.cs`,
+      `Views/Soporte/Index.cshtml`) — formulario in-app, sin depender de
+      email/SMTP (que la app no tiene configurado).
+- [x] Flujo de recepción: panel `/SuperAdmin/Soporte` — ve los tickets de
+      todos los centros/organizaciones (con su centro/organización
+      indicados) y responde ahí mismo; la respuesta aparece de vuelta en
+      `/Soporte` para el empleado que lo reportó. Probado de extremo a
+      extremo (crear ticket → responder como SuperAdmin → verificar que
+      llega al empleado correcto).
+- [x] Documentación mínima de usuario: texto de ayuda integrado en el
+      propio formulario ("qué esperabas, qué ha pasado, en qué pantalla").
+- [ ] Notificación activa (push/email) al SuperAdmin cuando entra un
+      ticket nuevo — hoy hay que entrar a mirar el panel; sin esto no hay
+      SLA real de respuesta. Requiere el mismo canal de alertas externo
+      pendiente en el bloque 1.
 
 ### 4. App instalable / pulir experiencia offline
 - [ ] Revisar manifest.webmanifest y service worker existentes.

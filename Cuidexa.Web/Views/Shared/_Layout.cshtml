@@ -11,6 +11,18 @@
     // dos nunca se desincronizan entre sí.
     List<(string Icono, string Etiqueta, string Href)> ObtenerNavItems()
     {
+        var items = ObtenerNavItemsPorRol();
+        if (items.Any())
+        {
+            // Común a cualquier rol reconocido — no depende de email/SMTP,
+            // ver Controllers/SoporteController.cs.
+            items.Add(("bi-life-preserver", "Soporte", "/Soporte"));
+        }
+        return items;
+    }
+
+    List<(string Icono, string Etiqueta, string Href)> ObtenerNavItemsPorRol()
+    {
         if (User.IsInRole("Admin"))
         {
             return new()

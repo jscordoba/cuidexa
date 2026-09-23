@@ -1,0 +1,67 @@
+@model List<TicketSoporte>
+@{
+    Layout = "_LayoutSuperAdmin";
+    var abiertos = Model.Where(t => t.Estado == EstadoTicketSoporte.Abierto).ToList();
+    var resueltos = Model.Where(t => t.Estado == EstadoTicketSoporte.Resuelto).ToList();
+}
+<h4 class="mb-3">Soporte — todos los centros</h4>
+
+<h6 class="text-muted">Pendientes de respuesta (@abiertos.Count)</h6>
+@if (!abiertos.Any())
+{
+    <p class="text-muted small">Sin tickets pendientes.</p>
+}
+@foreach (var t in abiertos)
+{
+    <div class="card mb-2">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                    <h6 class="mb-1">@t.Titulo</h6>
+                    <span class="badge rounded-pill text-bg-light border">@t.Centro?.Nombre (@t.Centro?.Organizacion?.Nombre)</span>
+                </div>
+                <span class="badge bg-warning text-dark">Pendiente</span>
+            </div>
+            <p class="mb-1 mt-2">@t.Descripcion</p>
+            <small class="text-muted">Enviado por @(t.Empleado?.Nombre ?? "-") · @t.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</small>
+
+            <form method="post" action="/SuperAdmin/ResponderTicket" class="mt-2">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="ticketId" value="@t.Id" />
+                <div class="row g-2">
+                    <div class="col-12 col-sm-9">
+                        <textarea name="respuesta" class="form-control form-control-sm" rows="2" required placeholder="Escribe la respuesta..."></textarea>
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        <button class="btn btn-sm btn-primary w-100 h-100">Responder</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+@if (resueltos.Any())
+{
+    <h6 class="text-muted mt-4">Resueltos (@resueltos.Count)</h6>
+    @foreach (var t in resueltos)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div>
+                        <h6 class="mb-1">@t.Titulo</h6>
+                        <span class="badge rounded-pill text-bg-light border">@t.Centro?.Nombre (@t.Centro?.Organizacion?.Nombre)</span>
+                    </div>
+                    <span class="badge bg-success">Resuelto</span>
+                </div>
+                <p class="mb-1 mt-2">@t.Descripcion</p>
+                <small class="text-muted">Enviado por @(t.Empleado?.Nombre ?? "-") · @t.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</small>
+                <div class="alert alert-light border mt-2 mb-0 small">
+                    <strong>Respuesta:</strong> @t.Respuesta
+                    <div class="text-muted">@t.FechaRespuesta?.ToString("dd/MM/yyyy HH:mm")</div>
+                </div>
+            </div>
+        </div>
+    }
+}
