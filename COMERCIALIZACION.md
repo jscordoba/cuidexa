@@ -57,12 +57,29 @@ qué queda.
       depende de tener un monitor externo llamando a `/health` (ej.
       UptimeRobot/Better Stack) o del servicio de alertas anterior.
 
-### 2. Backups automatizados
-- [ ] Backup automático diario de PostgreSQL, cifrado en reposo.
-- [ ] Retención definida (ej. 30 días diarios + 12 meses mensuales).
-- [ ] Prueba real de restauración documentada (un backup que nunca se ha
-      restaurado no es un backup fiable).
-- [ ] Plan de recuperación ante desastres (RPO/RTO) escrito.
+### 2. Backups automatizados ✅ (base completada 2026-09-23)
+- [x] Backup automático diario de PostgreSQL (`Services/BackupService.cs`,
+      `BackgroundService` sin dependencias externas — coherente con el
+      monolito autocontenido), cifrado en reposo con AES-256-GCM
+      (`Services/BackupCifrado.cs`, clave independiente en
+      `Backup:ClaveCifrado`). Desactivado por defecto
+      (`Backup:Habilitado=false`) — hay que activarlo explícitamente por
+      entorno.
+- [x] Retención configurable por días (`Backup:RetencionDias`, 30 por
+      defecto) — purga automática de backups más antiguos que el límite.
+- [x] Prueba real de restauración documentada y ejecutada: backup real →
+      `Scripts/Restaurar-Backup.ps1` (descifra + `pg_restore`) → base de
+      datos de pruebas nueva → verificado con `SELECT count(*)` sobre
+      Residentes/Empleados que los datos coinciden. Repetible por cualquiera
+      con el script.
+- [ ] Backups fuera del host (hoy se escriben en disco local del propio
+      servidor — si se pierde la máquina, se pierden los backups con ella).
+      Sincronizar `Backup:Directorio` a almacenamiento externo (S3/Azure
+      Blob/Backblaze) es la pieza que falta, y requiere credenciales de un
+      proveedor externo (decisión de negocio, no solo código).
+- [ ] Plan de recuperación ante desastres (RPO/RTO) escrito formalmente —
+      con backups diarios el RPO real hoy es de hasta 24h; falta
+      documentarlo como política explícita.
 
 ### 3. Canal de soporte para clientes
 - [ ] Punto de contacto visible dentro de la app (formulario o enlace).

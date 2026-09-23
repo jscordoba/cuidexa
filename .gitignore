@@ -14,3 +14,6 @@ obj/
 
 ## Logs
 *.log
+
+## Backups locales (solo para pruebas — en producción van a almacenamiento externo)
+backups/

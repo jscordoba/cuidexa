@@ -84,6 +84,7 @@ builder.Services.AddScoped<IInformesService, InformesService>();
 builder.Services.AddScoped<IIncidenciaService, IncidenciaService>();
 builder.Services.AddScoped<IDocumentoFirmadoService, DocumentoFirmadoService>();
 builder.Services.AddScoped<IAnalisisService, AnalisisService>();
+builder.Services.AddHostedService<BackupService>();
 
 builder.Services.AddHttpClient<IFestivosApiService, FestivosApiService>(cliente =>
 {
