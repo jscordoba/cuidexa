@@ -22,11 +22,13 @@ public class SuperAdminController : Controller
 
     private readonly CuidexaDbContext _db;
     private readonly IEmpleadoService _empleados;
+    private readonly IOrganizacionService _organizacion;
 
-    public SuperAdminController(CuidexaDbContext db, IEmpleadoService empleados)
+    public SuperAdminController(CuidexaDbContext db, IEmpleadoService empleados, IOrganizacionService organizacion)
     {
         _db = db;
         _empleados = empleados;
+        _organizacion = organizacion;
     }
 
     // Sin comprobación de "ya autenticado": HttpContext.User refleja el
@@ -198,5 +200,56 @@ public class SuperAdminController : Controller
 
         TempData["Mensaje"] = $"Admin '{nombre}' creado para el centro '{centro.Nombre}' (código {centro.Codigo}). Ya puede iniciar sesión.";
         return RedirectToAction("Index");
+    }
+
+    // Marca de una Organización desde el panel de SuperAdmin — cubre el
+    // hueco de una organización sin ningún DirectorOrganizacion todavía
+    // (recién provisionada, solo con su primer Admin) que de otro modo se
+    // queda con la marca genérica hasta que alguien sea ascendido. Vale
+    // igual para una organización de un único centro que para una con
+    // varios — la marca es de la Organización, no depende de cuántos tenga.
+    public async Task<IActionResult> Marca(int organizacionId)
+    {
+        Organizacion organizacion;
+        try
+        {
+            organizacion = await _organizacion.ObtenerPorIdAsync(organizacionId);
+        }
+        catch (InvalidOperationException)
+        {
+            return NotFound();
+        }
+
+        return View(organizacion);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ActualizarMarca(int organizacionId, string nombre, string? colorAcento)
+    {
+        try
+        {
+            await _organizacion.ActualizarMarcaComoSuperAdminAsync(organizacionId, nombre, colorAcento);
+            TempData["Mensaje"] = "Marca de la organización actualizada.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Marca", new { organizacionId });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SubirLogo(int organizacionId, IFormFile? logo)
+    {
+        try
+        {
+            await _organizacion.ActualizarLogoComoSuperAdminAsync(organizacionId, logo);
+            TempData["Mensaje"] = "Logo actualizado.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Marca", new { organizacionId });
     }
 }

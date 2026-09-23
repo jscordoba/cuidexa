@@ -32,10 +32,23 @@ public class OrganizacionService : IOrganizacionService
     // Organizacion nunca lleva filtro global — se acota explícitamente a la
     // de la sesión actual, igual que ICentroService.ObtenerAsync().
     public async Task<Organizacion> ObtenerAsync() =>
-        await _db.Organizaciones.FindAsync(_tenant.OrganizacionId)
+        await ObtenerPorIdAsync(_tenant.OrganizacionId);
+
+    public async Task<Organizacion> ObtenerPorIdAsync(int organizacionId) =>
+        await _db.Organizaciones.FindAsync(organizacionId)
             ?? throw new InvalidOperationException("Organización no encontrada.");
 
-    public async Task ActualizarMarcaAsync(string? nombre, string? colorAcento, int? actorId)
+    public Task ActualizarMarcaAsync(string? nombre, string? colorAcento, int? actorId) =>
+        ActualizarMarcaInternoAsync(_tenant.OrganizacionId, nombre, colorAcento, actorId);
+
+    // SuperAdmin no tiene OrganizacionId de sesión (ver ITenantContext) — de
+    // ahí el id explícito. Sin auditoría por actorId (SuperAdmin no es un
+    // Empleado): igual que SuperAdminController.CrearOrganizacion/CrearCentro,
+    // que tampoco auditan la acción con IAuditService.
+    public Task ActualizarMarcaComoSuperAdminAsync(int organizacionId, string? nombre, string? colorAcento) =>
+        ActualizarMarcaInternoAsync(organizacionId, nombre, colorAcento, actorId: null);
+
+    private async Task ActualizarMarcaInternoAsync(int organizacionId, string? nombre, string? colorAcento, int? actorId)
     {
         if (string.IsNullOrWhiteSpace(nombre))
         {
@@ -47,16 +60,25 @@ public class OrganizacionService : IOrganizacionService
             throw new InvalidOperationException("El color de acento debe ser un código hexadecimal válido (ej. #4f46e5).");
         }
 
-        var organizacion = await ObtenerAsync();
+        var organizacion = await ObtenerPorIdAsync(organizacionId);
         organizacion.Nombre = nombre;
         organizacion.ColorAcento = string.IsNullOrWhiteSpace(colorAcento) ? null : colorAcento;
         await _db.SaveChangesAsync();
 
-        await _auditoria.RegistrarAsync(actorId, "ConfiguracionActualizada", "Organizacion", organizacion.Id,
-            "Datos de marca de la organización actualizados.");
+        if (actorId.HasValue)
+        {
+            await _auditoria.RegistrarAsync(actorId, "ConfiguracionActualizada", "Organizacion", organizacion.Id,
+                "Datos de marca de la organización actualizados.");
+        }
     }
 
-    public async Task ActualizarLogoAsync(IFormFile? archivo, int? actorId)
+    public Task ActualizarLogoAsync(IFormFile? archivo, int? actorId) =>
+        ActualizarLogoInternoAsync(_tenant.OrganizacionId, archivo, actorId);
+
+    public Task ActualizarLogoComoSuperAdminAsync(int organizacionId, IFormFile? archivo) =>
+        ActualizarLogoInternoAsync(organizacionId, archivo, actorId: null);
+
+    private async Task ActualizarLogoInternoAsync(int organizacionId, IFormFile? archivo, int? actorId)
     {
         if (archivo is null || archivo.Length == 0)
         {
@@ -74,7 +96,7 @@ public class OrganizacionService : IOrganizacionService
             throw new InvalidOperationException("El logo debe ser .png, .jpg o .jpeg.");
         }
 
-        var organizacion = await ObtenerAsync();
+        var organizacion = await ObtenerPorIdAsync(organizacionId);
 
         // Carpeta por organización (no compartida): más fácil de razonar y de
         // limpiar si una organización se da de baja, aunque el nombre GUID ya
@@ -101,7 +123,10 @@ public class OrganizacionService : IOrganizacionService
         organizacion.LogoRuta = $"/uploads/org-{organizacion.Id}/{nombreArchivo}";
         await _db.SaveChangesAsync();
 
-        await _auditoria.RegistrarAsync(actorId, "ConfiguracionActualizada", "Organizacion", organizacion.Id,
-            "Logo de la organización actualizado.");
+        if (actorId.HasValue)
+        {
+            await _auditoria.RegistrarAsync(actorId, "ConfiguracionActualizada", "Organizacion", organizacion.Id,
+                "Logo de la organización actualizado.");
+        }
     }
 }
