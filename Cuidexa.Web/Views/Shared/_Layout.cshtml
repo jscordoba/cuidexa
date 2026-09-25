@@ -2,11 +2,9 @@
 @using Cuidexa.Web.ViewHelpers
 @using Cuidexa.Web.Services
 @using Microsoft.AspNetCore.Antiforgery
-@using Microsoft.Extensions.Localization
 @inject IConfiguration Configuracion
 @inject IOrganizacionService OrganizacionService
 @inject IAntiforgery Antiforgery
-@inject IStringLocalizer<SharedResource> Localizer
 @functions {
     // Un único lugar para la navegación de cada rol — se usa tanto en la
     // barra lateral (escritorio) como en la barra inferior (móvil), así las

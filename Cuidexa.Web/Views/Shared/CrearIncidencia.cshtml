@@ -4,75 +4,75 @@
 @{
     var (_, _, etiquetaPropia) = RolPresentacion.Obtener(Model.RolOrigen);
 }
-<a href="/@Model.RutaBase/Incidencias" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Incidencias</a>
-<h4 class="mb-3"><i class="bi bi-exclamation-octagon-fill me-2 text-muted"></i>Reportar incidencia</h4>
+<a href="/@Model.RutaBase/Incidencias" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver a Incidencias"]</a>
+<h4 class="mb-3"><i class="bi bi-exclamation-octagon-fill me-2 text-muted"></i>@Localizer["Reportar incidencia"]</h4>
 
 <div class="alert alert-light border d-flex align-items-start gap-2 mb-3">
     <i class="bi bi-info-circle text-muted mt-1"></i>
     <div>
-        Distinto de un aviso: una incidencia queda abierta hasta que el área responsable la resuelve, con seguimiento.
-        Reportada desde <strong>@etiquetaPropia</strong>.
+        @Localizer["Distinto de un aviso: una incidencia queda abierta hasta que el área responsable la resuelve, con seguimiento."]
+        @Localizer["Reportada desde"] <strong>@etiquetaPropia</strong>.
     </div>
 </div>
 
 <form method="post" action="/@Model.RutaBase/CrearIncidencia" class="card p-3">
     @Html.AntiForgeryToken()
     <div class="mb-3">
-        <label class="form-label d-block">¿A qué afecta?</label>
+        <label class="form-label d-block">@Localizer["¿A qué afecta?"]</label>
         <div class="btn-group" role="group">
             <input type="radio" class="btn-check" name="tipo" id="tipoResidente" value="@TipoIncidencia.Residente" checked>
-            <label class="btn btn-outline-secondary btn-sm" for="tipoResidente">A un residente</label>
+            <label class="btn btn-outline-secondary btn-sm" for="tipoResidente">@Localizer["A un residente"]</label>
             <input type="radio" class="btn-check" name="tipo" id="tipoPersonal" value="@TipoIncidencia.Personal">
-            <label class="btn btn-outline-secondary btn-sm" for="tipoPersonal">Personal/operativa</label>
+            <label class="btn btn-outline-secondary btn-sm" for="tipoPersonal">@Localizer["Personal/operativa"]</label>
             <input type="radio" class="btn-check" name="tipo" id="tipoInstalaciones" value="@TipoIncidencia.Instalaciones">
-            <label class="btn btn-outline-secondary btn-sm" for="tipoInstalaciones">Instalaciones/seguridad</label>
+            <label class="btn btn-outline-secondary btn-sm" for="tipoInstalaciones">@Localizer["Instalaciones/seguridad"]</label>
         </div>
-        <div class="form-text">Determina quién la resuelve: de residente la revisa Enfermería, las otras dos Administración.</div>
+        <div class="form-text">@Localizer["Determina quién la resuelve: de residente la revisa Enfermería, las otras dos Administración."]</div>
     </div>
 
     <div class="mb-3" id="campoResidente">
-        <label class="form-label">Residente</label>
+        <label class="form-label">@Localizer["Residente"]</label>
         <select name="residenteId" id="selectResidente" class="form-select" required>
-            <option value="">-- Selecciona un residente --</option>
+            <option value="">-- @Localizer["Selecciona un residente"] --</option>
             @foreach (var r in Model.Residentes)
             {
-                <option value="@r.Id">@r.Nombre @r.Apellidos @(r.Habitacion != null ? $"· Hab. {r.Habitacion.Numero}" : "")</option>
+                <option value="@r.Id">@r.Nombre @r.Apellidos @(r.Habitacion != null ? $"· {Localizer["Hab."]} {r.Habitacion.Numero}" : "")</option>
             }
         </select>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Título</label>
-        <input name="titulo" class="form-control" required maxlength="120" placeholder="Resumen corto de la incidencia" />
+        <label class="form-label">@Localizer["Título"]</label>
+        <input name="titulo" class="form-control" required maxlength="120" placeholder="@Localizer["Resumen corto de la incidencia"]" />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Descripción</label>
-        <textarea name="descripcion" class="form-control" rows="3" required placeholder="Qué ha pasado, cuándo, quién estaba presente..."></textarea>
+        <label class="form-label">@Localizer["Descripción"]</label>
+        <textarea name="descripcion" class="form-control" rows="3" required placeholder="@Localizer["Qué ha pasado, cuándo, quién estaba presente..."]"></textarea>
     </div>
 
     <div class="mb-3">
-        <label class="form-label d-block">¿Necesita que alguien actúe?</label>
+        <label class="form-label d-block">@Localizer["¿Necesita que alguien actúe?"]</label>
         <div class="btn-group" role="group">
             <input type="radio" class="btn-check" name="caracter" id="caracterSeguimiento" value="@CaracterIncidencia.RequiereSeguimiento" checked>
-            <label class="btn btn-outline-secondary btn-sm" for="caracterSeguimiento">Requiere seguimiento</label>
+            <label class="btn btn-outline-secondary btn-sm" for="caracterSeguimiento">@Localizer["Requiere seguimiento"]</label>
             <input type="radio" class="btn-check" name="caracter" id="caracterInformativa" value="@CaracterIncidencia.Informativa">
-            <label class="btn btn-outline-secondary btn-sm" for="caracterInformativa">Solo informativa</label>
+            <label class="btn btn-outline-secondary btn-sm" for="caracterInformativa">@Localizer["Solo informativa"]</label>
         </div>
-        <div class="form-text">"Solo informativa" queda registrada para el histórico, sin quedar pendiente ni avisar a nadie — para dejar constancia sin abrir un caso.</div>
+        <div class="form-text">@Localizer["\"Solo informativa\" queda registrada para el histórico, sin quedar pendiente ni avisar a nadie — para dejar constancia sin abrir un caso."]</div>
     </div>
 
     <div class="mb-3" id="campoGravedad">
-        <label class="form-label">Gravedad</label>
+        <label class="form-label">@Localizer["Gravedad"]</label>
         <select name="gravedad" class="form-select">
-            <option value="@GravedadIncidencia.Baja">Baja</option>
-            <option value="@GravedadIncidencia.Media" selected>Media</option>
-            <option value="@GravedadIncidencia.Alta">Alta</option>
-            <option value="@GravedadIncidencia.Urgente">Urgente — notifica al instante</option>
+            <option value="@GravedadIncidencia.Baja">@Localizer["Baja"]</option>
+            <option value="@GravedadIncidencia.Media" selected>@Localizer["Media"]</option>
+            <option value="@GravedadIncidencia.Alta">@Localizer["Alta"]</option>
+            <option value="@GravedadIncidencia.Urgente">@Localizer["Urgente — notifica al instante"]</option>
         </select>
     </div>
 
-    <button type="submit" class="btn btn-primary align-self-start">Reportar incidencia</button>
+    <button type="submit" class="btn btn-primary align-self-start">@Localizer["Reportar incidencia"]</button>
 </form>
 
 @section Scripts {

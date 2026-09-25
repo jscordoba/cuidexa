@@ -21,38 +21,46 @@
 
     string EtiquetaTipo(TipoIncidencia t) => t switch
     {
-        TipoIncidencia.Residente => "Residente",
-        TipoIncidencia.Personal => "Personal/operativa",
-        TipoIncidencia.Instalaciones => "Instalaciones/seguridad",
+        TipoIncidencia.Residente => Localizer["Residente"],
+        TipoIncidencia.Personal => Localizer["Personal/operativa"],
+        TipoIncidencia.Instalaciones => Localizer["Instalaciones/seguridad"],
         _ => t.ToString()
     };
+
+    string EtiquetaEstado(EstadoIncidencia e) => e switch
+    {
+        EstadoIncidencia.Abierta => Localizer["Abierta"],
+        EstadoIncidencia.EnProgreso => Localizer["En progreso"],
+        EstadoIncidencia.Resuelta => Localizer["Resuelta"],
+        _ => e.ToString()
+    };
 }
-<a href="/@Model.RutaBase" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<a href="/@Model.RutaBase" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver al panel"]</a>
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-exclamation-octagon-fill me-2 text-muted"></i>Incidencias</h4>
+    <h4 class="mb-0"><i class="bi bi-exclamation-octagon-fill me-2 text-muted"></i>@Localizer["Incidencias"]</h4>
     <div class="d-flex gap-2">
         @if (Model.PuedeFirmar)
         {
-            <a href="/@Model.RutaBase/DocumentosFirmados" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pen me-1"></i>Documentos firmados</a>
+            <a href="/@Model.RutaBase/DocumentosFirmados" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pen me-1"></i>@Localizer["Documentos firmados"]</a>
         }
         @if (Model.PuedeCrear)
         {
-            <a href="/@Model.RutaBase/CrearIncidencia" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Reportar incidencia</a>
+            <a href="/@Model.RutaBase/CrearIncidencia" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>@Localizer["Reportar incidencia"]</a>
         }
     </div>
 </div>
 
 @if (!Model.Incidencias.Any())
 {
-    <p class="text-muted">No hay incidencias registradas.</p>
+    <p class="text-muted">@Localizer["No hay incidencias registradas."]</p>
 }
 else
 {
-    <input type="search" id="filtroIncidencias" class="form-control mb-2" placeholder="Buscar en las incidencias..." />
+    <input type="search" id="filtroIncidencias" class="form-control mb-2" placeholder="@Localizer["Buscar en las incidencias..."]" />
     <div id="listaIncidencias">
         @if (!abiertas.Any())
         {
-            <p class="text-muted small">Sin incidencias abiertas — al día.</p>
+            <p class="text-muted small">@Localizer["Sin incidencias abiertas — al día."]</p>
         }
         @foreach (var i in abiertas)
         {
@@ -60,14 +68,14 @@ else
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-1 mb-2">
                         <span class="badge rounded-pill text-bg-light border"><i class="bi bi-tag me-1"></i>@EtiquetaTipo(i.Tipo)</span>
-                        <span class="badge rounded-pill text-bg-light border">@i.Estado</span>
+                        <span class="badge rounded-pill text-bg-light border">@EtiquetaEstado(i.Estado)</span>
                         @if (i.Gravedad == GravedadIncidencia.Urgente)
                         {
-                            <span class="badge bg-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i>Urgente</span>
+                            <span class="badge bg-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i>@Localizer["Urgente"]</span>
                         }
                         else if (i.Gravedad == GravedadIncidencia.Alta)
                         {
-                            <span class="badge bg-warning text-dark">Alta</span>
+                            <span class="badge bg-warning text-dark">@Localizer["Alta"]</span>
                         }
                     </div>
                     <h6 class="mb-1">@i.Titulo</h6>
@@ -77,18 +85,18 @@ else
                     }
                     <p class="mb-1">@i.Descripcion</p>
                     <small class="text-muted">
-                        Reportada por @(i.EmpleadoOrigen?.Nombre ?? i.RolOrigen.ToString()) · @i.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                        @Localizer["Reportada por"] @(i.EmpleadoOrigen?.Nombre ?? i.RolOrigen.ToString()) · @i.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
                     </small>
                     @if (i.DocumentosFirmados.Any() || Model.PuedeFirmar)
                     {
                         <div class="mt-1">
                             @if (i.DocumentosFirmados.Any())
                             {
-                                <span class="badge rounded-pill text-bg-light border"><i class="bi bi-pen me-1"></i>@i.DocumentosFirmados.Count firma(s)</span>
+                                <span class="badge rounded-pill text-bg-light border"><i class="bi bi-pen me-1"></i>@i.DocumentosFirmados.Count @Localizer["firma(s)"]</span>
                             }
                             @if (Model.PuedeFirmar)
                             {
-                                <a href="/@Model.RutaBase/FirmarIncidencia?incidenciaId=@i.Id" class="small ms-1">Firmar conformidad</a>
+                                <a href="/@Model.RutaBase/FirmarIncidencia?incidenciaId=@i.Id" class="small ms-1">@Localizer["Firmar conformidad"]</a>
                             }
                         </div>
                     }
@@ -100,16 +108,16 @@ else
                             <select name="estado" class="form-select form-select-sm">
                                 @if (i.Estado == EstadoIncidencia.Abierta)
                                 {
-                                    <option value="@EstadoIncidencia.EnProgreso">Marcar en progreso</option>
+                                    <option value="@EstadoIncidencia.EnProgreso">@Localizer["Marcar en progreso"]</option>
                                 }
-                                <option value="@EstadoIncidencia.Resuelta">Marcar resuelta</option>
+                                <option value="@EstadoIncidencia.Resuelta">@Localizer["Marcar resuelta"]</option>
                             </select>
                         </div>
                         <div class="col-auto flex-grow-1" style="min-width:180px;">
-                            <input name="notasResolucion" class="form-control form-control-sm" placeholder="Notas (obligatorio al resolver)" />
+                            <input name="notasResolucion" class="form-control form-control-sm" placeholder="@Localizer["Notas (obligatorio al resolver)"]" />
                         </div>
                         <div class="col-auto">
-                            <button class="btn btn-sm btn-outline-secondary">Actualizar</button>
+                            <button class="btn btn-sm btn-outline-secondary">@Localizer["Actualizar"]</button>
                         </div>
                     </form>
                 </div>
@@ -119,7 +127,7 @@ else
         @if (informativas.Any())
         {
             <button class="toggle-colapsable mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#incidenciasInformativas" aria-expanded="false" aria-controls="incidenciasInformativas">
-                Ver @informativas.Count informativa(s) <span class="caret">&#9662;</span>
+                @Localizer["Ver"] @informativas.Count @Localizer["informativa(s)"] <span class="caret">&#9662;</span>
             </button>
             <div class="collapse" id="incidenciasInformativas">
                 @foreach (var i in informativas)
@@ -128,7 +136,7 @@ else
                         <div class="card-body">
                             <div class="d-flex flex-wrap gap-1 mb-2">
                                 <span class="badge rounded-pill text-bg-light border"><i class="bi bi-tag me-1"></i>@EtiquetaTipo(i.Tipo)</span>
-                                <span class="badge rounded-pill text-bg-light border"><i class="bi bi-info-circle me-1"></i>Informativa</span>
+                                <span class="badge rounded-pill text-bg-light border"><i class="bi bi-info-circle me-1"></i>@Localizer["Informativa"]</span>
                             </div>
                             <h6 class="mb-1">@i.Titulo</h6>
                             @if (i.Residente is not null)
@@ -137,18 +145,18 @@ else
                             }
                             <p class="mb-1">@i.Descripcion</p>
                             <small class="text-muted">
-                                Reportada por @(i.EmpleadoOrigen?.Nombre ?? i.RolOrigen.ToString()) · @i.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                                @Localizer["Reportada por"] @(i.EmpleadoOrigen?.Nombre ?? i.RolOrigen.ToString()) · @i.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
                             </small>
                             @if (i.DocumentosFirmados.Any() || Model.PuedeFirmar)
                             {
                                 <div class="mt-1">
                                     @if (i.DocumentosFirmados.Any())
                                     {
-                                        <span class="badge rounded-pill text-bg-light border"><i class="bi bi-pen me-1"></i>@i.DocumentosFirmados.Count firma(s)</span>
+                                        <span class="badge rounded-pill text-bg-light border"><i class="bi bi-pen me-1"></i>@i.DocumentosFirmados.Count @Localizer["firma(s)"]</span>
                                     }
                                     @if (Model.PuedeFirmar)
                                     {
-                                        <a href="/@Model.RutaBase/FirmarIncidencia?incidenciaId=@i.Id" class="small ms-1">Firmar conformidad</a>
+                                        <a href="/@Model.RutaBase/FirmarIncidencia?incidenciaId=@i.Id" class="small ms-1">@Localizer["Firmar conformidad"]</a>
                                     }
                                 </div>
                             }
@@ -161,7 +169,7 @@ else
         @if (resueltas.Any())
         {
             <button class="toggle-colapsable mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#incidenciasResueltas" aria-expanded="false" aria-controls="incidenciasResueltas">
-                Ver @resueltas.Count resuelta(s) <span class="caret">&#9662;</span>
+                @Localizer["Ver"] @resueltas.Count @Localizer["resuelta(s)"] <span class="caret">&#9662;</span>
             </button>
             <div class="collapse" id="incidenciasResueltas">
                 @foreach (var i in resueltas)
@@ -173,21 +181,21 @@ else
                             <p class="mb-1">@i.Descripcion</p>
                             @if (!string.IsNullOrWhiteSpace(i.NotasResolucion))
                             {
-                                <p class="mb-1 small"><strong>Resolución:</strong> @i.NotasResolucion</p>
+                                <p class="mb-1 small"><strong>@Localizer["Resolución:"]</strong> @i.NotasResolucion</p>
                             }
                             <small class="text-muted">
-                                Resuelta por @(i.ResueltoPor?.Nombre ?? "-") · @i.FechaResolucion?.ToString("dd/MM/yyyy HH:mm")
+                                @Localizer["Resuelta por"] @(i.ResueltoPor?.Nombre ?? "-") · @i.FechaResolucion?.ToString("dd/MM/yyyy HH:mm")
                             </small>
                             @if (i.DocumentosFirmados.Any() || Model.PuedeFirmar)
                             {
                                 <div class="mt-1">
                                     @if (i.DocumentosFirmados.Any())
                                     {
-                                        <span class="badge rounded-pill text-bg-light border"><i class="bi bi-pen me-1"></i>@i.DocumentosFirmados.Count firma(s)</span>
+                                        <span class="badge rounded-pill text-bg-light border"><i class="bi bi-pen me-1"></i>@i.DocumentosFirmados.Count @Localizer["firma(s)"]</span>
                                     }
                                     @if (Model.PuedeFirmar)
                                     {
-                                        <a href="/@Model.RutaBase/FirmarIncidencia?incidenciaId=@i.Id" class="small ms-1">Firmar conformidad</a>
+                                        <a href="/@Model.RutaBase/FirmarIncidencia?incidenciaId=@i.Id" class="small ms-1">@Localizer["Firmar conformidad"]</a>
                                     }
                                 </div>
                             }
@@ -197,7 +205,7 @@ else
             </div>
         }
     </div>
-    <p id="incidenciasSinResultados" class="text-muted" hidden>Ninguna incidencia coincide con la búsqueda.</p>
+    <p id="incidenciasSinResultados" class="text-muted" hidden>@Localizer["Ninguna incidencia coincide con la búsqueda."]</p>
 }
 
 @section Scripts {

@@ -151,4 +151,146 @@
   <data name="Director de Organización" xml:space="preserve">
     <value>Organization Director</value>
   </data>
+  <data name="A un residente" xml:space="preserve"><value>For a resident</value></data>
+  <data name="Abierta" xml:space="preserve"><value>Open</value></data>
+  <data name="Accesos rápidos" xml:space="preserve"><value>Quick access</value></data>
+  <data name="Actividad reciente" xml:space="preserve"><value>Recent activity</value></data>
+  <data name="Activo" xml:space="preserve"><value>Active</value></data>
+  <data name="Actualizar" xml:space="preserve"><value>Update</value></data>
+  <data name="Alta" xml:space="preserve"><value>High</value></data>
+  <data name="Aprobada" xml:space="preserve"><value>Approved</value></data>
+  <data name="Aprobado" xml:space="preserve"><value>Approved</value></data>
+  <data name="Asistencia total" xml:space="preserve"><value>Full assistance</value></data>
+  <data name="Autónomo" xml:space="preserve"><value>Independent</value></data>
+  <data name="Avisos pendientes" xml:space="preserve"><value>Pending notices</value></data>
+  <data name="Baja" xml:space="preserve"><value>Low</value></data>
+  <data name="Buscar en las incidencias..." xml:space="preserve"><value>Search incidents...</value></data>
+  <data name="Buscar en los avisos..." xml:space="preserve"><value>Search notices...</value></data>
+  <data name="Buscar por nombre, habitación, estado..." xml:space="preserve"><value>Search by name, room, status...</value></data>
+  <data name="Cambios de turno pendientes" xml:space="preserve"><value>Pending shift changes</value></data>
+  <data name="Cambios y reemplazos" xml:space="preserve"><value>Changes and replacements</value></data>
+  <data name="Cedido" xml:space="preserve"><value>Covered</value></data>
+  <data name="Comensales hoy" xml:space="preserve"><value>Diners today</value></data>
+  <data name="Cubres a {0}" xml:space="preserve"><value>Covering for {0}</value></data>
+  <data name="De baja" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Descripción" xml:space="preserve"><value>Description</value></data>
+  <data name="Descripción del aviso" xml:space="preserve"><value>Notice description</value></data>
+  <data name="Desde" xml:space="preserve"><value>From</value></data>
+  <data name="Determina quién la resuelve: de residente la revisa Enfermería, las otras dos Administración." xml:space="preserve"><value>Determines who resolves it: resident incidents are reviewed by Nursing, the other two by Administration.</value></data>
+  <data name="Día" xml:space="preserve"><value>Day</value></data>
+  <data name="Distinto de un aviso: una incidencia queda abierta hasta que el área responsable la resuelve, con seguimiento." xml:space="preserve"><value>Different from a notice: an incident stays open until the responsible area resolves it, with follow-up.</value></data>
+  <data name="Distribución de residentes" xml:space="preserve"><value>Resident distribution</value></data>
+  <data name="Documentos firmados" xml:space="preserve"><value>Signed documents</value></data>
+  <data name="El {0} te cubre {1} — no tienes que ir ese día." xml:space="preserve"><value>On {0}, {1} is covering for you — you don't need to go in that day.</value></data>
+  <data name="En progreso" xml:space="preserve"><value>In progress</value></data>
+  <data name="Enviar a todo el centro" xml:space="preserve"><value>Send to the whole center</value></data>
+  <data name="Enviar aviso" xml:space="preserve"><value>Send notice</value></data>
+  <data name="Equipo, daño de implementos, mantenimiento, insumos... cualquier novedad no ligada a un residente concreto." xml:space="preserve"><value>Equipment, damaged tools, maintenance, supplies... any update not tied to a specific resident.</value></data>
+  <data name="Estado" xml:space="preserve"><value>Status</value></data>
+  <data name="Este aviso llegará automáticamente a" xml:space="preserve"><value>This notice will automatically reach</value></data>
+  <data name="Fecha" xml:space="preserve"><value>Date</value></data>
+  <data name="Fijo" xml:space="preserve"><value>Permanent</value></data>
+  <data name="Firmar conformidad" xml:space="preserve"><value>Sign acknowledgment</value></data>
+  <data name="Gestión de residentes" xml:space="preserve"><value>Resident management</value></data>
+  <data name="Gravedad" xml:space="preserve"><value>Severity</value></data>
+  <data name="Grupo de notificación (opcional)" xml:space="preserve"><value>Notification group (optional)</value></data>
+  <data name="Hab." xml:space="preserve"><value>Room</value></data>
+  <data name="Habitación" xml:space="preserve"><value>Room</value></data>
+  <data name="Hasta" xml:space="preserve"><value>To</value></data>
+  <data name="Hola" xml:space="preserve"><value>Hello</value></data>
+  <data name="Incidencias abiertas" xml:space="preserve"><value>Open incidents</value></data>
+  <data name="Informativa" xml:space="preserve"><value>Informational</value></data>
+  <data name="Instalaciones/seguridad" xml:space="preserve"><value>Facilities/security</value></data>
+  <data name="Listado de residentes" xml:space="preserve"><value>Resident list</value></data>
+  <data name="Llega solo a los miembros del grupo, sin avisar a todo su departamento." xml:space="preserve"><value>Only reaches group members, without notifying the whole department.</value></data>
+  <data name="Marcar como leído" xml:space="preserve"><value>Mark as read</value></data>
+  <data name="Marcar como urgente" xml:space="preserve"><value>Mark as urgent</value></data>
+  <data name="Marcar en progreso" xml:space="preserve"><value>Mark in progress</value></data>
+  <data name="Marcar resuelta" xml:space="preserve"><value>Mark resolved</value></data>
+  <data name="Media" xml:space="preserve"><value>Medium</value></data>
+  <data name="Medicación pendiente hoy" xml:space="preserve"><value>Medication due today</value></data>
+  <data name="Mis solicitudes de cambio" xml:space="preserve"><value>My change requests</value></data>
+  <data name="Mis turnos" xml:space="preserve"><value>My shifts</value></data>
+  <data name="Mis vacaciones" xml:space="preserve"><value>My time off</value></data>
+  <data name="Mismo departamento" xml:space="preserve"><value>Same department</value></data>
+  <data name="Motivo" xml:space="preserve"><value>Reason</value></data>
+  <data name="Motivo del cambio" xml:space="preserve"><value>Reason for the change</value></data>
+  <data name="Motivo, referencia..." xml:space="preserve"><value>Reason, reference...</value></data>
+  <data name="Ninguna incidencia coincide con la búsqueda." xml:space="preserve"><value>No incidents match the search.</value></data>
+  <data name="Ninguno" xml:space="preserve"><value>None</value></data>
+  <data name="Ningún aviso coincide con la búsqueda." xml:space="preserve"><value>No notices match the search.</value></data>
+  <data name="Ningún residente coincide con la búsqueda." xml:space="preserve"><value>No residents match the search.</value></data>
+  <data name="No has solicitado ningún cambio de turno todavía." xml:space="preserve"><value>You haven't requested any shift changes yet.</value></data>
+  <data name="No has solicitado vacaciones todavía." xml:space="preserve"><value>You haven't requested time off yet.</value></data>
+  <data name="No hay avisos pendientes." xml:space="preserve"><value>No pending notices.</value></data>
+  <data name="No hay incidencias registradas." xml:space="preserve"><value>No incidents recorded.</value></data>
+  <data name="No tienes reemplazos ni cambios de turno próximos." xml:space="preserve"><value>You have no upcoming replacements or shift changes.</value></data>
+  <data name="No tienes un turno por defecto configurado — contacta con Admin." xml:space="preserve"><value>You don't have a default shift configured — contact Admin.</value></data>
+  <data name="Nombre" xml:space="preserve"><value>Name</value></data>
+  <data name="Notas (obligatorio al resolver)" xml:space="preserve"><value>Notes (required when resolving)</value></data>
+  <data name="Notas (opcional)" xml:space="preserve"><value>Notes (optional)</value></data>
+  <data name="Nuevo aviso" xml:space="preserve"><value>New notice</value></data>
+  <data name="Pasajero" xml:space="preserve"><value>Temporary</value></data>
+  <data name="Pendiente" xml:space="preserve"><value>Pending</value></data>
+  <data name="Personal activo" xml:space="preserve"><value>Active staff</value></data>
+  <data name="Personal/operativa" xml:space="preserve"><value>Staff/operational</value></data>
+  <data name="Proponer sustituto (opcional)" xml:space="preserve"><value>Suggest a substitute (optional)</value></data>
+  <data name="Propuesto:" xml:space="preserve"><value>Proposed:</value></data>
+  <data name="Puesto de trabajo" xml:space="preserve"><value>Workplace</value></data>
+  <data name="Qué ha pasado, cuándo, quién estaba presente..." xml:space="preserve"><value>What happened, when, who was present...</value></data>
+  <data name="Qué ha pasado, qué se necesita, qué hay que tener en cuenta..." xml:space="preserve"><value>What happened, what's needed, anything to keep in mind...</value></data>
+  <data name="Rechazada" xml:space="preserve"><value>Rejected</value></data>
+  <data name="Rechazado" xml:space="preserve"><value>Rejected</value></data>
+  <data name="Reemplazo asignado por Admin" xml:space="preserve"><value>Replacement assigned by Admin</value></data>
+  <data name="Reportada desde" xml:space="preserve"><value>Reported from</value></data>
+  <data name="Reportada por" xml:space="preserve"><value>Reported by</value></data>
+  <data name="Reportar incidencia" xml:space="preserve"><value>Report incident</value></data>
+  <data name="Requiere seguimiento" xml:space="preserve"><value>Requires follow-up</value></data>
+  <data name="Residente" xml:space="preserve"><value>Resident</value></data>
+  <data name="Residentes activos" xml:space="preserve"><value>Active residents</value></data>
+  <data name="Resolución:" xml:space="preserve"><value>Resolution:</value></data>
+  <data name="Resuelta" xml:space="preserve"><value>Resolved</value></data>
+  <data name="Resuelta por" xml:space="preserve"><value>Resolved by</value></data>
+  <data name="Resumen corto de la incidencia" xml:space="preserve"><value>Short summary of the incident</value></data>
+  <data name="Se asume todos los días, salvo un reemplazo o un cambio de turno aprobado para un día concreto." xml:space="preserve"><value>Assumed every day, unless there's a replacement or an approved shift change for a specific day.</value></data>
+  <data name="Selecciona un residente" xml:space="preserve"><value>Select a resident</value></data>
+  <data name="Sesiones programadas" xml:space="preserve"><value>Scheduled sessions</value></data>
+  <data name="Silla de ruedas" xml:space="preserve"><value>Wheelchair</value></data>
+  <data name="Sin actividad registrada todavía." xml:space="preserve"><value>No activity recorded yet.</value></data>
+  <data name="Sin avisos pendientes — al día." xml:space="preserve"><value>No pending notices — all caught up.</value></data>
+  <data name="Sin incidencias abiertas — al día." xml:space="preserve"><value>No open incidents — all caught up.</value></data>
+  <data name="Sistema" xml:space="preserve"><value>System</value></data>
+  <data name="Sobre un residente" xml:space="preserve"><value>About a resident</value></data>
+  <data name="Solicitada" xml:space="preserve"><value>Requested</value></data>
+  <data name="Solicitar" xml:space="preserve"><value>Request</value></data>
+  <data name="Solicitar cambio para un día" xml:space="preserve"><value>Request a change for a day</value></data>
+  <data name="Solo informativa" xml:space="preserve"><value>Informational only</value></data>
+  <data name="&quot;Solo informativa&quot; queda registrada para el histórico, sin quedar pendiente ni avisar a nadie — para dejar constancia sin abrir un caso." xml:space="preserve"><value>"Informational only" is recorded for the history, without staying open or notifying anyone — to leave a record without opening a case.</value></data>
+  <data name="Tareas de limpieza pendientes" xml:space="preserve"><value>Pending housekeeping tasks</value></data>
+  <data name="Tareas pendientes" xml:space="preserve"><value>Pending tasks</value></data>
+  <data name="Tipo" xml:space="preserve"><value>Type</value></data>
+  <data name="Todavía no hay residentes activos." xml:space="preserve"><value>No active residents yet.</value></data>
+  <data name="Tu turno habitual" xml:space="preserve"><value>Your regular shift</value></data>
+  <data name="Turnos especiales próximos" xml:space="preserve"><value>Upcoming special shifts</value></data>
+  <data name="Turnos hoy" xml:space="preserve"><value>Shifts today</value></data>
+  <data name="Título" xml:space="preserve"><value>Title</value></data>
+  <data name="Urgente" xml:space="preserve"><value>Urgent</value></data>
+  <data name="Urgente — notifica al instante" xml:space="preserve"><value>Urgent — notifies instantly</value></data>
+  <data name="Usuarios y personal" xml:space="preserve"><value>Users and staff</value></data>
+  <data name="Ver" xml:space="preserve"><value>View</value></data>
+  <data name="Volver a Avisos" xml:space="preserve"><value>Back to Notices</value></data>
+  <data name="Volver a Incidencias" xml:space="preserve"><value>Back to Incidents</value></data>
+  <data name="Volver al panel" xml:space="preserve"><value>Back to dashboard</value></data>
+  <data name="aviso(s) ya leído(s)" xml:space="preserve"><value>notice(s) already read</value></data>
+  <data name="firma(s)" xml:space="preserve"><value>signature(s)</value></data>
+  <data name="informativa(s)" xml:space="preserve"><value>informational</value></data>
+  <data name="otro compañero" xml:space="preserve"><value>another colleague</value></data>
+  <data name="resuelta(s)" xml:space="preserve"><value>resolved</value></data>
+  <data name="tu departamento" xml:space="preserve"><value>your department</value></data>
+  <data name="un compañero" xml:space="preserve"><value>a colleague</value></data>
+  <data name="y a" xml:space="preserve"><value>and</value></data>
+  <data name="¿A qué afecta?" xml:space="preserve"><value>What does it affect?</value></data>
+  <data name="¿Afecta a otros departamentos?" xml:space="preserve"><value>Does it affect other departments?</value></data>
+  <data name="¿Necesita que alguien actúe?" xml:space="preserve"><value>Does it need someone to act?</value></data>
+  <data name="¿Sobre qué es este aviso?" xml:space="preserve"><value>What is this notice about?</value></data>
 </root>

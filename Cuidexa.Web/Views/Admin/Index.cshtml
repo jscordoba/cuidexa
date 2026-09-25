@@ -13,9 +13,9 @@
     };
     var etiquetasMovilidad = new Dictionary<Movilidad, string>
     {
-        { Movilidad.Autonomo, "Autónomo" },
-        { Movilidad.SillaRuedas, "Silla de ruedas" },
-        { Movilidad.AsistenciaTotal, "Asistencia total" }
+        { Movilidad.Autonomo, Localizer["Autónomo"] },
+        { Movilidad.SillaRuedas, Localizer["Silla de ruedas"] },
+        { Movilidad.AsistenciaTotal, Localizer["Asistencia total"] }
     };
 
     // Donut sin librerías: un conic-gradient con un tramo de color por cada
@@ -47,7 +47,7 @@
         <div class="card h-100 tarjeta-dashboard">
             <div class="icono-dashboard i-azul"><i class="bi bi-people-fill"></i></div>
             <div>
-                <h6 class="text-muted mb-1">Residentes</h6>
+                <h6 class="text-muted mb-1">@Localizer["Residentes"]</h6>
                 <h2 class="mb-0">@ViewBag.TotalResidentes</h2>
             </div>
         </div>
@@ -56,7 +56,7 @@
         <div class="card h-100 tarjeta-dashboard">
             <div class="icono-dashboard i-verde"><i class="bi bi-person-badge"></i></div>
             <div>
-                <h6 class="text-muted mb-1">Personal activo</h6>
+                <h6 class="text-muted mb-1">@Localizer["Personal activo"]</h6>
                 <h2 class="mb-0">@ViewBag.TotalPersonal</h2>
             </div>
         </div>
@@ -65,7 +65,7 @@
         <div class="card h-100 tarjeta-dashboard">
             <div class="icono-dashboard i-morado"><i class="bi bi-calendar3"></i></div>
             <div>
-                <h6 class="text-muted mb-1">Turnos hoy</h6>
+                <h6 class="text-muted mb-1">@Localizer["Turnos hoy"]</h6>
                 <h2 class="mb-0">@ViewBag.TurnosHoy</h2>
             </div>
         </div>
@@ -74,7 +74,7 @@
         <a href="/Admin/Avisos" class="card h-100 text-decoration-none text-body tarjeta-dashboard @claseUrgenciaAvisos">
             <div class="icono-dashboard i-rosa"><i class="bi bi-bell-fill"></i></div>
             <div>
-                <h6 class="text-muted mb-1">Avisos pendientes</h6>
+                <h6 class="text-muted mb-1">@Localizer["Avisos pendientes"]</h6>
                 <h2 class="mb-0">@avisosPendientes</h2>
             </div>
         </a>
@@ -85,25 +85,25 @@
     <div class="col-12 col-lg-5">
         <div class="card h-100">
             <div class="card-body">
-                <h6 class="mb-2">Accesos rápidos</h6>
+                <h6 class="mb-2">@Localizer["Accesos rápidos"]</h6>
                 <a href="/Residentes" class="fila-acceso">
                     <div class="icono-dashboard i-azul"><i class="bi bi-people-fill"></i></div>
-                    <span>Gestión de residentes</span>
+                    <span>@Localizer["Gestión de residentes"]</span>
                     <i class="bi bi-chevron-right"></i>
                 </a>
                 <a href="/Empleados" class="fila-acceso">
                     <div class="icono-dashboard i-verde"><i class="bi bi-person-badge"></i></div>
-                    <span>Usuarios y personal</span>
+                    <span>@Localizer["Usuarios y personal"]</span>
                     <i class="bi bi-chevron-right"></i>
                 </a>
                 <a href="/Turnos" class="fila-acceso">
                     <div class="icono-dashboard i-morado"><i class="bi bi-calendar3"></i></div>
-                    <span>Turnos</span>
+                    <span>@Localizer["Turnos"]</span>
                     <i class="bi bi-chevron-right"></i>
                 </a>
                 <a href="/Turnos/Cambios" class="fila-acceso">
                     <div class="icono-dashboard i-rosa"><i class="bi bi-arrow-left-right"></i></div>
-                    <span>Cambios de turno pendientes <span class="badge bg-secondary rounded-pill">@ViewBag.CambiosPendientes</span></span>
+                    <span>@Localizer["Cambios de turno pendientes"] <span class="badge bg-secondary rounded-pill">@ViewBag.CambiosPendientes</span></span>
                     <i class="bi bi-chevron-right"></i>
                 </a>
             </div>
@@ -113,10 +113,10 @@
     <div class="col-12 col-lg-4">
         <div class="card h-100">
             <div class="card-body">
-                <h6 class="mb-2">Actividad reciente</h6>
+                <h6 class="mb-2">@Localizer["Actividad reciente"]</h6>
                 @if (!actividad.Any())
                 {
-                    <p class="text-muted small mb-0">Sin actividad registrada todavía.</p>
+                    <p class="text-muted small mb-0">@Localizer["Sin actividad registrada todavía."]</p>
                 }
                 else
                 {
@@ -126,7 +126,7 @@
                             <div class="icono-actividad"><i class="bi bi-clock-history"></i></div>
                             <div>
                                 <div class="small">@a.Detalle</div>
-                                <div class="text-muted" style="font-size:.75rem">@(a.Empleado?.Nombre ?? "Sistema") · @a.FechaHora.ToString("dd/MM HH:mm")</div>
+                                <div class="text-muted" style="font-size:.75rem">@(a.Empleado?.Nombre ?? Localizer["Sistema"]) · @a.FechaHora.ToString("dd/MM HH:mm")</div>
                             </div>
                         </div>
                     }
@@ -138,10 +138,10 @@
     <div class="col-12 col-lg-3">
         <div class="card h-100">
             <div class="card-body">
-                <h6 class="mb-2">Distribución de residentes</h6>
+                <h6 class="mb-2">@Localizer["Distribución de residentes"]</h6>
                 @if (totalDistribucion == 0)
                 {
-                    <p class="text-muted small mb-0">Todavía no hay residentes activos.</p>
+                    <p class="text-muted small mb-0">@Localizer["Todavía no hay residentes activos."]</p>
                 }
                 else
                 {

@@ -3,23 +3,23 @@
     var pendientes = Model.Where(e => !e.Leido).OrderByDescending(e => e.Urgente).ThenByDescending(e => e.FechaCreacion).ToList();
     var leidos = Model.Where(e => e.Leido).ToList();
 }
-<a href="/Profesionales" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<a href="/Profesionales" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver al panel"]</a>
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-bell-fill me-2 text-muted"></i>Avisos</h4>
-    <a href="/Profesionales/CrearAviso" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo aviso</a>
+    <h4 class="mb-0"><i class="bi bi-bell-fill me-2 text-muted"></i>@Localizer["Avisos"]</h4>
+    <a href="/Profesionales/CrearAviso" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>@Localizer["Nuevo aviso"]</a>
 </div>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">No hay avisos pendientes.</p>
+    <p class="text-muted">@Localizer["No hay avisos pendientes."]</p>
 }
 else
 {
-    <input type="search" id="filtroAvisos" class="form-control mb-2" placeholder="Buscar en los avisos..." />
+    <input type="search" id="filtroAvisos" class="form-control mb-2" placeholder="@Localizer["Buscar en los avisos..."]" />
     <div id="listaAvisos">
         @if (!pendientes.Any())
         {
-            <p class="text-muted small">Sin avisos pendientes — al día.</p>
+            <p class="text-muted small">@Localizer["Sin avisos pendientes — al día."]</p>
         }
         @foreach (var e in pendientes)
         {
@@ -32,14 +32,14 @@ else
                     }
                     @if (e.Urgente)
                     {
-                        <span class="badge bg-danger mb-2 ms-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>Urgente</span>
+                        <span class="badge bg-danger mb-2 ms-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>@Localizer["Urgente"]</span>
                     }
                     <p class="mb-1">@e.Descripcion</p>
                     <small class="text-muted">@e.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</small>
                     <form method="post" action="/Profesionales/MarcarLeido" class="mt-2">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@e.Id" />
-                        <button class="btn btn-sm btn-outline-secondary">Marcar como leído</button>
+                        <button class="btn btn-sm btn-outline-secondary">@Localizer["Marcar como leído"]</button>
                     </form>
                 </div>
             </div>
@@ -48,7 +48,7 @@ else
         @if (leidos.Any())
         {
             <button class="toggle-colapsable mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#avisosLeidos" aria-expanded="false" aria-controls="avisosLeidos">
-                Ver @leidos.Count aviso(s) ya leído(s) <span class="caret">&#9662;</span>
+                @Localizer["Ver"] @leidos.Count @Localizer["aviso(s) ya leído(s)"] <span class="caret">&#9662;</span>
             </button>
             <div class="collapse" id="avisosLeidos">
                 @foreach (var e in leidos)
@@ -68,7 +68,7 @@ else
             </div>
         }
     </div>
-    <p id="avisosSinResultados" class="text-muted" hidden>Ningún aviso coincide con la búsqueda.</p>
+    <p id="avisosSinResultados" class="text-muted" hidden>@Localizer["Ningún aviso coincide con la búsqueda."]</p>
 }
 
 @section Scripts {

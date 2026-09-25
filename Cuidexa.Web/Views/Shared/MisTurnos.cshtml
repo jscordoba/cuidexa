@@ -1,33 +1,47 @@
 @model MisTurnosViewModel
-<a href="/@Model.RutaBase" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
-<h4 class="mb-3"><i class="bi bi-calendar3 me-2 text-muted"></i>Mis turnos</h4>
+@{
+    string EtiquetaCambio(EstadoCambioTurno e) => e switch
+    {
+        EstadoCambioTurno.Aprobado => Localizer["Aprobado"],
+        EstadoCambioTurno.Rechazado => Localizer["Rechazado"],
+        _ => Localizer["Pendiente"]
+    };
+    string EtiquetaVacacion(EstadoVacacion e) => e switch
+    {
+        EstadoVacacion.Aprobada => Localizer["Aprobada"],
+        EstadoVacacion.Rechazada => Localizer["Rechazada"],
+        _ => Localizer["Solicitada"]
+    };
+}
+<a href="/@Model.RutaBase" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver al panel"]</a>
+<h4 class="mb-3"><i class="bi bi-calendar3 me-2 text-muted"></i>@Localizer["Mis turnos"]</h4>
 
 <div class="card mb-3">
     <div class="card-body">
-        <h6 class="text-muted mb-1">Tu turno habitual</h6>
+        <h6 class="text-muted mb-1">@Localizer["Tu turno habitual"]</h6>
         @if (Model.PlantillaDefecto is null)
         {
-            <p class="mb-0 text-danger small">No tienes un turno por defecto configurado — contacta con Admin.</p>
+            <p class="mb-0 text-danger small">@Localizer["No tienes un turno por defecto configurado — contacta con Admin."]</p>
         }
         else
         {
             <p class="mb-0 fs-5">@Model.PlantillaDefecto.Nombre — @Model.PlantillaDefecto.HoraInicio.ToString("HH:mm")–@Model.PlantillaDefecto.HoraFin.ToString("HH:mm")</p>
-            <p class="mb-0 text-muted small">Se asume todos los días, salvo un reemplazo o un cambio de turno aprobado para un día concreto.</p>
+            <p class="mb-0 text-muted small">@Localizer["Se asume todos los días, salvo un reemplazo o un cambio de turno aprobado para un día concreto."]</p>
         }
     </div>
 </div>
 
-<h6 class="text-muted mb-2">Turnos especiales próximos</h6>
+<h6 class="text-muted mb-2">@Localizer["Turnos especiales próximos"]</h6>
 @if (!Model.TurnosEspeciales.Any())
 {
-    <p class="text-muted small">No tienes reemplazos ni cambios de turno próximos.</p>
+    <p class="text-muted small">@Localizer["No tienes reemplazos ni cambios de turno próximos."]</p>
 }
 else
 {
     @foreach (var t in Model.TurnosEspeciales)
     {
         var esMio = t.EmpleadoId == Model.EmpleadoIdPropio;
-        var badgeCambio = t.EsReemplazo ? "Reemplazo asignado por Admin" : $"Cubres a {t.EmpleadoOriginal?.Nombre ?? "un compañero"}";
+        var badgeCambio = t.EsReemplazo ? Localizer["Reemplazo asignado por Admin"].Value : string.Format(Localizer["Cubres a {0}"].Value, t.EmpleadoOriginal?.Nombre ?? Localizer["un compañero"]);
         <div class="card mb-2">
             <div class="card-body">
                 @if (esMio)
@@ -41,31 +55,31 @@ else
                 }
                 else
                 {
-                    <span class="badge bg-secondary">Cedido</span>
-                    <text><span class="ms-2">El @t.FechaInicio.ToString("dd/MM/yyyy") te cubre @(t.Empleado?.Nombre ?? t.NombreExterno ?? "otro compañero") — no tienes que ir ese día.</span></text>
+                    <span class="badge bg-secondary">@Localizer["Cedido"]</span>
+                    <text><span class="ms-2">@string.Format(Localizer["El {0} te cubre {1} — no tienes que ir ese día."].Value, t.FechaInicio.ToString("dd/MM/yyyy"), t.Empleado?.Nombre ?? t.NombreExterno ?? Localizer["otro compañero"])</span></text>
                 }
             </div>
         </div>
     }
 }
 
-<h6 class="text-muted mt-4 mb-2">Solicitar cambio para un día</h6>
+<h6 class="text-muted mt-4 mb-2">@Localizer["Solicitar cambio para un día"]</h6>
 <div class="card mb-3">
     <div class="card-body">
         <form method="post" action="/@Model.RutaBase/SolicitarCambio" class="row g-2 align-items-end">
             @Html.AntiForgeryToken()
             <div class="col-12 col-sm-3">
-                <label class="form-label small mb-1">Fecha</label>
+                <label class="form-label small mb-1">@Localizer["Fecha"]</label>
                 <input type="date" name="fecha" class="form-control" required />
             </div>
             <div class="col-12 col-sm-4">
-                <label class="form-label small mb-1">Motivo</label>
-                <input name="motivo" class="form-control" placeholder="Motivo del cambio" required />
+                <label class="form-label small mb-1">@Localizer["Motivo"]</label>
+                <input name="motivo" class="form-control" placeholder="@Localizer["Motivo del cambio"]" required />
             </div>
             <div class="col-12 col-sm-3">
-                <label class="form-label small mb-1">Proponer sustituto (opcional)</label>
+                <label class="form-label small mb-1">@Localizer["Proponer sustituto (opcional)"]</label>
                 <select name="empleadoSustitutoPropuestoId" class="form-select">
-                    <option value="">-- Mismo departamento --</option>
+                    <option value="">-- @Localizer["Mismo departamento"] --</option>
                     @foreach (var c in Model.Companeros)
                     {
                         <option value="@c.Id">@c.Nombre</option>
@@ -73,16 +87,16 @@ else
                 </select>
             </div>
             <div class="col-12 col-sm-2">
-                <button class="btn btn-outline-primary w-100">Solicitar</button>
+                <button class="btn btn-outline-primary w-100">@Localizer["Solicitar"]</button>
             </div>
         </form>
     </div>
 </div>
 
-<h6 class="text-muted mb-2">Mis solicitudes de cambio</h6>
+<h6 class="text-muted mb-2">@Localizer["Mis solicitudes de cambio"]</h6>
 @if (!Model.MisCambios.Any())
 {
-    <p class="text-muted small">No has solicitado ningún cambio de turno todavía.</p>
+    <p class="text-muted small">@Localizer["No has solicitado ningún cambio de turno todavía."]</p>
 }
 else
 {
@@ -101,34 +115,34 @@ else
                     <div class="text-muted small">@c.Motivo</div>
                     @if (c.EmpleadoSustitutoPropuesto != null)
                     {
-                        <div class="text-muted small">Propuesto: @c.EmpleadoSustitutoPropuesto.Nombre</div>
+                        <div class="text-muted small">@Localizer["Propuesto:"] @c.EmpleadoSustitutoPropuesto.Nombre</div>
                     }
                 </div>
-                <span class="badge @claseBadge">@c.Estado</span>
+                <span class="badge @claseBadge">@EtiquetaCambio(c.Estado)</span>
             </div>
         </div>
     }
 }
 
-<h5 class="mt-4 mb-2"><i class="bi bi-sun me-2 text-muted"></i>Mis vacaciones</h5>
+<h5 class="mt-4 mb-2"><i class="bi bi-sun me-2 text-muted"></i>@Localizer["Mis vacaciones"]</h5>
 <div class="card mb-3">
     <div class="card-body">
         <form method="post" action="/@Model.RutaBase/SolicitarVacaciones" class="row g-2 align-items-end">
             @Html.AntiForgeryToken()
             <div class="col-6 col-sm-3">
-                <label class="form-label small mb-1">Desde</label>
+                <label class="form-label small mb-1">@Localizer["Desde"]</label>
                 <input type="date" name="fechaInicio" class="form-control" required />
             </div>
             <div class="col-6 col-sm-3">
-                <label class="form-label small mb-1">Hasta</label>
+                <label class="form-label small mb-1">@Localizer["Hasta"]</label>
                 <input type="date" name="fechaFin" class="form-control" required />
             </div>
             <div class="col-12 col-sm-4">
-                <label class="form-label small mb-1">Notas (opcional)</label>
-                <input name="notas" class="form-control" placeholder="Motivo, referencia..." />
+                <label class="form-label small mb-1">@Localizer["Notas (opcional)"]</label>
+                <input name="notas" class="form-control" placeholder="@Localizer["Motivo, referencia..."]" />
             </div>
             <div class="col-12 col-sm-2">
-                <button class="btn btn-outline-primary w-100">Solicitar</button>
+                <button class="btn btn-outline-primary w-100">@Localizer["Solicitar"]</button>
             </div>
         </form>
     </div>
@@ -136,7 +150,7 @@ else
 
 @if (!Model.MisVacaciones.Any())
 {
-    <p class="text-muted small">No has solicitado vacaciones todavía.</p>
+    <p class="text-muted small">@Localizer["No has solicitado vacaciones todavía."]</p>
 }
 else
 {
@@ -157,7 +171,7 @@ else
                         <div class="text-muted small">@v.Notas</div>
                     }
                 </div>
-                <span class="badge @claseBadge">@v.Estado</span>
+                <span class="badge @claseBadge">@EtiquetaVacacion(v.Estado)</span>
             </div>
         </div>
     }

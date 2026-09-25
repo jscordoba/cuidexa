@@ -1,6 +1,25 @@
 @model List<Residente>
 @{
     var pendientesPorRol = (Dictionary<RolEmpleado, int>)ViewBag.PendientesPorRol;
+
+    string EtiquetaTipoResidente(TipoResidente t) => t switch
+    {
+        TipoResidente.Fijo => Localizer["Fijo"],
+        TipoResidente.Dia => Localizer["Día"],
+        TipoResidente.Pasajero => Localizer["Pasajero"],
+        _ => t.ToString()
+    };
+
+    // "De baja" (no solo "Baja") a propósito: GravedadIncidencia.Baja ya usa
+    // la clave "Baja" con otro significado (severidad) — mismo texto en
+    // español evitaría que Localizer pudiera traducir cada uno a su inglés
+    // correcto ("Low" vs "Inactive").
+    string EtiquetaEstadoResidente(EstadoResidente e) => e switch
+    {
+        EstadoResidente.Activo => Localizer["Activo"],
+        EstadoResidente.Baja => Localizer["De baja"],
+        _ => e.ToString()
+    };
 }
 @await Html.PartialAsync("_Saludo")
 <div class="row mb-4 g-3">
@@ -8,7 +27,7 @@
         <div class="card h-100 tarjeta-dashboard">
             <div class="icono-dashboard i-azul"><i class="bi bi-people-fill"></i></div>
             <div>
-                <h6 class="text-muted mb-1">Residentes activos</h6>
+                <h6 class="text-muted mb-1">@Localizer["Residentes activos"]</h6>
                 <h2 class="mb-0">@ViewBag.TotalResidentes</h2>
             </div>
         </div>
@@ -20,7 +39,7 @@
             <div class="card h-100 tarjeta-dashboard @claseUrgencia">
                 <div class="icono-dashboard i-rosa"><i class="bi bi-bell-fill"></i></div>
                 <div>
-                    <h6 class="text-muted mb-1">Avisos pendientes · @rol</h6>
+                    <h6 class="text-muted mb-1">@Localizer["Avisos pendientes"] · @RolPresentacion.Obtener(rol).Etiqueta</h6>
                     <h2 class="mb-0">@pendientes</h2>
                 </div>
             </div>
@@ -30,7 +49,7 @@
         <div class="card h-100 tarjeta-dashboard">
             <div class="icono-dashboard i-verde"><i class="bi bi-clipboard-check"></i></div>
             <div>
-                <h6 class="text-muted mb-1">Tareas de limpieza pendientes</h6>
+                <h6 class="text-muted mb-1">@Localizer["Tareas de limpieza pendientes"]</h6>
                 <h2 class="mb-0">@ViewBag.TareasLimpiezaPendientes</h2>
             </div>
         </div>
@@ -39,25 +58,25 @@
         <div class="card h-100 tarjeta-dashboard @(((int)ViewBag.IncidenciasAbiertas) == 0 ? "urgencia-ok" : "urgencia-alta")">
             <div class="icono-dashboard i-rosa"><i class="bi bi-exclamation-octagon-fill"></i></div>
             <div>
-                <h6 class="text-muted mb-1">Incidencias abiertas</h6>
+                <h6 class="text-muted mb-1">@Localizer["Incidencias abiertas"]</h6>
                 <h2 class="mb-0">@ViewBag.IncidenciasAbiertas</h2>
             </div>
         </div>
     </div>
 </div>
-<h5>Listado de residentes</h5>
-<input type="search" id="filtroResidentesDireccion" class="form-control mb-3" placeholder="Buscar por nombre, habitación, estado..." />
+<h5>@Localizer["Listado de residentes"]</h5>
+<input type="search" id="filtroResidentesDireccion" class="form-control mb-3" placeholder="@Localizer["Buscar por nombre, habitación, estado..."]" />
 <div class="table-responsive">
     <table class="table table-bordered bg-white">
-        <thead><tr><th>Nombre</th><th>Tipo</th><th>Habitación</th><th>Estado</th></tr></thead>
+        <thead><tr><th>@Localizer["Nombre"]</th><th>@Localizer["Tipo"]</th><th>@Localizer["Habitación"]</th><th>@Localizer["Estado"]</th></tr></thead>
         <tbody id="listaResidentesDireccion">
             @foreach (var r in Model)
             {
-                <tr><td>@r.Nombre @r.Apellidos</td><td>@r.TipoResidente</td><td>@(r.Habitacion?.Numero ?? "-")</td><td>@r.Estado</td></tr>
+                <tr><td>@r.Nombre @r.Apellidos</td><td>@EtiquetaTipoResidente(r.TipoResidente)</td><td>@(r.Habitacion?.Numero ?? "-")</td><td>@EtiquetaEstadoResidente(r.Estado)</td></tr>
             }
         </tbody>
     </table>
-    <p id="residentesDireccionSinResultados" class="text-muted" hidden>Ningún residente coincide con la búsqueda.</p>
+    <p id="residentesDireccionSinResultados" class="text-muted" hidden>@Localizer["Ningún residente coincide con la búsqueda."]</p>
 </div>
 
 @section Scripts {

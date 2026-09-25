@@ -3,68 +3,68 @@
 @{
     var (_, _, etiquetaPropia) = RolPresentacion.Obtener(Model.RolOrigen);
 }
-<a href="/@Model.RutaBase/Avisos" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Avisos</a>
-<h4 class="mb-3"><i class="bi bi-bell-fill me-2 text-muted"></i>Nuevo aviso</h4>
+<a href="/@Model.RutaBase/Avisos" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver a Avisos"]</a>
+<h4 class="mb-3"><i class="bi bi-bell-fill me-2 text-muted"></i>@Localizer["Nuevo aviso"]</h4>
 
 <div class="alert alert-light border d-flex align-items-start gap-2 mb-3">
     <i class="bi bi-info-circle text-muted mt-1"></i>
     <div>
-        Este aviso llegará automáticamente a <strong>@etiquetaPropia</strong> (tu departamento) y a <strong>Administración</strong>.
+        @Localizer["Este aviso llegará automáticamente a"] <strong>@etiquetaPropia</strong> (@Localizer["tu departamento"]) @Localizer["y a"] <strong>@Localizer["Administración"]</strong>.
     </div>
 </div>
 
 <form method="post" action="/@Model.RutaBase/CrearAviso" class="card p-3">
     @Html.AntiForgeryToken()
     <div class="mb-3">
-        <label class="form-label d-block">¿Sobre qué es este aviso?</label>
+        <label class="form-label d-block">@Localizer["¿Sobre qué es este aviso?"]</label>
         <div class="btn-group" role="group">
             <input type="radio" class="btn-check" name="tipoAviso" id="tipoResidente" value="residente" checked>
-            <label class="btn btn-outline-secondary btn-sm" for="tipoResidente">Sobre un residente</label>
+            <label class="btn btn-outline-secondary btn-sm" for="tipoResidente">@Localizer["Sobre un residente"]</label>
             <input type="radio" class="btn-check" name="tipoAviso" id="tipoGeneral" value="general">
-            <label class="btn btn-outline-secondary btn-sm" for="tipoGeneral">Puesto de trabajo</label>
+            <label class="btn btn-outline-secondary btn-sm" for="tipoGeneral">@Localizer["Puesto de trabajo"]</label>
         </div>
-        <div class="form-text">Equipo, daño de implementos, mantenimiento, insumos... cualquier novedad no ligada a un residente concreto.</div>
+        <div class="form-text">@Localizer["Equipo, daño de implementos, mantenimiento, insumos... cualquier novedad no ligada a un residente concreto."]</div>
     </div>
 
     <div class="mb-3" id="campoResidente">
-        <label class="form-label">Residente</label>
+        <label class="form-label">@Localizer["Residente"]</label>
         <select name="residenteId" id="selectResidente" class="form-select" required>
-            <option value="">-- Selecciona un residente --</option>
+            <option value="">-- @Localizer["Selecciona un residente"] --</option>
             @foreach (var r in Model.Residentes)
             {
-                <option value="@r.Id">@r.Nombre @r.Apellidos @(r.Habitacion != null ? $"· Hab. {r.Habitacion.Numero}" : "")</option>
+                <option value="@r.Id">@r.Nombre @r.Apellidos @(r.Habitacion != null ? $"· {Localizer["Hab."]} {r.Habitacion.Numero}" : "")</option>
             }
         </select>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Descripción del aviso</label>
-        <textarea name="descripcion" class="form-control" rows="3" required placeholder="Qué ha pasado, qué se necesita, qué hay que tener en cuenta..."></textarea>
+        <label class="form-label">@Localizer["Descripción del aviso"]</label>
+        <textarea name="descripcion" class="form-control" rows="3" required placeholder="@Localizer["Qué ha pasado, qué se necesita, qué hay que tener en cuenta..."]"></textarea>
     </div>
 
     <div class="mb-3 form-check">
         <input class="form-check-input" type="checkbox" name="urgente" value="true" id="urgente" />
-        <label class="form-check-label" for="urgente"><i class="bi bi-exclamation-triangle-fill text-danger me-1"></i>Marcar como urgente</label>
+        <label class="form-check-label" for="urgente"><i class="bi bi-exclamation-triangle-fill text-danger me-1"></i>@Localizer["Marcar como urgente"]</label>
     </div>
 
     <div class="mb-3" id="grupoAvisoGrupo">
-        <label class="form-label">Grupo de notificación (opcional)</label>
+        <label class="form-label">@Localizer["Grupo de notificación (opcional)"]</label>
         <select name="grupoDestinoId" class="form-select">
-            <option value="">-- Ninguno --</option>
+            <option value="">-- @Localizer["Ninguno"] --</option>
             @foreach (var g in Model.GruposDisponibles)
             {
                 <option value="@g.Id">@g.Nombre</option>
             }
         </select>
-        <div class="form-text">Llega solo a los miembros del grupo, sin avisar a todo su departamento.</div>
+        <div class="form-text">@Localizer["Llega solo a los miembros del grupo, sin avisar a todo su departamento."]</div>
     </div>
 
     <div class="mb-3" id="grupoAvisoRoles">
         <div class="form-check mb-2">
             <input class="form-check-input" type="checkbox" name="todoElCentro" value="true" id="todoElCentro" />
-            <label class="form-check-label" for="todoElCentro">Enviar a todo el centro</label>
+            <label class="form-check-label" for="todoElCentro">@Localizer["Enviar a todo el centro"]</label>
         </div>
-        <label class="form-label">¿Afecta a otros departamentos?</label>
+        <label class="form-label">@Localizer["¿Afecta a otros departamentos?"]</label>
         <div class="d-flex flex-column gap-1" id="listaRolesAdicionales">
             @foreach (var rol in Model.DepartamentosDisponibles)
             {
@@ -77,7 +77,7 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary align-self-start">Enviar aviso</button>
+    <button type="submit" class="btn btn-primary align-self-start">@Localizer["Enviar aviso"]</button>
 </form>
 
 @section Scripts {
