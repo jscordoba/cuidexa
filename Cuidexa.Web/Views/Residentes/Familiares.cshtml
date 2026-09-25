@@ -18,20 +18,50 @@
 }
 else
 {
-    <div class="table-responsive">
-        <table class="table table-sm bg-white">
-            <thead><tr><th>Nombre</th><th>Relación</th><th>Email</th><th>Desde</th></tr></thead>
-            <tbody>
-                @foreach (var f in Model)
-                {
-                    <tr>
-                        <td>@f.Nombre</td>
-                        <td>@f.Relacion</td>
-                        <td>@f.Email</td>
-                        <td>@f.FechaCreacion.ToString("dd/MM/yyyy")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    @foreach (var f in Model)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div>
+                        <h6 class="mb-1">@f.Nombre <span class="text-muted small">(@f.Relacion)</span></h6>
+                        <p class="mb-1 small">@f.Email</p>
+                        <small class="text-muted">Acceso creado el @f.FechaCreacion.ToString("dd/MM/yyyy")</small>
+                    </div>
+                    <span class="badge @(f.Activo ? "bg-success" : "bg-secondary")">@(f.Activo ? "Activo" : "Desactivado")</span>
+                </div>
+
+                <div class="row g-2 mt-2 align-items-end">
+                    <div class="col-12 col-sm-6">
+                        <form method="post" action="/Residentes/RestablecerPasswordFamiliar/@residente.Id" class="row g-2 align-items-end">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="familiarId" value="@f.Id" />
+                            <div class="col-8">
+                                <label class="form-label small mb-1">Restablecer contraseña</label>
+                                <input type="text" name="nuevaPassword" class="form-control form-control-sm" required minlength="8" placeholder="Mínimo 8 caracteres" />
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-sm btn-outline-secondary w-100">Restablecer</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-12 col-sm-6 text-sm-end">
+                        <form method="post" action="/Residentes/CambiarEstadoFamiliar/@residente.Id" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="familiarId" value="@f.Id" />
+                            @* .ToString() a propósito: un valor "value=@(boolExpr)" puro activa el
+                               "conditional attribute rendering" de Razor (trata bool de forma especial
+                               y nunca emite el texto "True"/"False" real) — con .ToString() el tipo ya
+                               es string y Razor lo escribe literalmente, que es lo que necesita el
+                               model binder de [HttpPost] CambiarEstadoFamiliar(..., bool activo). *@
+                            <input type="hidden" name="activo" value="@((!f.Activo).ToString())" />
+                            <button class="btn btn-sm @(f.Activo ? "btn-outline-danger" : "btn-outline-success")">
+                                @(f.Activo ? "Desactivar acceso" : "Reactivar acceso")
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 }

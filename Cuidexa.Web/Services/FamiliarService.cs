@@ -57,6 +57,36 @@ public class FamiliarService : IFamiliarService
             $"Acceso de portal creado para {familiar.Nombre} ({familiar.Relacion}), email {familiar.Email}.");
     }
 
+    public async Task CambiarEstadoAsync(int residenteId, int familiarId, bool activo, int? actorEmpleadoId)
+    {
+        var familiar = await _db.Familiares.FirstOrDefaultAsync(f => f.Id == familiarId && f.ResidenteId == residenteId)
+            ?? throw new InvalidOperationException("Familiar no encontrado.");
+
+        familiar.Activo = activo;
+        await _db.SaveChangesAsync();
+
+        await _auditoria.RegistrarAsync(actorEmpleadoId, activo ? "FamiliarReactivado" : "FamiliarDesactivado",
+            "Residente", familiar.ResidenteId,
+            $"Acceso de portal de {familiar.Nombre} ({familiar.Email}) {(activo ? "reactivado" : "desactivado")}.");
+    }
+
+    public async Task RestablecerPasswordAsync(int residenteId, int familiarId, string nuevaPassword, int? actorEmpleadoId)
+    {
+        var familiar = await _db.Familiares.FirstOrDefaultAsync(f => f.Id == familiarId && f.ResidenteId == residenteId)
+            ?? throw new InvalidOperationException("Familiar no encontrado.");
+
+        PasswordHasher.Validar(nuevaPassword);
+        familiar.PasswordHash = PasswordHasher.Hash(nuevaPassword);
+        // Por si estaba bloqueada por fuerza bruta — un restablecimiento
+        // manual de Admin es exactamente la vía de desbloqueo ya establecida
+        // para Empleado (BloqueoCuenta.Desbloquear).
+        BloqueoCuenta.Desbloquear(familiar);
+        await _db.SaveChangesAsync();
+
+        await _auditoria.RegistrarAsync(actorEmpleadoId, "FamiliarPasswordRestablecida", "Residente", familiar.ResidenteId,
+            $"Contraseña restablecida para el acceso de portal de {familiar.Nombre} ({familiar.Email}).");
+    }
+
     // IgnoreQueryFilters + Where(ResidenteId == ...) explícito: el esquema
     // "Familiar" no tiene CentroId de sesión (igual que SuperAdmin/
     // Dispositivo), así que el filtro global de estas dos entidades

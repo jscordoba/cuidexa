@@ -255,4 +255,34 @@ public class ResidentesController : Controller
         }
         return RedirectToAction("Familiares", new { id });
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CambiarEstadoFamiliar(int id, int familiarId, bool activo)
+    {
+        try
+        {
+            await _familiares.CambiarEstadoAsync(id, familiarId, activo, EmpleadoIdActual);
+            TempData["Mensaje"] = activo ? "Acceso reactivado." : "Acceso desactivado — ya no puede iniciar sesión.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Familiares", new { id });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RestablecerPasswordFamiliar(int id, int familiarId, string nuevaPassword)
+    {
+        try
+        {
+            await _familiares.RestablecerPasswordAsync(id, familiarId, nuevaPassword, EmpleadoIdActual);
+            TempData["Mensaje"] = "Contraseña restablecida. Comparte la nueva contraseña con la familia por un canal aparte.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Mensaje"] = ex.Message;
+        }
+        return RedirectToAction("Familiares", new { id });
+    }
 }

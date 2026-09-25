@@ -133,6 +133,19 @@ qué queda.
 - [x] Vistas de solo lectura (`/Familiar/Login`, `/Familiar/Index`)
       probadas de extremo a extremo: Admin invita → familiar entra con sus
       credenciales → ve solo los datos de su residente.
+- [x] Revocación de acceso (2026-09-25, cierre de hueco detectado en revisión
+      de seguridad post-implementación): desde `/Residentes/Familiares/{id}`,
+      Admin puede desactivar/reactivar el acceso y restablecer la
+      contraseña — mismo patrón ya usado en Empleados. `FamiliarService`
+      valida `familiar.ResidenteId == residenteId` en ambas operaciones
+      (si no, un Admin podría tocar el acceso de un familiar de OTRO
+      centro adivinando su Id, ya que `Familiar` no lleva filtro de
+      tenant). De paso se corrigió un bug real encontrado al probarlo: el
+      toggle activar/desactivar usaba `value="@(boolExpr)"` en un input
+      oculto, lo que activa el "conditional attribute rendering" de Razor
+      y nunca emitía "True"/"False" de verdad — con `.ToString()` se
+      evita. Probado de extremo a extremo: desactivar → login falla →
+      restablecer contraseña → reactivar → login funciona.
 - [ ] Notificar al familiar cuando hay un documento/incidencia nuevo — hoy
       tiene que entrar a mirar; requiere el mismo canal de alertas externo
       pendiente en los bloques 1 y 3.
