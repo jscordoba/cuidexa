@@ -44,7 +44,11 @@ function urlBase64ToUint8Array(base64String) {
 
         const claves = suscripcion.toJSON().keys;
         const tokenCsrf = document.querySelector('meta[name="request-verification-token"]')?.content;
-        await fetch('/Push/Suscribir', {
+        // data-endpoint-suscribir: SuperAdmin/Familiar tienen su propia
+        // acción de suscripción (esquema de cookie distinto de Empleado) —
+        // por defecto, /Push/Suscribir sigue sirviendo a los roles operativos.
+        const endpointSuscribir = boton.dataset.endpointSuscribir || '/Push/Suscribir';
+        await fetch(endpointSuscribir, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': tokenCsrf },
             body: JSON.stringify({ endpoint: suscripcion.endpoint, p256dh: claves.p256dh, auth: claves.auth })

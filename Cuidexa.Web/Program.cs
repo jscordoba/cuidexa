@@ -95,6 +95,7 @@ builder.Services.AddScoped<IDocumentoFirmadoService, DocumentoFirmadoService>();
 builder.Services.AddScoped<IAnalisisService, AnalisisService>();
 builder.Services.AddScoped<ISoporteService, SoporteService>();
 builder.Services.AddScoped<IFamiliarService, FamiliarService>();
+builder.Services.AddScoped<IRolPresentacionService, RolPresentacionService>();
 builder.Services.AddHostedService<BackupService>();
 
 builder.Services.AddHttpClient<IFestivosApiService, FestivosApiService>(cliente =>

@@ -10,12 +10,14 @@ public class DocumentoFirmadoService : IDocumentoFirmadoService
     private readonly CuidexaDbContext _db;
     private readonly IAuditService _auditoria;
     private readonly ITenantContext _tenant;
+    private readonly IPushNotificationService _push;
 
-    public DocumentoFirmadoService(CuidexaDbContext db, IAuditService auditoria, ITenantContext tenant)
+    public DocumentoFirmadoService(CuidexaDbContext db, IAuditService auditoria, ITenantContext tenant, IPushNotificationService push)
     {
         _db = db;
         _auditoria = auditoria;
         _tenant = tenant;
+        _push = push;
     }
 
     public async Task<List<DocumentoFirmado>> ObtenerPorResidenteAsync(int residenteId)
@@ -94,5 +96,16 @@ public class DocumentoFirmadoService : IDocumentoFirmadoService
         await _auditoria.RegistrarAsync(empleadoRegistraId, "Alta", "DocumentoFirmado", documento.Id,
             $"Documento firmado ({categoria}): {titulo} — firmado por {firmanteNombre}" +
             (string.IsNullOrWhiteSpace(firmanteRelacion) ? "" : $" ({firmanteRelacion})"));
+
+        // residenteId puede venir vacío si el documento se ligó solo a una
+        // incidencia (ver CrearAsync) — en ese caso el residente real es el
+        // de la propia incidencia, que es a quien hay que avisar.
+        var residenteParaAvisar = residenteId
+            ?? (incidenciaId.HasValue ? (await _db.Incidencias.FindAsync(incidenciaId.Value))?.ResidenteId : null);
+        if (residenteParaAvisar.HasValue)
+        {
+            await _push.NotificarFamiliarAsync(residenteParaAvisar.Value,
+                "Cuidexa · Nuevo documento", $"Se ha añadido un nuevo documento: {titulo}");
+        }
     }
 }

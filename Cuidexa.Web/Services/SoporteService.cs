@@ -9,11 +9,13 @@ public class SoporteService : ISoporteService
 {
     private readonly CuidexaDbContext _db;
     private readonly ITenantContext _tenant;
+    private readonly IPushNotificationService _push;
 
-    public SoporteService(CuidexaDbContext db, ITenantContext tenant)
+    public SoporteService(CuidexaDbContext db, ITenantContext tenant, IPushNotificationService push)
     {
         _db = db;
         _tenant = tenant;
+        _push = push;
     }
 
     public async Task<List<TicketSoporte>> ObtenerParaCentroActualAsync() =>
@@ -29,14 +31,17 @@ public class SoporteService : ISoporteService
             throw new InvalidOperationException("El título y la descripción son obligatorios.");
         }
 
-        _db.TicketsSoporte.Add(new TicketSoporte
+        var ticket = new TicketSoporte
         {
             CentroId = _tenant.CentroId,
             Titulo = titulo.Trim(),
             Descripcion = descripcion.Trim(),
             EmpleadoId = empleadoId
-        });
+        };
+        _db.TicketsSoporte.Add(ticket);
         await _db.SaveChangesAsync();
+
+        await _push.NotificarNuevoTicketSoporteAsync(ticket);
     }
 
     // IgnoreQueryFilters: SuperAdmin no tiene CentroId propio (opera por

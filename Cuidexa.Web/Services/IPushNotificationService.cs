@@ -16,4 +16,19 @@ public interface IPushNotificationService
 
     Task SuscribirAsync(int empleadoId, string endpoint, string p256dh, string auth);
     Task DesuscribirAsync(string endpoint);
+
+    // Fase 10 — comercialización: SuperAdmin (bloque 3, tickets de soporte
+    // nuevos) y Familiar (bloque 5, documentos/incidencias nuevas de su
+    // residente) tienen sus propias suscripciones — no son Empleado.
+    Task SuscribirSuperAdminAsync(int superAdminId, string endpoint, string p256dh, string auth);
+    Task DesuscribirSuperAdminAsync(string endpoint);
+    Task SuscribirFamiliarAsync(int familiarId, string endpoint, string p256dh, string auth);
+    Task DesuscribirFamiliarAsync(string endpoint);
+
+    Task NotificarNuevoTicketSoporteAsync(TicketSoporte ticket);
+
+    // titulo/cuerpo ya formados por quien llama (DocumentoFirmadoService/
+    // IncidenciaService) — a diferencia de NotificarAsync, aquí no hay un
+    // "tipo de evento" común que decida el mensaje por sí solo.
+    Task NotificarFamiliarAsync(int residenteId, string titulo, string cuerpo);
 }

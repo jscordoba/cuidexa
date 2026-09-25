@@ -49,6 +49,8 @@ public class CuidexaDbContext : DbContext
     public DbSet<DocumentoFirmado> DocumentosFirmados => Set<DocumentoFirmado>();
     public DbSet<TicketSoporte> TicketsSoporte => Set<TicketSoporte>();
     public DbSet<Familiar> Familiares => Set<Familiar>();
+    public DbSet<SuscripcionPushSuperAdmin> SuscripcionesPushSuperAdmin => Set<SuscripcionPushSuperAdmin>();
+    public DbSet<SuscripcionPushFamiliar> SuscripcionesPushFamiliar => Set<SuscripcionPushFamiliar>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -206,6 +208,15 @@ public class CuidexaDbContext : DbContext
         // FamiliarService/FamiliarController, no por Centro.
         modelBuilder.Entity<Familiar>().HasOne(e => e.Residente).WithMany().HasForeignKey(e => e.ResidenteId).OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<Familiar>().HasIndex(f => f.Email).IsUnique();
+
+        // Suscripciones de push de SuperAdmin/Familiar: sin filtro de tenant,
+        // mismo motivo que sus tablas dueñas. Restrict + Endpoint único,
+        // igual que SuscripcionPush (Empleado).
+        modelBuilder.Entity<SuscripcionPushSuperAdmin>().HasOne(e => e.SuperAdmin).WithMany().HasForeignKey(e => e.SuperAdminId).OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<SuscripcionPushSuperAdmin>().HasIndex(s => s.Endpoint).IsUnique();
+
+        modelBuilder.Entity<SuscripcionPushFamiliar>().HasOne(e => e.Familiar).WithMany().HasForeignKey(e => e.FamiliarId).OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<SuscripcionPushFamiliar>().HasIndex(s => s.Endpoint).IsUnique();
 
         // --- FK + filtro global de aislamiento por Organización (5 catálogos) ---
         // Compartidos por todos los Centros de una misma Organizacion — sin

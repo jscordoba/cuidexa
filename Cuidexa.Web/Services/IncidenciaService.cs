@@ -126,6 +126,17 @@ public class IncidenciaService : IIncidenciaService
 
         await _auditoria.RegistrarAsync(empleadoIdActor, "Modificacion", "Incidencia", incidencia.Id,
             $"Incidencia → {estado}" + (string.IsNullOrWhiteSpace(notasResolucion) ? "" : $": {notasResolucion}"));
+
+        // Solo la resolución de una incidencia de residente con seguimiento
+        // llega al portal de familiares (ver FamiliarService.ObtenerIncidenciasResueltasAsync)
+        // — las informativas nunca pasan por aquí (nacen ya Resueltas, sin
+        // pasar por CambiarEstadoAsync) y no tiene sentido avisar de esas.
+        if (estado == EstadoIncidencia.Resuelta && incidencia.Caracter == CaracterIncidencia.RequiereSeguimiento
+            && incidencia.ResidenteId.HasValue)
+        {
+            await _push.NotificarFamiliarAsync(incidencia.ResidenteId.Value,
+                "Cuidexa · Incidencia resuelta", incidencia.Titulo);
+        }
     }
 
     // Admin siempre puede ver/resolver cualquier incidencia (oversight),

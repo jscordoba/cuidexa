@@ -23,12 +23,16 @@ public class FamiliarController : Controller
 
     private readonly CuidexaDbContext _db;
     private readonly IFamiliarService _familiares;
+    private readonly IPushNotificationService _push;
 
-    public FamiliarController(CuidexaDbContext db, IFamiliarService familiares)
+    public FamiliarController(CuidexaDbContext db, IFamiliarService familiares, IPushNotificationService push)
     {
         _db = db;
         _familiares = familiares;
+        _push = push;
     }
+
+    private int FamiliarIdActual() => int.Parse(User.FindFirst("FamiliarId")!.Value);
 
     [AllowAnonymous]
     public IActionResult Login() => View();
@@ -100,5 +104,31 @@ public class FamiliarController : Controller
         ViewBag.Documentos = await _familiares.ObtenerDocumentosAsync(residenteId);
         ViewBag.Incidencias = await _familiares.ObtenerIncidenciasResueltasAsync(residenteId);
         return View();
+    }
+
+    public class SuscripcionRequest
+    {
+        public string Endpoint { get; set; } = string.Empty;
+        public string P256dh { get; set; } = string.Empty;
+        public string Auth { get; set; } = string.Empty;
+    }
+
+    public class DesuscripcionRequest
+    {
+        public string Endpoint { get; set; } = string.Empty;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SuscribirPush([FromBody] SuscripcionRequest request)
+    {
+        await _push.SuscribirFamiliarAsync(FamiliarIdActual(), request.Endpoint, request.P256dh, request.Auth);
+        return Ok();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DesuscribirPush([FromBody] DesuscripcionRequest request)
+    {
+        await _push.DesuscribirFamiliarAsync(request.Endpoint);
+        return Ok();
     }
 }

@@ -24,12 +24,15 @@ public class SuperAdminController : Controller
     private readonly IEmpleadoService _empleados;
     private readonly IOrganizacionService _organizacion;
     private readonly ISoporteService _soporte;
+    private readonly IPushNotificationService _push;
 
-    public SuperAdminController(CuidexaDbContext db, IEmpleadoService empleados, IOrganizacionService organizacion, ISoporteService soporte)
+    public SuperAdminController(CuidexaDbContext db, IEmpleadoService empleados, IOrganizacionService organizacion,
+        ISoporteService soporte, IPushNotificationService push)
     {
         _db = db;
         _empleados = empleados;
         _organizacion = organizacion;
+        _push = push;
         _soporte = soporte;
     }
 
@@ -278,5 +281,31 @@ public class SuperAdminController : Controller
             TempData["Mensaje"] = ex.Message;
         }
         return RedirectToAction("Soporte");
+    }
+
+    public class SuscripcionRequest
+    {
+        public string Endpoint { get; set; } = string.Empty;
+        public string P256dh { get; set; } = string.Empty;
+        public string Auth { get; set; } = string.Empty;
+    }
+
+    public class DesuscripcionRequest
+    {
+        public string Endpoint { get; set; } = string.Empty;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SuscribirPush([FromBody] SuscripcionRequest request)
+    {
+        await _push.SuscribirSuperAdminAsync(SuperAdminIdActual(), request.Endpoint, request.P256dh, request.Auth);
+        return Ok();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DesuscribirPush([FromBody] DesuscripcionRequest request)
+    {
+        await _push.DesuscribirSuperAdminAsync(request.Endpoint);
+        return Ok();
     }
 }

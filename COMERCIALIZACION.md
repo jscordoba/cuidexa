@@ -94,10 +94,15 @@ qué queda.
       llega al empleado correcto).
 - [x] Documentación mínima de usuario: texto de ayuda integrado en el
       propio formulario ("qué esperabas, qué ha pasado, en qué pantalla").
-- [ ] Notificación activa (push/email) al SuperAdmin cuando entra un
-      ticket nuevo — hoy hay que entrar a mirar el panel; sin esto no hay
-      SLA real de respuesta. Requiere el mismo canal de alertas externo
-      pendiente en el bloque 1.
+- [x] Notificación activa (2026-09-25): push web al SuperAdmin cuando entra
+      un ticket nuevo (`SoporteService.CrearTicketAsync` →
+      `IPushNotificationService.NotificarNuevoTicketSoporteAsync`), botón
+      "Activar notificaciones" en `_LayoutSuperAdmin.cshtml`. Reutiliza la
+      infraestructura WebPush/VAPID ya existente — tabla propia
+      `SuscripcionesPushSuperAdmin` (SuperAdmin no tiene CentroId, no
+      puede compartir la tabla de Empleado). Email queda como extensión
+      futura si se decide un proveedor (SendGrid/SMTP) — no bloqueante,
+      el hueco está identificado en el propio servicio.
 
 ### 4. App instalable / pulir experiencia offline ✅ (base completada 2026-09-23)
 - [x] Revisado `manifest.webmanifest` y `sw.js` existentes (Fase 7): ya
@@ -146,9 +151,16 @@ qué queda.
       y nunca emitía "True"/"False" de verdad — con `.ToString()` se
       evita. Probado de extremo a extremo: desactivar → login falla →
       restablecer contraseña → reactivar → login funciona.
-- [ ] Notificar al familiar cuando hay un documento/incidencia nuevo — hoy
-      tiene que entrar a mirar; requiere el mismo canal de alertas externo
-      pendiente en los bloques 1 y 3.
+- [x] Notificación activa (2026-09-25): push web al familiar cuando se
+      firma un documento nuevo de su residente
+      (`DocumentoFirmadoService.CrearAsync`) o se resuelve una incidencia
+      de seguimiento (`IncidenciaService.CambiarEstadoAsync`), ambos vía
+      `IPushNotificationService.NotificarFamiliarAsync`. Botón "Activar
+      notificaciones" en `_LayoutFamiliar.cshtml`. Tabla propia
+      `SuscripcionesPushFamiliar` (mismo motivo que SuperAdmin). Probado
+      de extremo a extremo sin suscripciones activas (no rompe nada);
+      el envío real requiere un navegador con permiso de notificaciones
+      concedido, no verificable en este entorno de pruebas.
 
 ### 6. Multi-idioma (ES/EN) — infraestructura y selector completados (2026-09-23)
 - [x] Infraestructura de recursos de idioma: `IStringLocalizer<SharedResource>`
@@ -166,10 +178,16 @@ qué queda.
       deliberadamente fuera de este alcance inicial, tal como ya marcaba
       este mismo checklist ("no bloquea al primer piloto si es en España").
       Con la infraestructura ya en pie, es trabajo incremental: añadir
-      `Localizer["..."]` vista a vista y su traducción en el .resx.
-- [ ] Etiquetas de rol (`ViewHelpers/RolPresentacion.cs`) siguen en español
-      — es una clase estática sin acceso a `IStringLocalizer` hoy; requiere
-      convertirla en un servicio inyectable si se quiere traducir.
+      `Localizer["..."]` vista a vista y su traducción en el .resx. En
+      curso — ver siguiente entrega.
+- [x] Etiquetas de rol traducibles (2026-09-25): `ViewHelpers/RolPresentacion.cs`
+      (clase estática) convertida a `Services/RolPresentacionService.cs`
+      (inyectable, con `IStringLocalizer<SharedResource>`). Registrada
+      globalmente como `RolPresentacion` en `_ViewImports.cshtml` — las
+      ~25 vistas que ya hacían `RolPresentacion.Obtener(...)` no
+      necesitaron tocarse (la instancia inyectada ocupa el mismo nombre
+      que antes ocupaba la clase estática). Probado ES→EN: "Administración"
+      → "Administration" en la barra lateral.
 
 ### 7. Sistema de facturación — deliberadamente aplazado (2026-09-23)
 Decisión explícita: nada todavía. La primera empresa de pruebas se da de

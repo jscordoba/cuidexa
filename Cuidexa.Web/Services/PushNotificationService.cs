@@ -59,6 +59,70 @@ public class PushNotificationService : IPushNotificationService
         }
     }
 
+    public async Task SuscribirSuperAdminAsync(int superAdminId, string endpoint, string p256dh, string auth)
+    {
+        var existente = await _db.SuscripcionesPushSuperAdmin.FirstOrDefaultAsync(s => s.Endpoint == endpoint);
+        if (existente is not null)
+        {
+            existente.SuperAdminId = superAdminId;
+            existente.P256dh = p256dh;
+            existente.Auth = auth;
+        }
+        else
+        {
+            _db.SuscripcionesPushSuperAdmin.Add(new SuscripcionPushSuperAdmin
+            {
+                SuperAdminId = superAdminId,
+                Endpoint = endpoint,
+                P256dh = p256dh,
+                Auth = auth
+            });
+        }
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task DesuscribirSuperAdminAsync(string endpoint)
+    {
+        var existente = await _db.SuscripcionesPushSuperAdmin.FirstOrDefaultAsync(s => s.Endpoint == endpoint);
+        if (existente is not null)
+        {
+            _db.SuscripcionesPushSuperAdmin.Remove(existente);
+            await _db.SaveChangesAsync();
+        }
+    }
+
+    public async Task SuscribirFamiliarAsync(int familiarId, string endpoint, string p256dh, string auth)
+    {
+        var existente = await _db.SuscripcionesPushFamiliar.FirstOrDefaultAsync(s => s.Endpoint == endpoint);
+        if (existente is not null)
+        {
+            existente.FamiliarId = familiarId;
+            existente.P256dh = p256dh;
+            existente.Auth = auth;
+        }
+        else
+        {
+            _db.SuscripcionesPushFamiliar.Add(new SuscripcionPushFamiliar
+            {
+                FamiliarId = familiarId,
+                Endpoint = endpoint,
+                P256dh = p256dh,
+                Auth = auth
+            });
+        }
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task DesuscribirFamiliarAsync(string endpoint)
+    {
+        var existente = await _db.SuscripcionesPushFamiliar.FirstOrDefaultAsync(s => s.Endpoint == endpoint);
+        if (existente is not null)
+        {
+            _db.SuscripcionesPushFamiliar.Remove(existente);
+            await _db.SaveChangesAsync();
+        }
+    }
+
     // Ruta de la bandeja de avisos de cada rol — Dirección no tiene bandeja
     // propia (ver CrearAvisoViewModel.DepartamentosDisponibles), así que un
     // grupo que incluyera a alguien de Dirección cae al inicio en vez de
@@ -142,19 +206,63 @@ public class PushNotificationService : IPushNotificationService
             var suscripciones = await _db.SuscripcionesPush.Where(s => s.EmpleadoId == destinatario.Id).ToListAsync();
             foreach (var suscripcion in suscripciones)
             {
-                var pushSubscription = new PushSubscription(suscripcion.Endpoint, suscripcion.P256dh, suscripcion.Auth);
-                try
-                {
-                    await _client.SendNotificationAsync(pushSubscription, payload, _vapidDetails);
-                }
-                catch (WebPushException ex) when (ex.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone)
-                {
-                    // Suscripción caducada/inválida — se limpia sola en vez
-                    // de seguir reintentando contra un endpoint muerto.
-                    _db.SuscripcionesPush.Remove(suscripcion);
-                    await _db.SaveChangesAsync();
-                }
+                await EnviarUnoAsync(suscripcion.Endpoint, suscripcion.P256dh, suscripcion.Auth, payload,
+                    () => _db.SuscripcionesPush.Remove(suscripcion));
             }
+        }
+    }
+
+    public async Task NotificarNuevoTicketSoporteAsync(TicketSoporte ticket)
+    {
+        var superAdmins = await _db.SuperAdmins.Where(s => s.Activo).ToListAsync();
+        var payload = JsonSerializer.Serialize(new
+        {
+            titulo = "Cuidexa · Nuevo ticket de soporte",
+            cuerpo = ticket.Titulo,
+            urgente = false,
+            url = "/SuperAdmin/Soporte"
+        });
+
+        foreach (var superAdmin in superAdmins)
+        {
+            var suscripciones = await _db.SuscripcionesPushSuperAdmin.Where(s => s.SuperAdminId == superAdmin.Id).ToListAsync();
+            foreach (var suscripcion in suscripciones)
+            {
+                await EnviarUnoAsync(suscripcion.Endpoint, suscripcion.P256dh, suscripcion.Auth, payload,
+                    () => _db.SuscripcionesPushSuperAdmin.Remove(suscripcion));
+            }
+        }
+    }
+
+    public async Task NotificarFamiliarAsync(int residenteId, string titulo, string cuerpo)
+    {
+        var familiares = await _db.Familiares.Where(f => f.ResidenteId == residenteId && f.Activo).ToListAsync();
+        var payload = JsonSerializer.Serialize(new { titulo, cuerpo, urgente = false, url = "/Familiar/Index" });
+
+        foreach (var familiar in familiares)
+        {
+            var suscripciones = await _db.SuscripcionesPushFamiliar.Where(s => s.FamiliarId == familiar.Id).ToListAsync();
+            foreach (var suscripcion in suscripciones)
+            {
+                await EnviarUnoAsync(suscripcion.Endpoint, suscripcion.P256dh, suscripcion.Auth, payload,
+                    () => _db.SuscripcionesPushFamiliar.Remove(suscripcion));
+            }
+        }
+    }
+
+    private async Task EnviarUnoAsync(string endpoint, string p256dh, string auth, string payload, Action eliminarSuscripcion)
+    {
+        var pushSubscription = new PushSubscription(endpoint, p256dh, auth);
+        try
+        {
+            await _client.SendNotificationAsync(pushSubscription, payload, _vapidDetails);
+        }
+        catch (WebPushException ex) when (ex.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone)
+        {
+            // Suscripción caducada/inválida — se limpia sola en vez de
+            // seguir reintentando contra un endpoint muerto.
+            eliminarSuscripcion();
+            await _db.SaveChangesAsync();
         }
     }
 }

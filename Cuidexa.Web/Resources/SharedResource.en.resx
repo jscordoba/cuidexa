@@ -127,4 +127,28 @@
   <data name="Acceso" xml:space="preserve">
     <value>Sign in</value>
   </data>
+  <data name="Administración" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="Cocina" xml:space="preserve">
+    <value>Kitchen</value>
+  </data>
+  <data name="Auxiliar" xml:space="preserve">
+    <value>Aide</value>
+  </data>
+  <data name="Dirección" xml:space="preserve">
+    <value>Management</value>
+  </data>
+  <data name="Enfermería" xml:space="preserve">
+    <value>Nursing</value>
+  </data>
+  <data name="Profesional" xml:space="preserve">
+    <value>Professional</value>
+  </data>
+  <data name="Limpieza" xml:space="preserve">
+    <value>Housekeeping</value>
+  </data>
+  <data name="Director de Organización" xml:space="preserve">
+    <value>Organization Director</value>
+  </data>
 </root>
