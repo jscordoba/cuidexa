@@ -1,6 +1,7 @@
 using Cuidexa.Web.Data;
 using Cuidexa.Web.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace Cuidexa.Web.Services;
 
@@ -8,11 +9,15 @@ public class AnalisisService : IAnalisisService
 {
     private readonly CuidexaDbContext _db;
     private readonly ITurnoService _turnos;
+    private readonly IStringLocalizer<SharedResource> _localizer;
+    private readonly IRolPresentacionService _rolPresentacion;
 
-    public AnalisisService(CuidexaDbContext db, ITurnoService turnos)
+    public AnalisisService(CuidexaDbContext db, ITurnoService turnos, IStringLocalizer<SharedResource> localizer, IRolPresentacionService rolPresentacion)
     {
         _db = db;
         _turnos = turnos;
+        _localizer = localizer;
+        _rolPresentacion = rolPresentacion;
     }
 
     public Task<List<string>> ObtenerResumenEjecutivoAsync(
@@ -23,25 +28,25 @@ public class AnalisisService : IAnalisisService
         if (turnos.Filas.Any())
         {
             var top = turnos.Filas.OrderByDescending(f => f.HorasTrabajadas).First();
-            puntos.Add($"{top.Nombre} ({top.Rol}) acumula más horas trabajadas del periodo: {top.HorasTrabajadas:0.0}h.");
+            puntos.Add(_localizer["{0} ({1}) acumula más horas trabajadas del periodo: {2}h.", top.Nombre, _rolPresentacion.Obtener(top.Rol).Etiqueta, top.HorasTrabajadas.ToString("0.0")]);
 
             var ausencias = turnos.Filas.Sum(f => f.DiasAusencia);
             if (ausencias > 0)
             {
-                puntos.Add($"{ausencias} día(s)-persona de ausencia cubiertos por compañeros en el periodo.");
+                puntos.Add(_localizer["{0} día(s)-persona de ausencia cubiertos por compañeros en el periodo.", ausencias]);
             }
         }
 
         if (residentes.DietasActivas.Any())
         {
             var dietaTop = residentes.DietasActivas.First();
-            puntos.Add($"La dieta más común entre los residentes activos es \"{dietaTop.Dieta}\" ({dietaTop.Cantidad} residentes).");
+            puntos.Add(_localizer["La dieta más común entre los residentes activos es \"{0}\" ({1} residentes).", dietaTop.Dieta, dietaTop.Cantidad]);
         }
 
         if (residentes.PatologiasFrecuentes.Any())
         {
             var patTop = residentes.PatologiasFrecuentes.First();
-            puntos.Add($"La patología más frecuente es \"{patTop.Patologia}\" ({patTop.Cantidad} residentes).");
+            puntos.Add(_localizer["La patología más frecuente es \"{0}\" ({1} residentes).", patTop.Patologia, patTop.Cantidad]);
         }
 
         if (actividad.AvisosPorDepartamento.Any())
@@ -49,13 +54,13 @@ public class AnalisisService : IAnalisisService
             var deptTop = actividad.AvisosPorDepartamento.OrderByDescending(f => f.Urgentes).First();
             if (deptTop.Urgentes > 0)
             {
-                puntos.Add($"{deptTop.Rol} fue el departamento con más avisos urgentes del periodo ({deptTop.Urgentes}).");
+                puntos.Add(_localizer["{0} fue el departamento con más avisos urgentes del periodo ({1}).", _rolPresentacion.Obtener(deptTop.Rol).Etiqueta, deptTop.Urgentes]);
             }
         }
 
         if (!puntos.Any())
         {
-            puntos.Add("Sin actividad suficiente en el rango seleccionado para destacar nada.");
+            puntos.Add(_localizer["Sin actividad suficiente en el rango seleccionado para destacar nada."]);
         }
 
         return Task.FromResult(puntos);
@@ -86,9 +91,9 @@ public class AnalisisService : IAnalisisService
         foreach (var g in porResidente)
         {
             var residente = g.First().Residente;
-            var nombre = residente is not null ? $"{residente.Nombre} {residente.Apellidos}" : "Un residente";
+            string nombre = residente is not null ? $"{residente.Nombre} {residente.Apellidos}" : _localizer["Un residente"];
             var tipoMasComun = g.GroupBy(i => i.Tipo).OrderByDescending(x => x.Count()).First().Key;
-            patrones.Add($"{nombre} concentra {g.Count()} incidencias en el rango (mayormente de tipo {EtiquetaTipo(tipoMasComun)}) — puede convenir revisar su plan de cuidados.");
+            patrones.Add(_localizer["{0} concentra {1} incidencias en el rango (mayormente de tipo {2}) — puede convenir revisar su plan de cuidados.", nombre, g.Count(), _localizer[EtiquetaTipo(tipoMasComun)]]);
         }
 
         // Día de la semana que concentra más incidencias graves/urgentes que el resto.
@@ -102,7 +107,7 @@ public class AnalisisService : IAnalisisService
             var mediaPorDia = graves.Count / 7.0;
             if (porDia.Cantidad >= 2 && porDia.Cantidad >= mediaPorDia * 1.75)
             {
-                patrones.Add($"Los {EtiquetaDia(porDia.Dia)} concentran más incidencias graves/urgentes que el resto de la semana ({porDia.Cantidad} de {graves.Count}) — puede convenir reforzar personal ese día.");
+                patrones.Add(_localizer["Los {0} concentran más incidencias graves/urgentes que el resto de la semana ({1} de {2}) — puede convenir reforzar personal ese día.", _localizer[EtiquetaDia(porDia.Dia)], porDia.Cantidad, graves.Count]);
             }
         }
 
@@ -110,7 +115,7 @@ public class AnalisisService : IAnalisisService
         var porTipo = incidencias.GroupBy(i => i.Tipo).OrderByDescending(g => g.Count()).First();
         if (incidencias.Count >= 4 && porTipo.Count() >= incidencias.Count * 0.5)
         {
-            patrones.Add($"Más de la mitad de las incidencias del periodo son de tipo {EtiquetaTipo(porTipo.Key)} ({porTipo.Count()} de {incidencias.Count}).");
+            patrones.Add(_localizer["Más de la mitad de las incidencias del periodo son de tipo {0} ({1} de {2}).", _localizer[EtiquetaTipo(porTipo.Key)], porTipo.Count(), incidencias.Count]);
         }
 
         return patrones;

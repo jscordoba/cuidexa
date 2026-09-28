@@ -8,29 +8,37 @@
     var patrones = (List<string>)ViewBag.PatronesIncidencias;
     var prediccion = (AnalisisPersonal)ViewBag.PrediccionPersonal;
     var qs = $"desde={desde:yyyy-MM-dd}&hasta={hasta:yyyy-MM-dd}";
+
+    string EtiquetaAccionResidente(string accion) => accion switch
+    {
+        "Alta" => Localizer["Alta (residente)"],
+        "Baja" => Localizer["Baja (residente)"],
+        "Traslado" => Localizer["Traslado"],
+        _ => accion
+    };
 }
-<h4 class="mb-3">Informes</h4>
+<h4 class="mb-3">@Localizer["Informes"]</h4>
 
 <form method="get" class="row g-2 align-items-end mb-4">
     <div class="col-6 col-sm-3">
-        <label class="form-label small mb-1">Desde</label>
+        <label class="form-label small mb-1">@Localizer["Desde"]</label>
         <input type="date" name="desde" class="form-control" value="@desde.ToString("yyyy-MM-dd")" />
     </div>
     <div class="col-6 col-sm-3">
-        <label class="form-label small mb-1">Hasta</label>
+        <label class="form-label small mb-1">@Localizer["Hasta"]</label>
         <input type="date" name="hasta" class="form-control" value="@hasta.ToString("yyyy-MM-dd")" />
     </div>
     <div class="col-12 col-sm-3">
-        <button class="btn btn-primary w-100">Filtrar</button>
+        <button class="btn btn-primary w-100">@Localizer["Filtrar"]</button>
     </div>
 </form>
 
 <div class="card mb-4">
     <div class="card-body">
-        <h5 class="mb-1"><i class="bi bi-stars me-2 text-muted"></i>Análisis del periodo</h5>
-        <p class="text-muted small">Generado localmente a partir de los datos del centro — sin IA externa, sin enviar datos a terceros.</p>
+        <h5 class="mb-1"><i class="bi bi-stars me-2 text-muted"></i>@Localizer["Análisis del periodo"]</h5>
+        <p class="text-muted small">@Localizer["Generado localmente a partir de los datos del centro — sin IA externa, sin enviar datos a terceros."]</p>
 
-        <h6 class="text-muted">Resumen ejecutivo</h6>
+        <h6 class="text-muted">@Localizer["Resumen ejecutivo"]</h6>
         <ul class="small mb-3">
             @foreach (var punto in resumen)
             {
@@ -40,7 +48,7 @@
 
         @if (patrones.Any())
         {
-            <h6 class="text-muted">Patrones detectados en incidencias</h6>
+            <h6 class="text-muted">@Localizer["Patrones detectados en incidencias"]</h6>
             <ul class="small mb-0">
                 @foreach (var patron in patrones)
                 {
@@ -53,29 +61,29 @@
 
 <div class="card mb-4">
     <div class="card-body">
-        <h5 class="mb-1"><i class="bi bi-graph-up me-2 text-muted"></i>Predicción de personal — próximos 7 días</h5>
-        <p class="text-muted small">"Recomendado" es el promedio histórico de personal distinto que trabajó ese mismo día de la semana en semanas anteriores — no considera vacaciones ya aprobadas ni eventos futuros excepcionales.</p>
+        <h5 class="mb-1"><i class="bi bi-graph-up me-2 text-muted"></i>@Localizer["Predicción de personal — próximos 7 días"]</h5>
+        <p class="text-muted small">@Localizer["\"Recomendado\" es el promedio histórico de personal distinto que trabajó ese mismo día de la semana en semanas anteriores — no considera vacaciones ya aprobadas ni eventos futuros excepcionales."]</p>
         @if (!prediccion.Filas.Any())
         {
-            <p class="text-muted small mb-0">Todavía no hay suficiente historial de turnos para calcular una predicción.</p>
+            <p class="text-muted small mb-0">@Localizer["Todavía no hay suficiente historial de turnos para calcular una predicción."]</p>
         }
         else
         {
             <div class="table-responsive">
                 <table class="table table-sm bg-white mb-0">
-                    <thead><tr><th>Fecha</th><th>Rol</th><th>Programado</th><th>Recomendado</th><th></th></tr></thead>
+                    <thead><tr><th>@Localizer["Fecha"]</th><th>@Localizer["Rol"]</th><th>@Localizer["Programado"]</th><th>@Localizer["Recomendado"]</th><th></th></tr></thead>
                     <tbody>
                         @foreach (var f in prediccion.Filas)
                         {
                             <tr class="@(f.PosibleFaltaPersonal ? "table-warning" : "")">
                                 <td>@f.Fecha.ToString("ddd dd/MM")</td>
-                                <td>@f.Rol</td>
+                                <td>@RolPresentacion.Obtener(f.Rol).Etiqueta</td>
                                 <td>@f.PersonalProgramado</td>
                                 <td>@f.PersonalRecomendado.ToString("0.0")</td>
                                 <td>
                                     @if (f.PosibleFaltaPersonal)
                                     {
-                                        <span class="badge bg-warning text-dark">Posible falta de personal</span>
+                                        <span class="badge bg-warning text-dark">@Localizer["Posible falta de personal"]</span>
                                     }
                                 </td>
                             </tr>
@@ -90,28 +98,28 @@
 <div class="card mb-4">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-            <h5 class="mb-0">Turnos y personal</h5>
+            <h5 class="mb-0">@Localizer["Turnos y personal"]</h5>
             <div class="d-flex gap-2">
-                <a class="btn btn-sm btn-outline-secondary" href="/Informes/TurnosPdf?@qs">Descargar PDF</a>
-                <a class="btn btn-sm btn-outline-secondary" href="/Informes/TurnosExcel?@qs">Descargar Excel</a>
+                <a class="btn btn-sm btn-outline-secondary" href="/Informes/TurnosPdf?@qs">@Localizer["Descargar PDF"]</a>
+                <a class="btn btn-sm btn-outline-secondary" href="/Informes/TurnosExcel?@qs">@Localizer["Descargar Excel"]</a>
             </div>
         </div>
-        <p class="text-muted small">"Ausencias" = días en que a la persona le cubrieron su turno (única señal de ausencia disponible hoy).</p>
+        <p class="text-muted small">@Localizer["\"Ausencias\" = días en que a la persona le cubrieron su turno (única señal de ausencia disponible hoy)."]</p>
         @if (!turnos.Filas.Any())
         {
-            <p class="text-muted small mb-0">Sin turnos en el rango.</p>
+            <p class="text-muted small mb-0">@Localizer["Sin turnos en el rango."]</p>
         }
         else
         {
             <div class="table-responsive">
                 <table class="table table-sm bg-white">
-                    <thead><tr><th>Empleado</th><th>Rol</th><th>Horas</th><th>Ausencias</th><th>Vac. disfrutadas</th><th>Vac. solicitadas</th></tr></thead>
+                    <thead><tr><th>@Localizer["Empleado"]</th><th>@Localizer["Rol"]</th><th>@Localizer["Horas"]</th><th>@Localizer["Ausencias"]</th><th>@Localizer["Vac. disfrutadas"]</th><th>@Localizer["Vac. solicitadas"]</th></tr></thead>
                     <tbody>
                         @foreach (var f in turnos.Filas)
                         {
                             <tr>
                                 <td>@f.Nombre</td>
-                                <td>@f.Rol</td>
+                                <td>@RolPresentacion.Obtener(f.Rol).Etiqueta</td>
                                 <td>@f.HorasTrabajadas.ToString("0.0")</td>
                                 <td>@f.DiasAusencia</td>
                                 <td>@f.VacacionesDisfrutadas</td>
@@ -128,14 +136,14 @@
 <div class="card mb-4">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-            <h5 class="mb-0">Residentes y cuidados</h5>
+            <h5 class="mb-0">@Localizer["Residentes y cuidados"]</h5>
             <div class="d-flex gap-2">
-                <a class="btn btn-sm btn-outline-secondary" href="/Informes/ResidentesPdf?@qs">Descargar PDF</a>
-                <a class="btn btn-sm btn-outline-secondary" href="/Informes/ResidentesExcel?@qs">Descargar Excel</a>
+                <a class="btn btn-sm btn-outline-secondary" href="/Informes/ResidentesPdf?@qs">@Localizer["Descargar PDF"]</a>
+                <a class="btn btn-sm btn-outline-secondary" href="/Informes/ResidentesExcel?@qs">@Localizer["Descargar Excel"]</a>
             </div>
         </div>
 
-        <h6 class="text-muted">Dietas activas <span class="fw-normal">(a fecha de hoy)</span></h6>
+        <h6 class="text-muted">@Localizer["Dietas activas"] <span class="fw-normal">(@Localizer["a fecha de hoy"])</span></h6>
         <div class="d-flex flex-wrap gap-2 mb-3">
             @foreach (var (dieta, cantidad) in residentes.DietasActivas)
             {
@@ -143,11 +151,11 @@
             }
         </div>
 
-        <h6 class="text-muted">Patologías más frecuentes <span class="fw-normal">(a fecha de hoy)</span></h6>
+        <h6 class="text-muted">@Localizer["Patologías más frecuentes"] <span class="fw-normal">(@Localizer["a fecha de hoy"])</span></h6>
         <div class="d-flex flex-wrap gap-2 mb-3">
             @if (!residentes.PatologiasFrecuentes.Any())
             {
-                <span class="text-muted small">Ninguna registrada.</span>
+                <span class="text-muted small">@Localizer["Ninguna registrada."]</span>
             }
             @foreach (var (patologia, cantidad) in residentes.PatologiasFrecuentes)
             {
@@ -155,32 +163,32 @@
             }
         </div>
 
-        <h6 class="text-muted">Medicación administrada en el rango</h6>
+        <h6 class="text-muted">@Localizer["Medicación administrada en el rango"]</h6>
         @if (!residentes.MedicacionAdministrada.Any())
         {
-            <p class="text-muted small">Sin registros en el rango.</p>
+            <p class="text-muted small">@Localizer["Sin registros en el rango."]</p>
         }
         else
         {
             <ul class="small mb-3">
                 @foreach (var m in residentes.MedicacionAdministrada)
                 {
-                    <li>@m.Residente — @m.Medicamento: @m.VecesAdministrada veces</li>
+                    <li>@m.Residente — @m.Medicamento: @m.VecesAdministrada @Localizer["veces"]</li>
                 }
             </ul>
         }
 
-        <h6 class="text-muted">Sesiones de terapia realizadas en el rango</h6>
+        <h6 class="text-muted">@Localizer["Sesiones de terapia realizadas en el rango"]</h6>
         @if (!residentes.SesionesRealizadas.Any())
         {
-            <p class="text-muted small mb-0">Sin registros en el rango.</p>
+            <p class="text-muted small mb-0">@Localizer["Sin registros en el rango."]</p>
         }
         else
         {
             <ul class="small mb-0">
                 @foreach (var s in residentes.SesionesRealizadas)
                 {
-                    <li>@s.Residente — @s.Profesional (@s.Especialidad): @s.SesionesRealizadas sesiones</li>
+                    <li>@s.Residente — @s.Profesional (@s.Especialidad): @s.SesionesRealizadas @Localizer["sesiones"]</li>
                 }
             </ul>
         }
@@ -190,44 +198,44 @@
 <div class="card mb-4">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-            <h5 class="mb-0">Actividad e incidencias</h5>
+            <h5 class="mb-0">@Localizer["Actividad e incidencias"]</h5>
             <div class="d-flex gap-2">
-                <a class="btn btn-sm btn-outline-secondary" href="/Informes/ActividadPdf?@qs">Descargar PDF</a>
-                <a class="btn btn-sm btn-outline-secondary" href="/Informes/ActividadExcel?@qs">Descargar Excel</a>
+                <a class="btn btn-sm btn-outline-secondary" href="/Informes/ActividadPdf?@qs">@Localizer["Descargar PDF"]</a>
+                <a class="btn btn-sm btn-outline-secondary" href="/Informes/ActividadExcel?@qs">@Localizer["Descargar Excel"]</a>
             </div>
         </div>
 
-        <h6 class="text-muted">Avisos por departamento</h6>
+        <h6 class="text-muted">@Localizer["Avisos por departamento"]</h6>
         @if (!actividad.AvisosPorDepartamento.Any())
         {
-            <p class="text-muted small">Sin avisos en el rango.</p>
+            <p class="text-muted small">@Localizer["Sin avisos en el rango."]</p>
         }
         else
         {
             <div class="table-responsive mb-3">
                 <table class="table table-sm bg-white">
-                    <thead><tr><th>Departamento</th><th>Total</th><th>Urgentes</th></tr></thead>
+                    <thead><tr><th>@Localizer["Departamento"]</th><th>@Localizer["Total"]</th><th>@Localizer["Urgentes"]</th></tr></thead>
                     <tbody>
                         @foreach (var f in actividad.AvisosPorDepartamento)
                         {
-                            <tr><td>@f.Rol</td><td>@f.Total</td><td>@f.Urgentes</td></tr>
+                            <tr><td>@RolPresentacion.Obtener(f.Rol).Etiqueta</td><td>@f.Total</td><td>@f.Urgentes</td></tr>
                         }
                     </tbody>
                 </table>
             </div>
         }
 
-        <h6 class="text-muted">Altas, bajas y traslados de residentes</h6>
+        <h6 class="text-muted">@Localizer["Altas, bajas y traslados de residentes"]</h6>
         @if (!actividad.TendenciaResidentes.Any())
         {
-            <p class="text-muted small mb-0">Sin movimientos en el rango.</p>
+            <p class="text-muted small mb-0">@Localizer["Sin movimientos en el rango."]</p>
         }
         else
         {
             <div class="d-flex flex-wrap gap-2">
                 @foreach (var (accion, cantidad) in actividad.TendenciaResidentes)
                 {
-                    <span class="badge bg-light text-dark border">@accion: @cantidad</span>
+                    <span class="badge bg-light text-dark border">@EtiquetaAccionResidente(accion): @cantidad</span>
                 }
             </div>
         }

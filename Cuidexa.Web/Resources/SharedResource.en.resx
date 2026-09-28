@@ -702,4 +702,58 @@
   <data name="¿Cancelar esta sesión?" xml:space="preserve"><value>Cancel this session?</value></data>
   <data name="¿Finalizar esta medicación?" xml:space="preserve"><value>End this medication?</value></data>
   <data name="Última administración:" xml:space="preserve"><value>Last administered:</value></data>
+  <data name="Actividad e incidencias" xml:space="preserve"><value>Activity and incidents</value></data>
+  <data name="Alta (residente)" xml:space="preserve"><value>Admission</value></data>
+  <data name="Altas, bajas y traslados de residentes" xml:space="preserve"><value>Admissions, discharges, and transfers of residents</value></data>
+  <data name="Análisis del periodo" xml:space="preserve"><value>Analysis of the period</value></data>
+  <data name="Ausencias" xml:space="preserve"><value>Absences</value></data>
+  <data name="Avisos por departamento" xml:space="preserve"><value>Notices by department</value></data>
+  <data name="Baja (residente)" xml:space="preserve"><value>Discharge</value></data>
+  <data name="Descargar Excel" xml:space="preserve"><value>Download Excel</value></data>
+  <data name="Dietas activas" xml:space="preserve"><value>Active diets</value></data>
+  <data name="Filtrar" xml:space="preserve"><value>Filter</value></data>
+  <data name="Generado localmente a partir de los datos del centro — sin IA externa, sin enviar datos a terceros." xml:space="preserve"><value>Generated locally from the center's own data — no external AI, no data sent to third parties.</value></data>
+  <data name="Horas" xml:space="preserve"><value>Hours</value></data>
+  <data name="La dieta más común entre los residentes activos es &quot;{0}&quot; ({1} residentes)." xml:space="preserve"><value>The most common diet among active residents is "{0}" ({1} residents).</value></data>
+  <data name="La patología más frecuente es &quot;{0}&quot; ({1} residentes)." xml:space="preserve"><value>The most frequent condition is "{0}" ({1} residents).</value></data>
+  <data name="Los {0} concentran más incidencias graves/urgentes que el resto de la semana ({1} de {2}) — puede convenir reforzar personal ese día." xml:space="preserve"><value>{0} sees more severe/urgent incidents than the rest of the week ({1} of {2}) — staffing that day may be worth reinforcing.</value></data>
+  <data name="Medicación administrada en el rango" xml:space="preserve"><value>Medication administered in this range</value></data>
+  <data name="Más de la mitad de las incidencias del periodo son de tipo {0} ({1} de {2})." xml:space="preserve"><value>More than half of the period's incidents are of type {0} ({1} of {2}).</value></data>
+  <data name="Patologías más frecuentes" xml:space="preserve"><value>Most frequent conditions</value></data>
+  <data name="Patrones detectados en incidencias" xml:space="preserve"><value>Patterns detected in incidents</value></data>
+  <data name="Posible falta de personal" xml:space="preserve"><value>Possible understaffing</value></data>
+  <data name="Predicción de personal — próximos 7 días" xml:space="preserve"><value>Staffing forecast — next 7 days</value></data>
+  <data name="Recomendado" xml:space="preserve"><value>Recommended</value></data>
+  <data name="Residentes y cuidados" xml:space="preserve"><value>Residents and care</value></data>
+  <data name="Resumen ejecutivo" xml:space="preserve"><value>Executive summary</value></data>
+  <data name="Sesiones de terapia realizadas en el rango" xml:space="preserve"><value>Therapy sessions completed in this range</value></data>
+  <data name="Sin actividad suficiente en el rango seleccionado para destacar nada." xml:space="preserve"><value>Not enough activity in the selected range to highlight anything.</value></data>
+  <data name="Sin avisos en el rango." xml:space="preserve"><value>No notices in this range.</value></data>
+  <data name="Sin movimientos en el rango." xml:space="preserve"><value>No movements in this range.</value></data>
+  <data name="Sin registros en el rango." xml:space="preserve"><value>No records in this range.</value></data>
+  <data name="Sin turnos en el rango." xml:space="preserve"><value>No shifts in this range.</value></data>
+  <data name="Todavía no hay suficiente historial de turnos para calcular una predicción." xml:space="preserve"><value>There isn't enough shift history yet to calculate a forecast.</value></data>
+  <data name="Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Traslado" xml:space="preserve"><value>Transfer</value></data>
+  <data name="Turnos y personal" xml:space="preserve"><value>Shifts and staff</value></data>
+  <data name="Un residente" xml:space="preserve"><value>A resident</value></data>
+  <data name="Urgentes" xml:space="preserve"><value>Urgent</value></data>
+  <data name="Vac. disfrutadas" xml:space="preserve"><value>Vac. taken</value></data>
+  <data name="Vac. solicitadas" xml:space="preserve"><value>Vac. requested</value></data>
+  <data name="a fecha de hoy" xml:space="preserve"><value>as of today</value></data>
+  <data name="sesiones" xml:space="preserve"><value>sessions</value></data>
+  <data name="veces" xml:space="preserve"><value>times</value></data>
+  <data name="{0} ({1}) acumula más horas trabajadas del periodo: {2}h." xml:space="preserve"><value>{0} ({1}) has logged the most hours worked in the period: {2}h.</value></data>
+  <data name="{0} concentra {1} incidencias en el rango (mayormente de tipo {2}) — puede convenir revisar su plan de cuidados." xml:space="preserve"><value>{0} accounts for {1} incidents in this range (mostly of type {2}) — their care plan may be worth reviewing.</value></data>
+  <data name="{0} día(s)-persona de ausencia cubiertos por compañeros en el periodo." xml:space="preserve"><value>{0} person-day(s) of absence covered by colleagues in the period.</value></data>
+  <data name="{0} fue el departamento con más avisos urgentes del periodo ({1})." xml:space="preserve"><value>{0} was the department with the most urgent notices in the period ({1}).</value></data>
+  <data name="&quot;Recomendado&quot; es el promedio histórico de personal distinto que trabajó ese mismo día de la semana en semanas anteriores — no considera vacaciones ya aprobadas ni eventos futuros excepcionales." xml:space="preserve"><value>"Recommended" is the historical average of distinct staff who worked that same day of the week in previous weeks — it does not account for already-approved vacations or exceptional future events.</value></data>
+  <data name="&quot;Ausencias&quot; = días en que a la persona le cubrieron su turno (única señal de ausencia disponible hoy)." xml:space="preserve"><value>"Absences" = days when someone else covered this person's shift (the only absence signal available today).</value></data>
+  <data name="lunes" xml:space="preserve"><value>Mondays</value></data>
+  <data name="martes" xml:space="preserve"><value>Tuesdays</value></data>
+  <data name="miércoles" xml:space="preserve"><value>Wednesdays</value></data>
+  <data name="jueves" xml:space="preserve"><value>Thursdays</value></data>
+  <data name="viernes" xml:space="preserve"><value>Fridays</value></data>
+  <data name="sábados" xml:space="preserve"><value>Saturdays</value></data>
+  <data name="domingos" xml:space="preserve"><value>Sundays</value></data>
 </root>
