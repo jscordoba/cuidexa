@@ -173,13 +173,21 @@ qué queda.
       navegador/dispositivo, visible en el login y en toda la app
       autenticada (`Views/Shared/_SelectorIdioma.cshtml`). Probado de
       extremo a extremo: ES→EN→ES, con el idioma sobreviviendo al login.
-- [ ] Traducción completa de los flujos operativos (contenido de cada
-      pantalla más allá del login/nav — Avisos, Turnos, Residentes...) —
-      deliberadamente fuera de este alcance inicial, tal como ya marcaba
-      este mismo checklist ("no bloquea al primer piloto si es en España").
-      Con la infraestructura ya en pie, es trabajo incremental: añadir
-      `Localizer["..."]` vista a vista y su traducción en el .resx. En
-      curso — ver siguiente entrega.
+- [x] Traducción completa de los flujos operativos (2026-09-28): las ~50
+      vistas operativas (Avisos, Incidencias, Turnos, Residentes,
+      Documentos, portal de familiares, Empleados, Dispositivos, Grupos,
+      Soporte, SuperAdmin, Organización/Marca, Cocina, Limpieza,
+      Enfermería, Profesionales e Informes) usan ahora `Localizer["..."]`
+      con su traducción en `Resources/SharedResource.en.resx` (~330 claves
+      nuevas en 6 lotes). Incluye el texto generado dinámicamente por
+      `AnalisisService` (resumen ejecutivo y patrones de incidencias de
+      Informes) mediante plantillas de formato inyectadas con
+      `IStringLocalizer`, no solo el HTML estático de las vistas. Probado
+      de extremo a extremo en navegador como Admin, Enfermería y
+      Profesionales con el selector en EN — sin fugas de texto en español
+      salvo datos propios introducidos por el usuario (nombres de dietas,
+      patologías, texto libre de historial de auditoría), que no son
+      contenido de la interfaz. Suite de 22 tests sigue en verde.
 - [x] Etiquetas de rol traducibles (2026-09-25): `ViewHelpers/RolPresentacion.cs`
       (clase estática) convertida a `Services/RolPresentacionService.cs`
       (inyectable, con `IStringLocalizer<SharedResource>`). Registrada
