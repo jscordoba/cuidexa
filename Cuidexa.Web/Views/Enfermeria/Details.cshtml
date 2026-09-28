@@ -6,15 +6,15 @@
     var medicacionesActivas = Model.Medicaciones.Where(m => m.FechaFin == null).OrderBy(m => m.Nombre).ToList();
     var medicacionesFinalizadas = Model.Medicaciones.Where(m => m.FechaFin != null).OrderByDescending(m => m.FechaFin).ToList();
 }
-<a href="/Enfermeria" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<a href="/Enfermeria" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver al panel"]</a>
 <h4 class="mb-3">@Model.Nombre @Model.Apellidos</h4>
 
 <div class="card mb-3">
     <div class="card-body">
-        <h6 class="text-muted">Patologías</h6>
+        <h6 class="text-muted">@Localizer["Patologías"]</h6>
         @if (!Model.Patologias.Any())
         {
-            <p class="text-muted">Ninguna registrada.</p>
+            <p class="text-muted">@Localizer["Ninguna registrada."]</p>
         }
         else
         {
@@ -32,7 +32,7 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="residenteId" value="@Model.Id" />
                         <input type="hidden" name="patologiaId" value="@p.PatologiaId" />
-                        <button class="btn btn-sm btn-outline-danger text-nowrap">Quitar</button>
+                        <button class="btn btn-sm btn-outline-danger text-nowrap">@Localizer["Quitar"]</button>
                     </form>
                 </div>
             }
@@ -42,24 +42,24 @@
             @Html.AntiForgeryToken()
             <input type="hidden" name="residenteId" value="@Model.Id" />
             <select name="patologiaId" class="form-select" required>
-                <option value="">-- Añadir patología --</option>
+                <option value="">-- @Localizer["Añadir patología"] --</option>
                 @foreach (var p in patologiasDisponibles.Where(p => !patologiasAsignadas.Contains(p.Id)))
                 {
                     <option value="@p.Id">@p.Nombre</option>
                 }
             </select>
-            <input name="observaciones" class="form-control" placeholder="Observaciones (opcional)" />
-            <button class="btn btn-outline-primary text-nowrap flex-shrink-0">Añadir</button>
+            <input name="observaciones" class="form-control" placeholder="@Localizer["Observaciones (opcional)"]" />
+            <button class="btn btn-outline-primary text-nowrap flex-shrink-0">@Localizer["Añadir"]</button>
         </form>
     </div>
 </div>
 
 <div class="card mb-3">
     <div class="card-body">
-        <h6 class="text-muted">Medicación activa</h6>
+        <h6 class="text-muted">@Localizer["Medicación activa"]</h6>
         @if (!medicacionesActivas.Any())
         {
-            <p class="text-muted">Ninguna registrada.</p>
+            <p class="text-muted">@Localizer["Ninguna registrada."]</p>
         }
         else
         {
@@ -78,19 +78,19 @@
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="residenteId" value="@Model.Id" />
                             <input type="hidden" name="medicacionId" value="@m.Id" />
-                            <button class="btn btn-sm btn-outline-primary text-nowrap">Registrar administración</button>
+                            <button class="btn btn-sm btn-outline-primary text-nowrap">@Localizer["Registrar administración"]</button>
                         </form>
-                        <form method="post" action="/Enfermeria/FinalizarMedicacion" onsubmit="return confirm('¿Finalizar esta medicación?');">
+                        <form method="post" action="/Enfermeria/FinalizarMedicacion" onsubmit="return confirm('@Localizer["¿Finalizar esta medicación?"]');">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="residenteId" value="@Model.Id" />
                             <input type="hidden" name="medicacionId" value="@m.Id" />
-                            <button class="btn btn-sm btn-outline-secondary text-nowrap">Finalizar</button>
+                            <button class="btn btn-sm btn-outline-secondary text-nowrap">@Localizer["Finalizar"]</button>
                         </form>
                     </div>
                     @{ var ultimoRegistro = m.Registros.OrderByDescending(r => r.FechaHora).FirstOrDefault(); }
                     @if (ultimoRegistro != null)
                     {
-                        <div class="text-muted small mt-1">Última administración: @ultimoRegistro.FechaHora.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</div>
+                        <div class="text-muted small mt-1">@Localizer["Última administración:"] @ultimoRegistro.FechaHora.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</div>
                     }
                 </div>
             }
@@ -100,35 +100,35 @@
             @Html.AntiForgeryToken()
             <input type="hidden" name="residenteId" value="@Model.Id" />
             <div class="row g-2">
-                <div class="col-12 col-md-3"><input name="Nombre" class="form-control" placeholder="Medicamento" required /></div>
-                <div class="col-12 col-md-3"><input name="Dosis" class="form-control" placeholder="Dosis" required /></div>
-                <div class="col-12 col-md-3"><input name="Horario" class="form-control" placeholder="Horario (ej. 08:00, 20:00)" required /></div>
-                <div class="col-12 col-md-3"><input name="Instrucciones" class="form-control" placeholder="Instrucciones (opcional)" /></div>
+                <div class="col-12 col-md-3"><input name="Nombre" class="form-control" placeholder="@Localizer["Medicamento"]" required /></div>
+                <div class="col-12 col-md-3"><input name="Dosis" class="form-control" placeholder="@Localizer["Dosis"]" required /></div>
+                <div class="col-12 col-md-3"><input name="Horario" class="form-control" placeholder="@Localizer["Horario (ej. 08:00, 20:00)"]" required /></div>
+                <div class="col-12 col-md-3"><input name="Instrucciones" class="form-control" placeholder="@Localizer["Instrucciones (opcional)"]" /></div>
             </div>
-            <button class="btn btn-outline-primary mt-2">Añadir medicación</button>
+            <button class="btn btn-outline-primary mt-2">@Localizer["Añadir medicación"]</button>
         </form>
 
         @if (medicacionesFinalizadas.Any())
         {
-            <h6 class="text-muted mt-4">Medicación finalizada</h6>
+            <h6 class="text-muted mt-4">@Localizer["Medicación finalizada"]</h6>
             @foreach (var m in medicacionesFinalizadas)
             {
                 <div class="text-muted small border-bottom py-1">
-                    @m.Nombre — @m.Dosis (hasta @m.FechaFin!.Value.ToString("dd/MM/yyyy"))
+                    @m.Nombre — @m.Dosis (@Localizer["Hasta"] @m.FechaFin!.Value.ToString("dd/MM/yyyy"))
                 </div>
             }
         }
     </div>
 </div>
 
-<h6 class="mt-4">Historial clínico</h6>
+<h6 class="mt-4">@Localizer["Historial clínico"]</h6>
 @if (!historial.Any())
 {
-    <p class="text-muted">Sin movimientos registrados.</p>
+    <p class="text-muted">@Localizer["Sin movimientos registrados."]</p>
 }
 else
 {
-    <input type="search" id="filtroHistorialClinico" class="form-control mb-2" placeholder="Buscar en el historial..." />
+    <input type="search" id="filtroHistorialClinico" class="form-control mb-2" placeholder="@Localizer["Buscar en el historial..."]" />
     <ul class="list-group" id="listaHistorialClinico">
         @foreach (var h in historial)
         {
@@ -139,7 +139,7 @@ else
             </li>
         }
     </ul>
-    <p id="historialClinicoSinResultados" class="text-muted mt-2" hidden>Ningún movimiento coincide con la búsqueda.</p>
+    <p id="historialClinicoSinResultados" class="text-muted mt-2" hidden>@Localizer["Ningún movimiento coincide con la búsqueda."]</p>
 }
 
 @section Scripts {

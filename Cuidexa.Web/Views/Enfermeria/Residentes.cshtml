@@ -1,14 +1,14 @@
 @model List<Residente>
-<a href="/Enfermeria" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
-<h4 class="mb-3"><i class="bi bi-people-fill me-2 text-muted"></i>Residentes</h4>
+<a href="/Enfermeria" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver al panel"]</a>
+<h4 class="mb-3"><i class="bi bi-people-fill me-2 text-muted"></i>@Localizer["Residentes"]</h4>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">No hay residentes activos.</p>
+    <p class="text-muted">@Localizer["No hay residentes activos."]</p>
 }
 else
 {
-    <input type="search" id="filtroResidentes" class="form-control mb-2" placeholder="Buscar residente..." />
+    <input type="search" id="filtroResidentes" class="form-control mb-2" placeholder="@Localizer["Buscar residente..."]" />
     <div id="listaResidentes">
         @foreach (var r in Model)
         {
@@ -19,15 +19,15 @@ else
                         <strong>@r.Nombre @r.Apellidos</strong>
                         <br />
                         <small class="text-muted">
-                            @(r.Patologias.Count > 0 ? string.Join(", ", r.Patologias.Select(p => p.Patologia?.Nombre)) : "Sin patologías registradas")
+                            @(r.Patologias.Count > 0 ? string.Join(", ", r.Patologias.Select(p => p.Patologia?.Nombre)) : Localizer["Sin patologías registradas"])
                         </small>
                     </div>
-                    <span class="badge bg-secondary text-nowrap">@medicacionesActivas medicación(es)</span>
+                    <span class="badge bg-secondary text-nowrap">@medicacionesActivas @Localizer["medicación(es)"]</span>
                 </div>
             </a>
         }
     </div>
-    <p id="residentesSinResultados" class="text-muted" hidden>Ningún residente coincide con la búsqueda.</p>
+    <p id="residentesSinResultados" class="text-muted" hidden>@Localizer["Ningún residente coincide con la búsqueda."]</p>
 }
 
 @section Scripts {

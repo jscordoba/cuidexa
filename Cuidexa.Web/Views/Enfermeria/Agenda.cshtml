@@ -1,14 +1,14 @@
 @model List<AgendaMedicacionItem>
-<a href="/Enfermeria" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
-<h4 class="mb-3"><i class="bi bi-capsule me-2 text-muted"></i>Agenda de hoy</h4>
+<a href="/Enfermeria" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver al panel"]</a>
+<h4 class="mb-3"><i class="bi bi-capsule me-2 text-muted"></i>@Localizer["Agenda de hoy"]</h4>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">No hay medicación activa registrada.</p>
+    <p class="text-muted">@Localizer["No hay medicación activa registrada."]</p>
 }
 else
 {
-    <input type="search" id="filtroAgenda" class="form-control mb-2" placeholder="Buscar en la agenda..." />
+    <input type="search" id="filtroAgenda" class="form-control mb-2" placeholder="@Localizer["Buscar en la agenda..."]" />
     <div id="listaAgenda">
         @foreach (var a in Model)
         {
@@ -21,7 +21,7 @@ else
                     </div>
                     @if (a.AdministradaHoy)
                     {
-                        <span class="badge bg-success text-nowrap align-self-start align-self-sm-center">Administrada hoy</span>
+                        <span class="badge bg-success text-nowrap align-self-start align-self-sm-center">@Localizer["Administrada hoy"]</span>
                     }
                     else
                     {
@@ -30,14 +30,14 @@ else
                             <input type="hidden" name="residenteId" value="@a.ResidenteId" />
                             <input type="hidden" name="medicacionId" value="@a.MedicacionId" />
                             <input type="hidden" name="volver" value="Agenda" />
-                            <button class="btn btn-sm btn-outline-primary text-nowrap">Registrar administración</button>
+                            <button class="btn btn-sm btn-outline-primary text-nowrap">@Localizer["Registrar administración"]</button>
                         </form>
                     }
                 </div>
             </div>
         }
     </div>
-    <p id="agendaSinResultados" class="text-muted" hidden>Ninguna entrada coincide con la búsqueda.</p>
+    <p id="agendaSinResultados" class="text-muted" hidden>@Localizer["Ninguna entrada coincide con la búsqueda."]</p>
 }
 
 @section Scripts {

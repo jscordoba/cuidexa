@@ -671,4 +671,35 @@
   <data name="todos los centros" xml:space="preserve"><value>all centers</value></data>
   <data name="Último acceso" xml:space="preserve"><value>Last access</value></data>
   <data name="Único en todo Cuidexa — el personal lo teclea al iniciar sesión." xml:space="preserve"><value>Unique across all of Cuidexa — staff type it in when signing in.</value></data>
+  <data name="Administrada hoy" xml:space="preserve"><value>Given today</value></data>
+  <data name="Agenda de hoy" xml:space="preserve"><value>Today's schedule</value></data>
+  <data name="Añadir" xml:space="preserve"><value>Add</value></data>
+  <data name="Añadir medicación" xml:space="preserve"><value>Add medication</value></data>
+  <data name="Añadir patología" xml:space="preserve"><value>Add condition</value></data>
+  <data name="Buscar en la agenda..." xml:space="preserve"><value>Search the schedule...</value></data>
+  <data name="Buscar residente..." xml:space="preserve"><value>Search resident...</value></data>
+  <data name="Evolución / observaciones (opcional)" xml:space="preserve"><value>Progress notes / observations (optional)</value></data>
+  <data name="Finalizar" xml:space="preserve"><value>End</value></data>
+  <data name="Historial clínico" xml:space="preserve"><value>Clinical history</value></data>
+  <data name="Horario (ej. 08:00, 20:00)" xml:space="preserve"><value>Schedule (e.g. 08:00, 20:00)</value></data>
+  <data name="Instrucciones (opcional)" xml:space="preserve"><value>Instructions (optional)</value></data>
+  <data name="Marcar realizada" xml:space="preserve"><value>Mark as completed</value></data>
+  <data name="Medicación finalizada" xml:space="preserve"><value>Finished medication</value></data>
+  <data name="Medicamento" xml:space="preserve"><value>Medication</value></data>
+  <data name="Mi agenda" xml:space="preserve"><value>My schedule</value></data>
+  <data name="Ninguna entrada coincide con la búsqueda." xml:space="preserve"><value>No entries match the search.</value></data>
+  <data name="Ninguna sesión coincide con la búsqueda." xml:space="preserve"><value>No sessions match the search.</value></data>
+  <data name="No hay medicación activa registrada." xml:space="preserve"><value>No active medication on file.</value></data>
+  <data name="No hay residentes activos." xml:space="preserve"><value>No active residents.</value></data>
+  <data name="No tienes sesiones programadas." xml:space="preserve"><value>You have no scheduled sessions.</value></data>
+  <data name="Observaciones (opcional)" xml:space="preserve"><value>Observations (optional)</value></data>
+  <data name="Programar sesión" xml:space="preserve"><value>Schedule session</value></data>
+  <data name="Quitar" xml:space="preserve"><value>Remove</value></data>
+  <data name="Registrar administración" xml:space="preserve"><value>Log administration</value></data>
+  <data name="Sesiones anteriores" xml:space="preserve"><value>Previous sessions</value></data>
+  <data name="Sin patologías registradas" xml:space="preserve"><value>No conditions on file</value></data>
+  <data name="medicación(es)" xml:space="preserve"><value>medication(s)</value></data>
+  <data name="¿Cancelar esta sesión?" xml:space="preserve"><value>Cancel this session?</value></data>
+  <data name="¿Finalizar esta medicación?" xml:space="preserve"><value>End this medication?</value></data>
+  <data name="Última administración:" xml:space="preserve"><value>Last administered:</value></data>
 </root>

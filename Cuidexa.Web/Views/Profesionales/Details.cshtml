@@ -5,15 +5,15 @@
     var programadas = sesiones.Where(s => s.Estado == EstadoSesion.Programada).ToList();
     var pasadas = sesiones.Where(s => s.Estado != EstadoSesion.Programada).ToList();
 }
-<a href="/Profesionales" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
+<a href="/Profesionales" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver al panel"]</a>
 <h4 class="mb-3">@Model.Nombre @Model.Apellidos</h4>
 
 <div class="card mb-3">
     <div class="card-body">
-        <h6 class="text-muted">Sesiones programadas</h6>
+        <h6 class="text-muted">@Localizer["Sesiones programadas"]</h6>
         @if (!programadas.Any())
         {
-            <p class="text-muted">Ninguna.</p>
+            <p class="text-muted">@Localizer["Ninguna."]</p>
         }
         else
         {
@@ -26,14 +26,14 @@
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="residenteId" value="@Model.Id" />
                             <input type="hidden" name="sesionId" value="@s.Id" />
-                            <input name="observaciones" class="form-control" placeholder="Evolución / observaciones (opcional)" />
-                            <button class="btn btn-sm btn-outline-primary text-nowrap flex-shrink-0">Marcar realizada</button>
+                            <input name="observaciones" class="form-control" placeholder="@Localizer["Evolución / observaciones (opcional)"]" />
+                            <button class="btn btn-sm btn-outline-primary text-nowrap flex-shrink-0">@Localizer["Marcar realizada"]</button>
                         </form>
-                        <form method="post" action="/Profesionales/CancelarSesion" onsubmit="return confirm('¿Cancelar esta sesión?');">
+                        <form method="post" action="/Profesionales/CancelarSesion" onsubmit="return confirm('@Localizer["¿Cancelar esta sesión?"]');">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="residenteId" value="@Model.Id" />
                             <input type="hidden" name="sesionId" value="@s.Id" />
-                            <button class="btn btn-sm btn-outline-danger text-nowrap">Cancelar</button>
+                            <button class="btn btn-sm btn-outline-danger text-nowrap">@Localizer["Cancelar"]</button>
                         </form>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
             @Html.AntiForgeryToken()
             <input type="hidden" name="residenteId" value="@Model.Id" />
             <input type="datetime-local" name="fechaHora" class="form-control" required />
-            <button class="btn btn-outline-primary text-nowrap flex-shrink-0">Programar sesión</button>
+            <button class="btn btn-outline-primary text-nowrap flex-shrink-0">@Localizer["Programar sesión"]</button>
         </form>
     </div>
 </div>
@@ -53,12 +53,12 @@
 {
     <div class="card mb-3">
         <div class="card-body">
-            <h6 class="text-muted">Sesiones anteriores</h6>
+            <h6 class="text-muted">@Localizer["Sesiones anteriores"]</h6>
             @foreach (var s in pasadas)
             {
                 <div class="border-bottom py-2">
                     <strong>@s.FechaHora.ToString("dd/MM/yyyy HH:mm")</strong>
-                    <span class="badge @(s.Estado == EstadoSesion.Realizada ? "bg-success" : "bg-secondary")">@s.Estado</span>
+                    <span class="badge @(s.Estado == EstadoSesion.Realizada ? "bg-success" : "bg-secondary")">@Localizer[s.Estado.ToString()]</span>
                     @if (!string.IsNullOrWhiteSpace(s.Observaciones))
                     {
                         <div class="text-muted small mt-1">@s.Observaciones</div>
@@ -69,14 +69,14 @@
     </div>
 }
 
-<h6 class="mt-4">Historial</h6>
+<h6 class="mt-4">@Localizer["Historial"]</h6>
 @if (!historial.Any())
 {
-    <p class="text-muted">Sin movimientos registrados.</p>
+    <p class="text-muted">@Localizer["Sin movimientos registrados."]</p>
 }
 else
 {
-    <input type="search" id="filtroHistorialTerapia" class="form-control mb-2" placeholder="Buscar en el historial..." />
+    <input type="search" id="filtroHistorialTerapia" class="form-control mb-2" placeholder="@Localizer["Buscar en el historial..."]" />
     <ul class="list-group" id="listaHistorialTerapia">
         @foreach (var h in historial)
         {
@@ -87,7 +87,7 @@ else
             </li>
         }
     </ul>
-    <p id="historialTerapiaSinResultados" class="text-muted mt-2" hidden>Ningún movimiento coincide con la búsqueda.</p>
+    <p id="historialTerapiaSinResultados" class="text-muted mt-2" hidden>@Localizer["Ningún movimiento coincide con la búsqueda."]</p>
 }
 
 @section Scripts {

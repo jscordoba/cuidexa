@@ -1,14 +1,14 @@
 @model List<SesionTerapia>
-<a href="/Profesionales" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
-<h4 class="mb-3"><i class="bi bi-calendar2-week me-2 text-muted"></i>Mi agenda</h4>
+<a href="/Profesionales" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver al panel"]</a>
+<h4 class="mb-3"><i class="bi bi-calendar2-week me-2 text-muted"></i>@Localizer["Mi agenda"]</h4>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">No tienes sesiones programadas.</p>
+    <p class="text-muted">@Localizer["No tienes sesiones programadas."]</p>
 }
 else
 {
-    <input type="search" id="filtroAgenda" class="form-control mb-2" placeholder="Buscar en la agenda..." />
+    <input type="search" id="filtroAgenda" class="form-control mb-2" placeholder="@Localizer["Buscar en la agenda..."]" />
     <div id="listaAgenda">
         @foreach (var s in Model)
         {
@@ -20,7 +20,7 @@ else
             </a>
         }
     </div>
-    <p id="agendaSinResultados" class="text-muted" hidden>Ninguna sesión coincide con la búsqueda.</p>
+    <p id="agendaSinResultados" class="text-muted" hidden>@Localizer["Ninguna sesión coincide con la búsqueda."]</p>
 }
 
 @section Scripts {
