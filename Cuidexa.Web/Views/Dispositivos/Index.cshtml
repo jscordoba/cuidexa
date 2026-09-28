@@ -4,21 +4,21 @@
     var mostrarCentro = (bool)ViewBag.MostrarCentro;
 }
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
-    <h4 class="mb-0">Dispositivos</h4>
-    <a class="btn btn-primary" href="/Dispositivos/Create">+ Nueva tablet</a>
+    <h4 class="mb-0">@Localizer["Dispositivos"]</h4>
+    <a class="btn btn-primary" href="/Dispositivos/Create">+ @Localizer["Nueva tablet"]</a>
 </div>
-<p class="text-muted small">Tablets compartidas fijas por departamento, para consulta rápida durante el turno (avisos, personal en turno, comensales/medicación pendiente). No pueden marcar avisos leídos ni realizar ninguna acción de gestión.</p>
-<input type="search" id="filtroDispositivos" class="form-control mb-3" placeholder="Buscar por nombre o rol..." />
+<p class="text-muted small">@Localizer["Tablets compartidas fijas por departamento, para consulta rápida durante el turno (avisos, personal en turno, comensales/medicación pendiente). No pueden marcar avisos leídos ni realizar ninguna acción de gestión."]</p>
+<input type="search" id="filtroDispositivos" class="form-control mb-3" placeholder="@Localizer["Buscar por nombre o rol..."]" />
 <div class="table-responsive">
     <table class="table table-bordered bg-white">
         <thead>
             <tr>
-                <th>Nombre</th><th>Departamento</th>
+                <th>@Localizer["Nombre"]</th><th>@Localizer["Departamento"]</th>
                 @if (mostrarCentro)
                 {
-                    <th>Centro</th>
+                    <th>@Localizer["Centro"]</th>
                 }
-                <th>Último acceso</th><th>Estado</th><th></th>
+                <th>@Localizer["Último acceso"]</th><th>@Localizer["Estado"]</th><th></th>
             </tr>
         </thead>
         <tbody id="listaDispositivos">
@@ -26,27 +26,27 @@
             {
                 <tr>
                     <td>@c.Nombre</td>
-                    <td>@c.Rol</td>
+                    <td>@RolPresentacion.Obtener(c.Rol).Etiqueta</td>
                     @if (mostrarCentro)
                     {
                         <td>@c.Centro?.Nombre</td>
                     }
-                    <td>@(c.UltimoAcceso?.ToString("dd/MM/yyyy HH:mm") ?? "Nunca")</td>
+                    <td>@(c.UltimoAcceso?.ToString("dd/MM/yyyy HH:mm") ?? Localizer["Nunca"].Value)</td>
                     <td>
-                        <span class="badge @(c.Activo ? "bg-success" : "bg-secondary")">@(c.Activo ? "Activa" : "Inactiva")</span>
+                        <span class="badge @(c.Activo ? "bg-success" : "bg-secondary")">@(c.Activo ? Localizer["Activa"] : Localizer["Inactiva"])</span>
                         @if (BloqueoCuenta.EstaBloqueada(c))
                         {
-                            <span class="badge bg-warning text-dark" title="Bloqueada por fuerza bruta — resetea su contraseña en Editar para desbloquearla al instante.">Bloqueada</span>
+                            <span class="badge bg-warning text-dark" title="@Localizer["Bloqueada por fuerza bruta — resetea su contraseña en Editar para desbloquearla al instante."]">@Localizer["Bloqueada"]</span>
                         }
                     </td>
                     <td class="d-flex flex-column flex-sm-row gap-2">
-                        <a href="/Dispositivos/Edit/@c.Id" class="btn btn-sm btn-outline-secondary text-nowrap">Editar</a>
+                        <a href="/Dispositivos/Edit/@c.Id" class="btn btn-sm btn-outline-secondary text-nowrap">@Localizer["Editar"]</a>
                         <form method="post" action="/Dispositivos/CambiarEstado">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@c.Id" />
                             <input type="hidden" name="activo" value="@(!c.Activo ? "true" : "false")" />
                             <button class="btn btn-sm @(c.Activo ? "btn-outline-danger" : "btn-outline-success") text-nowrap">
-                                @(c.Activo ? "Desactivar" : "Activar")
+                                @(c.Activo ? Localizer["Desactivar"] : Localizer["Activar"])
                             </button>
                         </form>
                     </td>
@@ -54,7 +54,7 @@
             }
         </tbody>
     </table>
-    <p id="dispositivosSinResultados" class="text-muted" hidden>Ninguna tablet coincide con la búsqueda.</p>
+    <p id="dispositivosSinResultados" class="text-muted" hidden>@Localizer["Ninguna tablet coincide con la búsqueda."]</p>
 </div>
 
 @section Scripts {

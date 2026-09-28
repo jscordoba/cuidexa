@@ -3,13 +3,13 @@
     Layout = "_LayoutSuperAdmin";
 }
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">Organizaciones</h4>
-    <a href="/SuperAdmin/CrearOrganizacion" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Nueva organización</a>
+    <h4 class="mb-0">@Localizer["Organizaciones"]</h4>
+    <a href="/SuperAdmin/CrearOrganizacion" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> @Localizer["Nueva organización"]</a>
 </div>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">Todavía no hay ninguna organización — crea la primera.</p>
+    <p class="text-muted">@Localizer["Todavía no hay ninguna organización — crea la primera."]</p>
 }
 else
 {
@@ -20,14 +20,14 @@ else
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h5 class="card-title mb-1">@org.Nombre</h5>
-                        <p class="text-muted small mb-0">@org.Centros.Count centro(s)</p>
+                        <p class="text-muted small mb-0">@org.Centros.Count @Localizer["centro(s)"]</p>
                     </div>
                     <div class="d-flex gap-2">
                         <a href="/SuperAdmin/Marca?organizacionId=@org.Id" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-palette"></i> Marca
+                            <i class="bi bi-palette"></i> @Localizer["Marca"]
                         </a>
                         <a href="/SuperAdmin/CrearCentro?organizacionId=@org.Id" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-plus-lg"></i> Nuevo centro
+                            <i class="bi bi-plus-lg"></i> @Localizer["Nuevo centro"]
                         </a>
                     </div>
                 </div>
@@ -35,7 +35,7 @@ else
                 {
                     <table class="table table-sm mt-3 mb-0">
                         <thead>
-                            <tr><th>Centro</th><th>Código</th><th>Estado</th><th></th></tr>
+                            <tr><th>@Localizer["Centro"]</th><th>@Localizer["Código"]</th><th>@Localizer["Estado"]</th><th></th></tr>
                         </thead>
                         <tbody>
                             @foreach (var centro in org.Centros.OrderBy(c => c.Nombre))
@@ -43,10 +43,10 @@ else
                                 <tr>
                                     <td>@centro.Nombre</td>
                                     <td><code>@centro.Codigo</code></td>
-                                    <td>@(centro.Activo ? "Activo" : "Inactivo")</td>
+                                    <td>@(centro.Activo ? Localizer["Activo"] : Localizer["Inactivo"])</td>
                                     <td class="text-end">
                                         <a href="/SuperAdmin/CrearAdminInicial?centroId=@centro.Id" class="btn btn-outline-secondary btn-sm">
-                                            <i class="bi bi-person-plus"></i> Admin inicial
+                                            <i class="bi bi-person-plus"></i> @Localizer["Admin inicial"]
                                         </a>
                                     </td>
                                 </tr>

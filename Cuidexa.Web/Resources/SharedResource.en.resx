@@ -549,4 +549,126 @@
   <data name="sin titular" xml:space="preserve"><value>no assignee</value></data>
   <data name="¿Cancelar este turno?" xml:space="preserve"><value>Cancel this shift?</value></data>
   <data name="¿Eliminar este festivo?" xml:space="preserve"><value>Delete this holiday?</value></data>
+  <data name="A qué centro de tu organización pertenece este usuario." xml:space="preserve"><value>Which center in your organization this user belongs to.</value></data>
+  <data name="Activa" xml:space="preserve"><value>Active</value></data>
+  <data name="Admin inicial" xml:space="preserve"><value>Initial Admin</value></data>
+  <data name="Bloqueada" xml:space="preserve"><value>Locked</value></data>
+  <data name="Bloqueada por fuerza bruta — resetea su contraseña en Editar para desbloquearla al instante." xml:space="preserve"><value>Locked out from repeated failed attempts — reset the password in Edit to unlock it instantly.</value></data>
+  <data name="Bloqueado" xml:space="preserve"><value>Locked</value></data>
+  <data name="Buscar en completadas..." xml:space="preserve"><value>Search completed...</value></data>
+  <data name="Buscar por nombre o rol..." xml:space="preserve"><value>Search by name or role...</value></data>
+  <data name="Buscar por nombre, email, rol..." xml:space="preserve"><value>Search by name, email, role...</value></data>
+  <data name="Buscar tareas..." xml:space="preserve"><value>Search tasks...</value></data>
+  <data name="Cargo del responsable" xml:space="preserve"><value>Contact person's role</value></data>
+  <data name="Centro:" xml:space="preserve"><value>Center:</value></data>
+  <data name="Color de acento" xml:space="preserve"><value>Accent color</value></data>
+  <data name="Completada" xml:space="preserve"><value>Done</value></data>
+  <data name="Completadas recientemente" xml:space="preserve"><value>Recently completed</value></data>
+  <data name="Crear Admin" xml:space="preserve"><value>Create Admin</value></data>
+  <data name="Crear centro" xml:space="preserve"><value>Create center</value></data>
+  <data name="Crear grupo" xml:space="preserve"><value>Create group</value></data>
+  <data name="Crear organización" xml:space="preserve"><value>Create organization</value></data>
+  <data name="Crear tablet" xml:space="preserve"><value>Create tablet</value></data>
+  <data name="Crear tarea" xml:space="preserve"><value>Create task</value></data>
+  <data name="Crear usuario" xml:space="preserve"><value>Create user</value></data>
+  <data name="Cuéntanos qué esperabas que pasara, qué ha pasado en realidad y en qué pantalla — con eso normalmente basta para investigarlo. Tu equipo de soporte responde aquí mismo, no hace falta que revises el correo." xml:space="preserve"><value>Tell us what you expected to happen, what actually happened, and on which screen — that's usually enough to investigate. Your support team replies right here, no need to check email.</value></data>
+  <data name="Código" xml:space="preserve"><value>Code</value></data>
+  <data name="Código de centro (login):" xml:space="preserve"><value>Center code (login):</value></data>
+  <data name="Código de centro (para el login)" xml:space="preserve"><value>Center code (for login)</value></data>
+  <data name="Datos del centro" xml:space="preserve"><value>Center details</value></data>
+  <data name="Dejar en blanco para no cambiarla" xml:space="preserve"><value>Leave blank to keep it unchanged</value></data>
+  <data name="Editar grupo" xml:space="preserve"><value>Edit group</value></data>
+  <data name="Editar tablet" xml:space="preserve"><value>Edit tablet</value></data>
+  <data name="Editar usuario" xml:space="preserve"><value>Edit user</value></data>
+  <data name="Ej. Centro Tres Cantos" xml:space="preserve"><value>E.g. Tres Cantos Center</value></data>
+  <data name="Ej. Directora del centro" xml:space="preserve"><value>E.g. Center Director</value></data>
+  <data name="Ej. Encargados de turno" xml:space="preserve"><value>E.g. Shift supervisors</value></data>
+  <data name="Ej. Fundación Polibea" xml:space="preserve"><value>E.g. Polibea Foundation</value></data>
+  <data name="Ej. TRESCANTOS" xml:space="preserve"><value>E.g. TRESCANTOS</value></data>
+  <data name="Ej. Tablet Cocina" xml:space="preserve"><value>E.g. Kitchen Tablet</value></data>
+  <data name="Enlaces, botones secundarios y acentos de la app." xml:space="preserve"><value>Links, secondary buttons, and accents throughout the app.</value></data>
+  <data name="Enviado por" xml:space="preserve"><value>Sent by</value></data>
+  <data name="Enviar" xml:space="preserve"><value>Send</value></data>
+  <data name="Escribe la respuesta..." xml:space="preserve"><value>Write the reply...</value></data>
+  <data name="Estos datos son propios de este centro físico. El nombre de marca, el logo y el color de acento se comparten con el resto de centros de tu organización y se gestionan aparte" xml:space="preserve"><value>These details belong to this physical center. The brand name, logo, and accent color are shared with the rest of your organization's centers and are managed separately</value></data>
+  <data name="Grupos ad-hoc de empleados de cualquier departamento — al crear un aviso manual, se puede dirigir a un grupo en vez de a un departamento entero." xml:space="preserve"><value>Ad-hoc groups of employees from any department — when creating a manual notice, it can be directed at a group instead of an entire department.</value></data>
+  <data name="Grupos de notificación" xml:space="preserve"><value>Notification groups</value></data>
+  <data name="Guardar datos" xml:space="preserve"><value>Save details</value></data>
+  <data name="Hoy" xml:space="preserve"><value>Today</value></data>
+  <data name="Identidad" xml:space="preserve"><value>Identity</value></data>
+  <data name="Inactivo" xml:space="preserve"><value>Inactive</value></data>
+  <data name="La entidad gestora — puede tener varios centros físicos después." xml:space="preserve"><value>The managing entity — it can have several physical centers later.</value></data>
+  <data name="Logo" xml:space="preserve"><value>Logo</value></data>
+  <data name="Logo actual" xml:space="preserve"><value>Current logo</value></data>
+  <data name="Los miembros del grupo deben pertenecer a este centro — el grupo entero vive en uno solo, igual que los avisos que genera." xml:space="preserve"><value>Group members must belong to this center — the whole group lives in one, just like the notices it generates.</value></data>
+  <data name="Marca de" xml:space="preserve"><value>Branding for</value></data>
+  <data name="Marca de organización" xml:space="preserve"><value>Organization branding</value></data>
+  <data name="Miembros" xml:space="preserve"><value>Members</value></data>
+  <data name="Ninguna tablet coincide con la búsqueda." xml:space="preserve"><value>No tablets match the search.</value></data>
+  <data name="Ninguna tarea coincide con la búsqueda." xml:space="preserve"><value>No tasks match the search.</value></data>
+  <data name="Ningún usuario coincide con la búsqueda." xml:space="preserve"><value>No users match the search.</value></data>
+  <data name="No hay tareas pendientes." xml:space="preserve"><value>No pending tasks.</value></data>
+  <data name="Nombre de la organización" xml:space="preserve"><value>Organization name</value></data>
+  <data name="Nombre del centro" xml:space="preserve"><value>Center name</value></data>
+  <data name="Nombre del grupo" xml:space="preserve"><value>Group name</value></data>
+  <data name="Nombre, logo y color de acento se aplican en el login, la barra de navegación y los informes/fichas exportados a PDF de" xml:space="preserve"><value>Name, logo, and accent color apply to the login, the navigation bar, and the reports/records exported to PDF for</value></data>
+  <data name="Nombre, logo y color de acento se aplican en el login, la barra de navegación y los informes/fichas exportados a PDF de todos los centros de esta organización (uno o varios)." xml:space="preserve"><value>Name, logo, and accent color apply to the login, the navigation bar, and the reports/records exported to PDF for all centers in this organization (one or several).</value></data>
+  <data name="Nueva contraseña" xml:space="preserve"><value>New password</value></data>
+  <data name="Nueva organización" xml:space="preserve"><value>New organization</value></data>
+  <data name="Nueva tablet" xml:space="preserve"><value>New tablet</value></data>
+  <data name="Nueva tarea de zona común" xml:space="preserve"><value>New common-area task</value></data>
+  <data name="Nuevo centro" xml:space="preserve"><value>New center</value></data>
+  <data name="Nuevo grupo" xml:space="preserve"><value>New group</value></data>
+  <data name="Nuevo usuario" xml:space="preserve"><value>New user</value></data>
+  <data name="Nunca" xml:space="preserve"><value>Never</value></data>
+  <data name="Organizaciones" xml:space="preserve"><value>Organizations</value></data>
+  <data name="Organización:" xml:space="preserve"><value>Organization:</value></data>
+  <data name="PNG o JPG, máximo 2MB." xml:space="preserve"><value>PNG or JPG, max 2MB.</value></data>
+  <data name="Pendientes" xml:space="preserve"><value>Pending</value></data>
+  <data name="Pendientes de respuesta" xml:space="preserve"><value>Awaiting reply</value></data>
+  <data name="Personal en turno" xml:space="preserve"><value>Staff on shift</value></data>
+  <data name="Personal por departamento y turno" xml:space="preserve"><value>Staff by department and shift</value></data>
+  <data name="Por departamento" xml:space="preserve"><value>By department</value></data>
+  <data name="Por turno" xml:space="preserve"><value>By shift</value></data>
+  <data name="Primer Admin del centro" xml:space="preserve"><value>Center's first Admin</value></data>
+  <data name="Qué esperabas, qué ha pasado, en qué pantalla..." xml:space="preserve"><value>What you expected, what happened, on which screen...</value></data>
+  <data name="Qué hay que hacer" xml:space="preserve"><value>What needs to be done</value></data>
+  <data name="Reportar un problema" xml:space="preserve"><value>Report a problem</value></data>
+  <data name="Residentes por dieta" xml:space="preserve"><value>Residents by diet</value></data>
+  <data name="Responder" xml:space="preserve"><value>Reply</value></data>
+  <data name="Responsable" xml:space="preserve"><value>Contact person</value></data>
+  <data name="Responsable — cargo" xml:space="preserve"><value>Contact person — role</value></data>
+  <data name="Responsable — nombre" xml:space="preserve"><value>Contact person — name</value></data>
+  <data name="Respuesta:" xml:space="preserve"><value>Reply:</value></data>
+  <data name="Resuelto" xml:space="preserve"><value>Resolved</value></data>
+  <data name="Resueltos" xml:space="preserve"><value>Resolved</value></data>
+  <data name="Resumen corto del problema" xml:space="preserve"><value>Short summary of the problem</value></data>
+  <data name="Se asume que este usuario cubre esta franja todos los días, salvo un reemplazo o cambio de turno concreto." xml:space="preserve"><value>This user is assumed to cover this time slot every day, unless there's a specific replacement or shift change.</value></data>
+  <data name="Selecciona" xml:space="preserve"><value>Select</value></data>
+  <data name="Sin logo propio todavía — se muestra el icono por defecto de Cuidexa." xml:space="preserve"><value>No custom logo yet — the default Cuidexa icon is shown.</value></data>
+  <data name="Sin residentes activos." xml:space="preserve"><value>No active residents.</value></data>
+  <data name="Sin tickets pendientes." xml:space="preserve"><value>No pending tickets.</value></data>
+  <data name="Sin turnos programados este día." xml:space="preserve"><value>No shifts scheduled for this day.</value></data>
+  <data name="Solo estos tres departamentos tienen dashboard de tablet en esta fase." xml:space="preserve"><value>Only these three departments have a tablet dashboard at this stage.</value></data>
+  <data name="Soporte — todos los centros" xml:space="preserve"><value>Support — all centers</value></data>
+  <data name="Subir logo" xml:space="preserve"><value>Upload logo</value></data>
+  <data name="Tablets compartidas fijas por departamento, para consulta rápida durante el turno (avisos, personal en turno, comensales/medicación pendiente). No pueden marcar avisos leídos ni realizar ninguna acción de gestión." xml:space="preserve"><value>Shared department tablets for quick reference during a shift (notices, staff on shift, diners/pending medication). They cannot mark notices as read or perform any management action.</value></data>
+  <data name="Todavía no has enviado ninguna incidencia de soporte." xml:space="preserve"><value>You haven't submitted any support ticket yet.</value></data>
+  <data name="Todavía no hay ninguna organización — crea la primera." xml:space="preserve"><value>There are no organizations yet — create the first one.</value></data>
+  <data name="Total comensales" xml:space="preserve"><value>Total diners</value></data>
+  <data name="Turno" xml:space="preserve"><value>Shift</value></data>
+  <data name="Turno por defecto" xml:space="preserve"><value>Default shift</value></data>
+  <data name="Ver listado de personal" xml:space="preserve"><value>View staff list</value></data>
+  <data name="Ver listado de residentes" xml:space="preserve"><value>View resident list</value></data>
+  <data name="Volver a Dispositivos" xml:space="preserve"><value>Back to Devices</value></data>
+  <data name="Volver a Grupos" xml:space="preserve"><value>Back to Groups</value></data>
+  <data name="Volver a Organizaciones" xml:space="preserve"><value>Back to Organizations</value></data>
+  <data name="Volver a Usuarios" xml:space="preserve"><value>Back to Users</value></data>
+  <data name="Zona (ej. Comedor, Pasillo Planta 1...)" xml:space="preserve"><value>Area (e.g. Dining room, Floor 1 hallway...)</value></data>
+  <data name="centro(s)" xml:space="preserve"><value>center(s)</value></data>
+  <data name="de esta organización." xml:space="preserve"><value>in this organization.</value></data>
+  <data name="en Marca de organización" xml:space="preserve"><value>at Organization branding</value></data>
+  <data name="todos los centros" xml:space="preserve"><value>all centers</value></data>
+  <data name="Último acceso" xml:space="preserve"><value>Last access</value></data>
+  <data name="Único en todo Cuidexa — el personal lo teclea al iniciar sesión." xml:space="preserve"><value>Unique across all of Cuidexa — staff type it in when signing in.</value></data>
 </root>

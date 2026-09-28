@@ -3,9 +3,17 @@
     var especialidades = (List<Especialidad>)ViewBag.Especialidades;
     var plantillas = (List<PlantillaTurno>)ViewBag.Plantillas;
     var centrosOrganizacion = ViewBag.CentrosOrganizacion as List<Centro>;
+
+    string EtiquetaTipoDia(TipoDia t) => t switch
+    {
+        TipoDia.Laborable => Localizer["Laborable"],
+        TipoDia.Festivo => Localizer["Festivo"],
+        TipoDia.FinDeSemana => Localizer["Fin de semana"],
+        _ => t.ToString()
+    };
 }
-<a href="/Empleados" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Usuarios</a>
-<h4 class="mb-3">Nuevo usuario</h4>
+<a href="/Empleados" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver a Usuarios"]</a>
+<h4 class="mb-3">@Localizer["Nuevo usuario"]</h4>
 <form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 480px;">
     @Html.AntiForgeryToken()
 
@@ -22,42 +30,42 @@
     @if (centrosOrganizacion is not null)
     {
         <div class="mb-3">
-            <label class="form-label">Centro</label>
+            <label class="form-label">@Localizer["Centro"]</label>
             <select name="centroId" class="form-select" required>
                 @foreach (var c in centrosOrganizacion)
                 {
                     <option value="@c.Id">@c.Nombre (@c.Codigo)</option>
                 }
             </select>
-            <div class="form-text">A qué centro de tu organización pertenece este usuario.</div>
+            <div class="form-text">@Localizer["A qué centro de tu organización pertenece este usuario."]</div>
         </div>
     }
 
     <div class="mb-3">
-        <label class="form-label">Nombre</label>
+        <label class="form-label">@Localizer["Nombre"]</label>
         <input name="Nombre" class="form-control" value="@Model.Nombre" required />
     </div>
     <div class="mb-3">
-        <label class="form-label">Email</label>
+        <label class="form-label">@Localizer["Email"]</label>
         <input type="email" name="Email" class="form-control" value="@Model.Email" required />
     </div>
     <div class="mb-3">
-        <label class="form-label">Contraseña inicial</label>
+        <label class="form-label">@Localizer["Contraseña inicial"]</label>
         <input type="password" name="Password" class="form-control" required minlength="8" />
     </div>
     <div class="mb-3">
-        <label class="form-label">Rol</label>
+        <label class="form-label">@Localizer["Rol"]</label>
         <select name="Rol" class="form-select" id="rolSelect">
             @foreach (var rol in Enum.GetValues<RolEmpleado>())
             {
-                <option value="@rol">@rol</option>
+                <option value="@rol">@RolPresentacion.Obtener(rol).Etiqueta</option>
             }
         </select>
     </div>
     <div class="mb-3" id="especialidadGrupo" style="display: none;">
-        <label class="form-label">Especialidad</label>
+        <label class="form-label">@Localizer["Especialidad"]</label>
         <select name="EspecialidadId" class="form-select">
-            <option value="">-- Selecciona --</option>
+            <option value="">-- @Localizer["Selecciona"] --</option>
             @foreach (var e in especialidades)
             {
                 <option value="@e.Id">@e.Nombre</option>
@@ -65,20 +73,20 @@
         </select>
     </div>
     <div class="mb-3" id="plantillaGrupo" style="display: none;">
-        <label class="form-label">Turno por defecto</label>
+        <label class="form-label">@Localizer["Turno por defecto"]</label>
         <select name="PlantillaTurnoDefectoId" id="plantillaSelect" class="form-select">
-            <option value="">-- Selecciona --</option>
+            <option value="">-- @Localizer["Selecciona"] --</option>
             @foreach (var p in plantillas)
             {
-                <option value="@p.Id">@p.Nombre (@p.TipoDia) @p.HoraInicio.ToString("HH:mm")–@p.HoraFin.ToString("HH:mm")</option>
+                <option value="@p.Id">@p.Nombre (@EtiquetaTipoDia(p.TipoDia)) @p.HoraInicio.ToString("HH:mm")–@p.HoraFin.ToString("HH:mm")</option>
             }
         </select>
-        <div class="form-text">Se asume que este usuario cubre esta franja todos los días, salvo un reemplazo o cambio de turno concreto.</div>
+        <div class="form-text">@Localizer["Se asume que este usuario cubre esta franja todos los días, salvo un reemplazo o cambio de turno concreto."]</div>
     </div>
 
     <div class="d-flex flex-column flex-sm-row gap-2">
-        <button type="submit" class="btn btn-primary">Crear usuario</button>
-        <a href="/Empleados" class="btn btn-outline-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">@Localizer["Crear usuario"]</button>
+        <a href="/Empleados" class="btn btn-outline-secondary">@Localizer["Cancelar"]</a>
     </div>
 </form>
 

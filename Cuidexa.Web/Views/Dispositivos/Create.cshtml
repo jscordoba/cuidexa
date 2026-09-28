@@ -3,8 +3,8 @@
     var roles = (RolEmpleado[])ViewBag.Roles;
     var centrosOrganizacion = ViewBag.CentrosOrganizacion as List<Centro>;
 }
-<a href="/Dispositivos" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Dispositivos</a>
-<h4 class="mb-3">Nueva tablet</h4>
+<a href="/Dispositivos" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver a Dispositivos"]</a>
+<h4 class="mb-3">@Localizer["Nueva tablet"]</h4>
 <form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 480px;">
     @Html.AntiForgeryToken()
 
@@ -21,7 +21,7 @@
     @if (centrosOrganizacion is not null)
     {
         <div class="mb-3">
-            <label class="form-label">Centro</label>
+            <label class="form-label">@Localizer["Centro"]</label>
             <select name="centroId" class="form-select" required>
                 @foreach (var c in centrosOrganizacion)
                 {
@@ -32,26 +32,26 @@
     }
 
     <div class="mb-3">
-        <label class="form-label">Nombre de la tablet</label>
-        <input name="Nombre" class="form-control" value="@Model.Nombre" placeholder="Ej. Tablet Cocina" required />
+        <label class="form-label">@Localizer["Nombre de la tablet"]</label>
+        <input name="Nombre" class="form-control" value="@Model.Nombre" placeholder="@Localizer["Ej. Tablet Cocina"]" required />
     </div>
     <div class="mb-3">
-        <label class="form-label">Contraseña</label>
+        <label class="form-label">@Localizer["Contraseña"]</label>
         <input type="password" name="Password" class="form-control" required minlength="8" />
     </div>
     <div class="mb-3">
-        <label class="form-label">Departamento</label>
+        <label class="form-label">@Localizer["Departamento"]</label>
         <select name="Rol" class="form-select">
             @foreach (var rol in roles)
             {
-                <option value="@rol">@rol</option>
+                <option value="@rol">@RolPresentacion.Obtener(rol).Etiqueta</option>
             }
         </select>
-        <div class="form-text">Solo estos tres departamentos tienen dashboard de tablet en esta fase.</div>
+        <div class="form-text">@Localizer["Solo estos tres departamentos tienen dashboard de tablet en esta fase."]</div>
     </div>
 
     <div class="d-flex flex-column flex-sm-row gap-2">
-        <button type="submit" class="btn btn-primary">Crear tablet</button>
-        <a href="/Dispositivos" class="btn btn-outline-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">@Localizer["Crear tablet"]</button>
+        <a href="/Dispositivos" class="btn btn-outline-secondary">@Localizer["Cancelar"]</a>
     </div>
 </form>

@@ -2,8 +2,8 @@
 @{
     var empleados = (List<Empleado>)ViewBag.Empleados;
 }
-<a href="/Grupos" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Grupos</a>
-<h4 class="mb-3">Editar grupo</h4>
+<a href="/Grupos" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver a Grupos"]</a>
+<h4 class="mb-3">@Localizer["Editar grupo"]</h4>
 <form method="post" class="bg-white p-3 p-md-4 border rounded" style="max-width: 480px;">
     @Html.AntiForgeryToken()
 
@@ -18,11 +18,11 @@
     }
 
     <div class="mb-3">
-        <label class="form-label">Nombre del grupo</label>
+        <label class="form-label">@Localizer["Nombre del grupo"]</label>
         <input name="Nombre" class="form-control" value="@Model.Nombre" required />
     </div>
     <div class="mb-3">
-        <label class="form-label">Miembros</label>
+        <label class="form-label">@Localizer["Miembros"]</label>
         <div class="d-flex flex-column gap-1" style="max-height: 320px; overflow-y: auto;">
             @foreach (var emp in empleados)
             {
@@ -36,7 +36,7 @@
     </div>
 
     <div class="d-flex flex-column flex-sm-row gap-2">
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-        <a href="/Grupos" class="btn btn-outline-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">@Localizer["Guardar cambios"]</button>
+        <a href="/Grupos" class="btn btn-outline-secondary">@Localizer["Cancelar"]</a>
     </div>
 </form>
