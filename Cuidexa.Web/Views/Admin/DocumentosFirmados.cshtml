@@ -2,23 +2,23 @@
 @{
     string EtiquetaCategoria(CategoriaDocumentoFirmado c) => c switch
     {
-        CategoriaDocumentoFirmado.ConsentimientoInformado => "Consentimiento informado",
-        CategoriaDocumentoFirmado.Admision => "Admisión",
-        CategoriaDocumentoFirmado.ConformidadIncidencia => "Conformidad de incidencia",
-        CategoriaDocumentoFirmado.Entrega => "Entrega",
-        _ => "Otro"
+        CategoriaDocumentoFirmado.ConsentimientoInformado => Localizer["Consentimiento informado"],
+        CategoriaDocumentoFirmado.Admision => Localizer["Admisión"],
+        CategoriaDocumentoFirmado.ConformidadIncidencia => Localizer["Conformidad de incidencia"],
+        CategoriaDocumentoFirmado.Entrega => Localizer["Entrega"],
+        _ => Localizer["Otro"]
     };
 }
-<a href="/Admin" class="d-inline-block mb-2 text-decoration-none">&larr; Volver al panel</a>
-<h4 class="mb-3"><i class="bi bi-pen me-2 text-muted"></i>Documentos firmados</h4>
+<a href="/Admin" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver al panel"]</a>
+<h4 class="mb-3"><i class="bi bi-pen me-2 text-muted"></i>@Localizer["Documentos firmados"]</h4>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">Todavía no hay documentos firmados en este centro.</p>
+    <p class="text-muted">@Localizer["Todavía no hay documentos firmados en este centro."]</p>
 }
 else
 {
-    <input type="search" id="filtroDocumentos" class="form-control mb-2" placeholder="Buscar en los documentos..." />
+    <input type="search" id="filtroDocumentos" class="form-control mb-2" placeholder="@Localizer["Buscar en los documentos..."]" />
     <div id="listaDocumentos">
         @foreach (var d in Model)
         {
@@ -37,17 +37,17 @@ else
                     </div>
                     <h6 class="mb-1">@d.Titulo</h6>
                     <p class="mb-2">@d.Descripcion</p>
-                    <img src="@d.FirmaImagenBase64" alt="Firma de @d.FirmanteNombre" style="max-width:220px; max-height:80px;" class="border rounded bg-white mb-2 d-block" />
+                    <img src="@d.FirmaImagenBase64" alt="@Localizer["Firma de"] @d.FirmanteNombre" style="max-width:220px; max-height:80px;" class="border rounded bg-white mb-2 d-block" />
                     <small class="text-muted">
-                        Firmado por @d.FirmanteNombre @(string.IsNullOrWhiteSpace(d.FirmanteRelacion) ? "" : $"({d.FirmanteRelacion})") ·
+                        @Localizer["Firmado por"] @d.FirmanteNombre @(string.IsNullOrWhiteSpace(d.FirmanteRelacion) ? "" : $"({d.FirmanteRelacion})") ·
                         @d.FechaFirma.ToString("dd/MM/yyyy HH:mm")
-                        @(d.EmpleadoRegistra != null ? $" · Gestionado por {d.EmpleadoRegistra.Nombre}" : "")
+                        @(d.EmpleadoRegistra != null ? $" · {Localizer["Gestionado por"]} {d.EmpleadoRegistra.Nombre}" : "")
                     </small>
                 </div>
             </div>
         }
     </div>
-    <p id="documentosSinResultados" class="text-muted" hidden>Ningún documento coincide con la búsqueda.</p>
+    <p id="documentosSinResultados" class="text-muted" hidden>@Localizer["Ningún documento coincide con la búsqueda."]</p>
 }
 
 @section Scripts {

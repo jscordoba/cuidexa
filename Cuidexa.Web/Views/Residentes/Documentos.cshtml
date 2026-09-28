@@ -5,22 +5,22 @@
 
     string EtiquetaCategoria(CategoriaDocumentoFirmado c) => c switch
     {
-        CategoriaDocumentoFirmado.ConsentimientoInformado => "Consentimiento informado",
-        CategoriaDocumentoFirmado.Admision => "Admisión",
-        CategoriaDocumentoFirmado.ConformidadIncidencia => "Conformidad de incidencia",
-        CategoriaDocumentoFirmado.Entrega => "Entrega",
-        _ => "Otro"
+        CategoriaDocumentoFirmado.ConsentimientoInformado => Localizer["Consentimiento informado"],
+        CategoriaDocumentoFirmado.Admision => Localizer["Admisión"],
+        CategoriaDocumentoFirmado.ConformidadIncidencia => Localizer["Conformidad de incidencia"],
+        CategoriaDocumentoFirmado.Entrega => Localizer["Entrega"],
+        _ => Localizer["Otro"]
     };
 }
-<a href="/Residentes/Details/@residente.Id" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a @residente.Nombre @residente.Apellidos</a>
+<a href="/Residentes/Details/@residente.Id" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver a"] @residente.Nombre @residente.Apellidos</a>
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-pen me-2 text-muted"></i>Documentos firmados</h4>
-    <a href="/Residentes/CrearDocumento/@residente.Id" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo documento</a>
+    <h4 class="mb-0"><i class="bi bi-pen me-2 text-muted"></i>@Localizer["Documentos firmados"]</h4>
+    <a href="/Residentes/CrearDocumento/@residente.Id" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>@Localizer["Nuevo documento"]</a>
 </div>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">Todavía no hay documentos firmados para este residente.</p>
+    <p class="text-muted">@Localizer["Todavía no hay documentos firmados para este residente."]</p>
 }
 else
 {
@@ -31,11 +31,11 @@ else
                 <span class="badge rounded-pill text-bg-light border mb-2"><i class="bi bi-tag me-1"></i>@EtiquetaCategoria(d.Categoria)</span>
                 <h6 class="mb-1">@d.Titulo</h6>
                 <p class="mb-2">@d.Descripcion</p>
-                <img src="@d.FirmaImagenBase64" alt="Firma de @d.FirmanteNombre" style="max-width:220px; max-height:80px;" class="border rounded bg-white mb-2 d-block" />
+                <img src="@d.FirmaImagenBase64" alt="@Localizer["Firma de"] @d.FirmanteNombre" style="max-width:220px; max-height:80px;" class="border rounded bg-white mb-2 d-block" />
                 <small class="text-muted">
-                    Firmado por @d.FirmanteNombre @(string.IsNullOrWhiteSpace(d.FirmanteRelacion) ? "" : $"({d.FirmanteRelacion})") ·
+                    @Localizer["Firmado por"] @d.FirmanteNombre @(string.IsNullOrWhiteSpace(d.FirmanteRelacion) ? "" : $"({d.FirmanteRelacion})") ·
                     @d.FechaFirma.ToString("dd/MM/yyyy HH:mm")
-                    @(d.EmpleadoRegistra != null ? $" · Gestionado por {d.EmpleadoRegistra.Nombre}" : "")
+                    @(d.EmpleadoRegistra != null ? $" · {Localizer["Gestionado por"]} {d.EmpleadoRegistra.Nombre}" : "")
                 </small>
             </div>
         </div>

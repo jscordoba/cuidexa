@@ -3,9 +3,10 @@
     // Marca genérica siempre — mismo motivo que Account/Login.cshtml: aquí
     // todavía no se sabe a qué organización pertenece esta tablet.
     const string nombreCentro = "Cuidexa";
+    var culturaActual = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }
 <!DOCTYPE html>
-<html lang="es">
+<html lang="@culturaActual">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -45,7 +46,21 @@
             <div class="text-center mb-4">
                 <div class="logo-cuidexa"><i class="bi bi-tablet"></i></div>
                 <h1 class="h4 mb-1 fw-bold" style="color:var(--navy)">@nombreCentro</h1>
-                <p class="text-muted small mb-0">Tablet compartida de departamento</p>
+                <p class="text-muted small mb-2">@Localizer["Tablet compartida de departamento"]</p>
+                <div class="d-flex justify-content-center gap-1">
+                    <form method="post" action="/Cultura/Cambiar">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="cultura" value="es" />
+                        <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                        <button type="submit" class="btn btn-sm @(culturaActual == "es" ? "btn-secondary" : "btn-outline-secondary")" @(culturaActual == "es" ? "disabled" : "")>ES</button>
+                    </form>
+                    <form method="post" action="/Cultura/Cambiar">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="cultura" value="en" />
+                        <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                        <button type="submit" class="btn btn-sm @(culturaActual == "en" ? "btn-secondary" : "btn-outline-secondary")" @(culturaActual == "en" ? "disabled" : "")>EN</button>
+                    </form>
+                </div>
             </div>
 
             <div class="card border-0 shadow-sm p-4">
@@ -61,31 +76,31 @@
                 <form method="post" class="form-acceso">
                     @Html.AntiForgeryToken()
                     <div class="mb-3">
-                        <label class="form-label small text-muted">Código de centro</label>
+                        <label class="form-label small text-muted">@Localizer["Código de centro"]</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-building"></i></span>
                             <input name="codigoCentro" class="form-control text-uppercase" required autofocus autocomplete="off" value="DEMO" />
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small text-muted">Nombre de la tablet</label>
+                        <label class="form-label small text-muted">@Localizer["Nombre de la tablet"]</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-tablet"></i></span>
                             <input name="nombre" class="form-control" required autocomplete="username" />
                         </div>
                     </div>
                     <div class="mb-4">
-                        <label class="form-label small text-muted">Contraseña</label>
+                        <label class="form-label small text-muted">@Localizer["Contraseña"]</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
                             <input type="password" name="password" class="form-control" required autocomplete="current-password" />
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-acceso w-100 py-2 fw-semibold">Entrar</button>
+                    <button type="submit" class="btn btn-acceso w-100 py-2 fw-semibold">@Localizer["Entrar"]</button>
                 </form>
             </div>
 
-            <p class="text-muted small text-center mt-3 mb-0">Esta sesión queda abierta en el dispositivo — pídela a Admin si no la tienes.</p>
+            <p class="text-muted small text-center mt-3 mb-0">@Localizer["Esta sesión queda abierta en el dispositivo — pídela a Admin si no la tienes."]</p>
         </div>
     </div>
 </body>

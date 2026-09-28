@@ -2,46 +2,46 @@
 @{
     var residente = (Residente)ViewBag.Residente;
 }
-<a href="/Residentes/Documentos/@residente.Id" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Documentos</a>
-<h4 class="mb-3">Nuevo documento firmado — @residente.Nombre @residente.Apellidos</h4>
+<a href="/Residentes/Documentos/@residente.Id" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver a Documentos"]</a>
+<h4 class="mb-3">@Localizer["Nuevo documento firmado"] — @residente.Nombre @residente.Apellidos</h4>
 
 <form method="post" action="/Residentes/CrearDocumento/@residente.Id" id="formDocumento" class="card p-3" style="max-width:560px;">
     @Html.AntiForgeryToken()
 
     <div class="mb-3">
-        <label class="form-label">Categoría</label>
+        <label class="form-label">@Localizer["Categoría"]</label>
         <select name="categoria" class="form-select">
-            <option value="@CategoriaDocumentoFirmado.ConsentimientoInformado">Consentimiento informado</option>
-            <option value="@CategoriaDocumentoFirmado.Admision">Admisión</option>
-            <option value="@CategoriaDocumentoFirmado.Entrega">Entrega (material, indumentaria...)</option>
-            <option value="@CategoriaDocumentoFirmado.Otro">Otro</option>
+            <option value="@CategoriaDocumentoFirmado.ConsentimientoInformado">@Localizer["Consentimiento informado"]</option>
+            <option value="@CategoriaDocumentoFirmado.Admision">@Localizer["Admisión"]</option>
+            <option value="@CategoriaDocumentoFirmado.Entrega">@Localizer["Entrega (material, indumentaria...)"]</option>
+            <option value="@CategoriaDocumentoFirmado.Otro">@Localizer["Otro"]</option>
         </select>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Título</label>
-        <input name="titulo" class="form-control" required maxlength="150" placeholder="Ej. Autorización salida fin de semana" />
+        <label class="form-label">@Localizer["Título"]</label>
+        <input name="titulo" class="form-control" required maxlength="150" placeholder="@Localizer["Ej. Autorización salida fin de semana"]" />
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Descripción</label>
-        <textarea name="descripcion" class="form-control" rows="3" required placeholder="Qué se está autorizando o reconociendo..."></textarea>
+        <label class="form-label">@Localizer["Descripción"]</label>
+        <textarea name="descripcion" class="form-control" rows="3" required placeholder="@Localizer["Qué se está autorizando o reconociendo..."]"></textarea>
     </div>
 
     <div class="row g-2 mb-1">
         <div class="col-12 col-sm-6">
-            <label class="form-label">Nombre de quien firma</label>
-            <input name="firmanteNombre" class="form-control" required placeholder="Nombre completo" />
+            <label class="form-label">@Localizer["Nombre de quien firma"]</label>
+            <input name="firmanteNombre" class="form-control" required placeholder="@Localizer["Nombre completo"]" />
         </div>
         <div class="col-12 col-sm-6">
-            <label class="form-label">Relación</label>
-            <input name="firmanteRelacion" class="form-control" placeholder="Residente, hijo/a, representante legal..." />
+            <label class="form-label">@Localizer["Relación"]</label>
+            <input name="firmanteRelacion" class="form-control" placeholder="@Localizer["Residente, hijo/a, representante legal..."]" />
         </div>
     </div>
 
     @await Html.PartialAsync("_FirmaPad")
 
-    <button type="submit" class="btn btn-primary align-self-start">Guardar documento firmado</button>
+    <button type="submit" class="btn btn-primary align-self-start">@Localizer["Guardar documento firmado"]</button>
 </form>
 
 @section Scripts {

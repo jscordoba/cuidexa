@@ -293,4 +293,145 @@
   <data name="¿Afecta a otros departamentos?" xml:space="preserve"><value>Does it affect other departments?</value></data>
   <data name="¿Necesita que alguien actúe?" xml:space="preserve"><value>Does it need someone to act?</value></data>
   <data name="¿Sobre qué es este aviso?" xml:space="preserve"><value>What is this notice about?</value></data>
+  <data name="A qué centro de tu organización pertenece este residente." xml:space="preserve"><value>Which center in your organization this resident belongs to.</value></data>
+  <data name="Alergias" xml:space="preserve"><value>Allergies</value></data>
+  <data name="Apellidos" xml:space="preserve"><value>Last name</value></data>
+  <data name="Atención y cuidados" xml:space="preserve"><value>Care and attention</value></data>
+  <data name="Auxiliares" xml:space="preserve"><value>Aides</value></data>
+  <data name="Ayuda para levantarse" xml:space="preserve"><value>Help getting up</value></data>
+  <data name="Buscar en el historial..." xml:space="preserve"><value>Search the history...</value></data>
+  <data name="Buscar por nombre, habitación, dieta, alergia..." xml:space="preserve"><value>Search by name, room, diet, allergy...</value></data>
+  <data name="Cancelada" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="Cancelar" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Contacto de emergencia" xml:space="preserve"><value>Emergency contact</value></data>
+  <data name="Dar de alta" xml:space="preserve"><value>Admit</value></data>
+  <data name="Dar de alta un residente" xml:space="preserve"><value>Admit a resident</value></data>
+  <data name="Dar de baja" xml:space="preserve"><value>Discharge</value></data>
+  <data name="Datos actuales" xml:space="preserve"><value>Current details</value></data>
+  <data name="Datos básicos" xml:space="preserve"><value>Basic details</value></data>
+  <data name="Datos de contacto del residente" xml:space="preserve"><value>Resident's contact details</value></data>
+  <data name="Descargar PDF" xml:space="preserve"><value>Download PDF</value></data>
+  <data name="Dieta" xml:space="preserve"><value>Diet</value></data>
+  <data name="Dieta actual" xml:space="preserve"><value>Current diet</value></data>
+  <data name="Dieta inicial" xml:space="preserve"><value>Initial diet</value></data>
+  <data name="Documento de identidad (DNI/NIE)" xml:space="preserve"><value>ID document (DNI/NIE)</value></data>
+  <data name="Dosis" xml:space="preserve"><value>Dose</value></data>
+  <data name="Editar datos" xml:space="preserve"><value>Edit details</value></data>
+  <data name="Editar datos de" xml:space="preserve"><value>Edit details for</value></data>
+  <data name="Ej. Hijo/a, Tutor legal..." xml:space="preserve"><value>E.g. Son/daughter, Legal guardian...</value></data>
+  <data name="Ej. grúa, andador..." xml:space="preserve"><value>E.g. hoist, walker...</value></data>
+  <data name="Equipamiento especial" xml:space="preserve"><value>Special equipment</value></data>
+  <data name="Especialidad" xml:space="preserve"><value>Specialty</value></data>
+  <data name="Fecha de nacimiento" xml:space="preserve"><value>Date of birth</value></data>
+  <data name="Guardar cambios" xml:space="preserve"><value>Save changes</value></data>
+  <data name="Historial" xml:space="preserve"><value>History</value></data>
+  <data name="Horario" xml:space="preserve"><value>Schedule</value></data>
+  <data name="Información por departamento" xml:space="preserve"><value>Information by department</value></data>
+  <data name="Instrucciones" xml:space="preserve"><value>Instructions</value></data>
+  <data name="Medicación activa" xml:space="preserve"><value>Active medication</value></data>
+  <data name="Motivo (opcional)" xml:space="preserve"><value>Reason (optional)</value></data>
+  <data name="Movilidad" xml:space="preserve"><value>Mobility</value></data>
+  <data name="Necesita ayuda para levantarse" xml:space="preserve"><value>Needs help getting up</value></data>
+  <data name="Ninguna programada." xml:space="preserve"><value>None scheduled.</value></data>
+  <data name="Ninguna registrada" xml:space="preserve"><value>None recorded</value></data>
+  <data name="Ninguna registrada." xml:space="preserve"><value>None recorded.</value></data>
+  <data name="Ninguna." xml:space="preserve"><value>None.</value></data>
+  <data name="Ningún movimiento coincide con la búsqueda." xml:space="preserve"><value>No entries match the search.</value></data>
+  <data name="No" xml:space="preserve"><value>No</value></data>
+  <data name="Observaciones" xml:space="preserve"><value>Notes</value></data>
+  <data name="Patologías" xml:space="preserve"><value>Conditions</value></data>
+  <data name="Portal de familiares" xml:space="preserve"><value>Family portal</value></data>
+  <data name="Profesionales" xml:space="preserve"><value>Therapists</value></data>
+  <data name="Programada" xml:space="preserve"><value>Scheduled</value></data>
+  <data name="Próximas sesiones" xml:space="preserve"><value>Upcoming sessions</value></data>
+  <data name="Realizada" xml:space="preserve"><value>Completed</value></data>
+  <data name="Relación con el residente" xml:space="preserve"><value>Relationship to the resident</value></data>
+  <data name="Selecciona habitación" xml:space="preserve"><value>Select a room</value></data>
+  <data name="Sin asignar" xml:space="preserve"><value>Unassigned</value></data>
+  <data name="Sin especialidad" xml:space="preserve"><value>No specialty</value></data>
+  <data name="Sin movimientos registrados." xml:space="preserve"><value>No entries recorded.</value></data>
+  <data name="Sin registrar" xml:space="preserve"><value>Not recorded</value></data>
+  <data name="Sí" xml:space="preserve"><value>Yes</value></data>
+  <data name="Teléfono" xml:space="preserve"><value>Phone</value></data>
+  <data name="Tipo de residente" xml:space="preserve"><value>Resident type</value></data>
+  <data name="Trasladar" xml:space="preserve"><value>Move</value></data>
+  <data name="Trasladar de habitación" xml:space="preserve"><value>Move to another room</value></data>
+  <data name="Ver histórico de dietas" xml:space="preserve"><value>View diet history</value></data>
+  <data name="Vigente" xml:space="preserve"><value>Current</value></data>
+  <data name="Volver a Residentes" xml:space="preserve"><value>Back to Residents</value></data>
+  <data name="Volver a la ficha" xml:space="preserve"><value>Back to profile</value></data>
+  <data name="medicación(es) finalizada(s)" xml:space="preserve"><value>completed medication(s)</value></data>
+  <data name="obligatoria para residentes Fijos" xml:space="preserve"><value>required for Permanent residents</value></data>
+  <data name="sesión(es) anterior(es)" xml:space="preserve"><value>past session(s)</value></data>
+  <data name="¿Confirmas dar de baja a este residente?" xml:space="preserve"><value>Confirm discharging this resident?</value></data>
+  <data name="Última dosis" xml:space="preserve"><value>Last dose</value></data>
+  <data name="Acceso creado el" xml:space="preserve"><value>Access created on</value></data>
+  <data name="Admisión" xml:space="preserve"><value>Admission</value></data>
+  <data name="Buscar en los documentos..." xml:space="preserve"><value>Search documents...</value></data>
+  <data name="Categoría" xml:space="preserve"><value>Category</value></data>
+  <data name="Comensales por dieta" xml:space="preserve"><value>Diners by diet</value></data>
+  <data name="Compártela con la familia por un canal aparte (no queda visible después de crear el acceso)." xml:space="preserve"><value>Share it with the family through a separate channel (it won't be visible again after the access is created).</value></data>
+  <data name="Conformidad" xml:space="preserve"><value>Acknowledgment</value></data>
+  <data name="Conformidad de incidencia" xml:space="preserve"><value>Incident acknowledgment</value></data>
+  <data name="Consentimiento informado" xml:space="preserve"><value>Informed consent</value></data>
+  <data name="Contraseña inicial" xml:space="preserve"><value>Initial password</value></data>
+  <data name="Crear acceso" xml:space="preserve"><value>Create access</value></data>
+  <data name="Desactivado" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Desactivar acceso" xml:space="preserve"><value>Disable access</value></data>
+  <data name="Descripción / lo que se reconoce" xml:space="preserve"><value>Description / what is being acknowledged</value></data>
+  <data name="Documentos e incidencias resueltas de tu familiar" xml:space="preserve"><value>Signed documents and resolved incidents for your family member</value></data>
+  <data name="Ej. Autorización salida fin de semana" xml:space="preserve"><value>E.g. Weekend outing authorization</value></data>
+  <data name="Ej. Se informó de lo ocurrido y se aceptan las medidas tomadas." xml:space="preserve"><value>E.g. Informed of what happened and accepts the measures taken.</value></data>
+  <data name="Entrega" xml:space="preserve"><value>Handover</value></data>
+  <data name="Entrega (material, indumentaria...)" xml:space="preserve"><value>Handover (equipment, clothing...)</value></data>
+  <data name="Esta sesión queda abierta en el dispositivo — pídela a Admin si no la tienes." xml:space="preserve"><value>This session stays open on the device — ask Admin if you don't have it.</value></data>
+  <data name="Firma" xml:space="preserve"><value>Signature</value></data>
+  <data name="Firma capturada en pantalla — no es una firma digital con validez legal (eIDAS)." xml:space="preserve"><value>Signature captured on screen — not a legally binding digital signature (eIDAS).</value></data>
+  <data name="Firma de" xml:space="preserve"><value>Signature of</value></data>
+  <data name="Firmado por" xml:space="preserve"><value>Signed by</value></data>
+  <data name="Gestionado por" xml:space="preserve"><value>Managed by</value></data>
+  <data name="Guardar documento firmado" xml:space="preserve"><value>Save signed document</value></data>
+  <data name="Guardar firma" xml:space="preserve"><value>Save signature</value></data>
+  <data name="Hija, hijo, representante legal..." xml:space="preserve"><value>Daughter, son, legal representative...</value></data>
+  <data name="Incidencias resueltas" xml:space="preserve"><value>Resolved incidents</value></data>
+  <data name="Invitar familiar" xml:space="preserve"><value>Invite family member</value></data>
+  <data name="Invitar familiar de" xml:space="preserve"><value>Invite a family member of</value></data>
+  <data name="Limpiar firma" xml:space="preserve"><value>Clear signature</value></data>
+  <data name="Mínimo 8 caracteres" xml:space="preserve"><value>Minimum 8 characters</value></data>
+  <data name="Ningún documento coincide con la búsqueda." xml:space="preserve"><value>No documents match the search.</value></data>
+  <data name="Nombre completo" xml:space="preserve"><value>Full name</value></data>
+  <data name="Nombre de la tablet" xml:space="preserve"><value>Tablet name</value></data>
+  <data name="Nombre de quien firma" xml:space="preserve"><value>Name of the signer</value></data>
+  <data name="Nuevo documento" xml:space="preserve"><value>New document</value></data>
+  <data name="Nuevo documento firmado" xml:space="preserve"><value>New signed document</value></data>
+  <data name="Otro" xml:space="preserve"><value>Other</value></data>
+  <data name="Personal en turno hoy" xml:space="preserve"><value>Staff on shift today</value></data>
+  <data name="Provisión de organizaciones y centros" xml:space="preserve"><value>Provisioning organizations and centers</value></data>
+  <data name="Qué se está autorizando o reconociendo..." xml:space="preserve"><value>What is being authorized or acknowledged...</value></data>
+  <data name="Reactivar acceso" xml:space="preserve"><value>Re-enable access</value></data>
+  <data name="Relación" xml:space="preserve"><value>Relationship</value></data>
+  <data name="Residente, hijo/a, representante legal..." xml:space="preserve"><value>Resident, son/daughter, legal representative...</value></data>
+  <data name="Restablecer" xml:space="preserve"><value>Reset</value></data>
+  <data name="Restablecer contraseña" xml:space="preserve"><value>Reset password</value></data>
+  <data name="Resuelta el" xml:space="preserve"><value>Resolved on</value></data>
+  <data name="Sin avisos pendientes." xml:space="preserve"><value>No pending notices.</value></data>
+  <data name="Sin documentos firmados todavía." xml:space="preserve"><value>No signed documents yet.</value></data>
+  <data name="Sin incidencias resueltas todavía." xml:space="preserve"><value>No resolved incidents yet.</value></data>
+  <data name="Sin personal asignado hoy." xml:space="preserve"><value>No staff assigned today.</value></data>
+  <data name="Solo se muestran documentos firmados e incidencias ya resueltas — para cualquier otra consulta, contacta directamente con el centro." xml:space="preserve"><value>Only signed documents and already-resolved incidents are shown — for anything else, please contact the center directly.</value></data>
+  <data name="Tablet compartida de departamento" xml:space="preserve"><value>Shared department tablet</value></data>
+  <data name="Todavía no hay documentos firmados en este centro." xml:space="preserve"><value>No signed documents in this center yet.</value></data>
+  <data name="Todavía no hay documentos firmados para este residente." xml:space="preserve"><value>No signed documents for this resident yet.</value></data>
+  <data name="Todavía no hay ningún familiar con acceso." xml:space="preserve"><value>No family member has access yet.</value></data>
+  <data name="Título del documento" xml:space="preserve"><value>Document title</value></data>
+  <data name="Un familiar con acceso puede ver, desde su propia cuenta en" xml:space="preserve"><value>A family member with access can see, from their own account at</value></data>
+  <data name="Volver" xml:space="preserve"><value>Back</value></data>
+  <data name="Volver a" xml:space="preserve"><value>Back to</value></data>
+  <data name="Volver a Documentos" xml:space="preserve"><value>Back to Documents</value></data>
+  <data name="cedido a" xml:space="preserve"><value>covered by</value></data>
+  <data name="los documentos firmados y las incidencias ya resueltas de" xml:space="preserve"><value>the signed documents and already-resolved incidents for</value></data>
+  <data name="nada más." xml:space="preserve"><value>nothing else.</value></data>
+  <data name="se actualiza solo cada minuto" xml:space="preserve"><value>refreshes automatically every minute</value></data>
+  <data name="¿No tienes acceso todavía? Pide al centro que te dé de alta desde la ficha de tu familiar." xml:space="preserve"><value>Don't have access yet? Ask the center to set it up from your family member's profile.</value></data>
+  <data name="Últimos avisos pendientes" xml:space="preserve"><value>Latest pending notices</value></data>
 </root>

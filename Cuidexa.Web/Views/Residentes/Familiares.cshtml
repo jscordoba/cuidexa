@@ -2,19 +2,19 @@
 @{
     var residente = (Residente)ViewBag.Residente;
 }
-<a href="/Residentes/Details/@residente.Id" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a @residente.Nombre @residente.Apellidos</a>
+<a href="/Residentes/Details/@residente.Id" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver a"] @residente.Nombre @residente.Apellidos</a>
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-people me-2 text-muted"></i>Portal de familiares</h4>
-    <a href="/Residentes/CrearFamiliar/@residente.Id" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Invitar familiar</a>
+    <h4 class="mb-0"><i class="bi bi-people me-2 text-muted"></i>@Localizer["Portal de familiares"]</h4>
+    <a href="/Residentes/CrearFamiliar/@residente.Id" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>@Localizer["Invitar familiar"]</a>
 </div>
 <p class="text-muted small">
-    Un familiar con acceso puede ver, desde su propia cuenta en <code>/Familiar/Login</code>,
-    los documentos firmados y las incidencias ya resueltas de @residente.Nombre — nada más.
+    @Localizer["Un familiar con acceso puede ver, desde su propia cuenta en"] <code>/Familiar/Login</code>,
+    @Localizer["los documentos firmados y las incidencias ya resueltas de"] @residente.Nombre — @Localizer["nada más."]
 </p>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">Todavía no hay ningún familiar con acceso.</p>
+    <p class="text-muted">@Localizer["Todavía no hay ningún familiar con acceso."]</p>
 }
 else
 {
@@ -26,9 +26,9 @@ else
                     <div>
                         <h6 class="mb-1">@f.Nombre <span class="text-muted small">(@f.Relacion)</span></h6>
                         <p class="mb-1 small">@f.Email</p>
-                        <small class="text-muted">Acceso creado el @f.FechaCreacion.ToString("dd/MM/yyyy")</small>
+                        <small class="text-muted">@Localizer["Acceso creado el"] @f.FechaCreacion.ToString("dd/MM/yyyy")</small>
                     </div>
-                    <span class="badge @(f.Activo ? "bg-success" : "bg-secondary")">@(f.Activo ? "Activo" : "Desactivado")</span>
+                    <span class="badge @(f.Activo ? "bg-success" : "bg-secondary")">@(f.Activo ? Localizer["Activo"] : Localizer["Desactivado"])</span>
                 </div>
 
                 <div class="row g-2 mt-2 align-items-end">
@@ -37,11 +37,11 @@ else
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="familiarId" value="@f.Id" />
                             <div class="col-8">
-                                <label class="form-label small mb-1">Restablecer contraseña</label>
-                                <input type="text" name="nuevaPassword" class="form-control form-control-sm" required minlength="8" placeholder="Mínimo 8 caracteres" />
+                                <label class="form-label small mb-1">@Localizer["Restablecer contraseña"]</label>
+                                <input type="text" name="nuevaPassword" class="form-control form-control-sm" required minlength="8" placeholder="@Localizer["Mínimo 8 caracteres"]" />
                             </div>
                             <div class="col-4">
-                                <button class="btn btn-sm btn-outline-secondary w-100">Restablecer</button>
+                                <button class="btn btn-sm btn-outline-secondary w-100">@Localizer["Restablecer"]</button>
                             </div>
                         </form>
                     </div>
@@ -56,7 +56,7 @@ else
                                model binder de [HttpPost] CambiarEstadoFamiliar(..., bool activo). *@
                             <input type="hidden" name="activo" value="@((!f.Activo).ToString())" />
                             <button class="btn btn-sm @(f.Activo ? "btn-outline-danger" : "btn-outline-success")">
-                                @(f.Activo ? "Desactivar acceso" : "Reactivar acceso")
+                                @(f.Activo ? Localizer["Desactivar acceso"] : Localizer["Reactivar acceso"])
                             </button>
                         </form>
                     </div>

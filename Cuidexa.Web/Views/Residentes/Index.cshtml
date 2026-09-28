@@ -1,22 +1,45 @@
 @model List<Residente>
 @{
     var mostrarCentro = (bool)ViewBag.MostrarCentro;
+
+    string EtiquetaTipoResidente(TipoResidente t) => t switch
+    {
+        TipoResidente.Fijo => Localizer["Fijo"],
+        TipoResidente.Dia => Localizer["Día"],
+        TipoResidente.Pasajero => Localizer["Pasajero"],
+        _ => t.ToString()
+    };
+
+    string EtiquetaMovilidad(Movilidad m) => m switch
+    {
+        Movilidad.Autonomo => Localizer["Autónomo"],
+        Movilidad.SillaRuedas => Localizer["Silla de ruedas"],
+        Movilidad.AsistenciaTotal => Localizer["Asistencia total"],
+        _ => m.ToString()
+    };
+
+    string EtiquetaEstadoResidente(EstadoResidente e) => e switch
+    {
+        EstadoResidente.Activo => Localizer["Activo"],
+        EstadoResidente.Baja => Localizer["De baja"],
+        _ => e.ToString()
+    };
 }
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
-    <h4 class="mb-0">Residentes</h4>
-    <a class="btn btn-primary" href="/Residentes/Create">+ Dar de alta</a>
+    <h4 class="mb-0">@Localizer["Residentes"]</h4>
+    <a class="btn btn-primary" href="/Residentes/Create">+ @Localizer["Dar de alta"]</a>
 </div>
-<input type="search" id="filtroResidentes" class="form-control mb-3" placeholder="Buscar por nombre, habitación, dieta, alergia..." />
+<input type="search" id="filtroResidentes" class="form-control mb-3" placeholder="@Localizer["Buscar por nombre, habitación, dieta, alergia..."]" />
 <div class="table-responsive">
     <table class="table table-bordered table-hover bg-white tabla-clicable">
         <thead>
             <tr>
-                <th>Nombre</th><th>Tipo</th><th>Habitación</th><th>Movilidad</th><th>Dieta actual</th><th>Alergias</th>
+                <th>@Localizer["Nombre"]</th><th>@Localizer["Tipo"]</th><th>@Localizer["Habitación"]</th><th>@Localizer["Movilidad"]</th><th>@Localizer["Dieta actual"]</th><th>@Localizer["Alergias"]</th>
                 @if (mostrarCentro)
                 {
-                    <th>Centro</th>
+                    <th>@Localizer["Centro"]</th>
                 }
-                <th>Estado</th><th></th>
+                <th>@Localizer["Estado"]</th><th></th>
             </tr>
         </thead>
         <tbody id="listaResidentes">
@@ -25,22 +48,22 @@
                 var dietaActual = r.Dietas.FirstOrDefault(d => d.FechaFin == null)?.Dieta?.Nombre ?? "-";
                 <tr data-href="/Residentes/Details/@r.Id">
                     <td class="fw-semibold">@r.Nombre @r.Apellidos</td>
-                    <td>@r.TipoResidente</td>
+                    <td>@EtiquetaTipoResidente(r.TipoResidente)</td>
                     <td>@(r.Habitacion?.Numero ?? "-")</td>
-                    <td>@r.Movilidad</td>
+                    <td>@EtiquetaMovilidad(r.Movilidad)</td>
                     <td>@dietaActual</td>
                     <td>@string.Join(", ", r.Alergias.Select(a => a.Alergia?.Nombre))</td>
                     @if (mostrarCentro)
                     {
                         <td>@r.Centro?.Nombre</td>
                     }
-                    <td><span class="badge @(r.Estado == EstadoResidente.Activo ? "bg-success" : "bg-secondary")">@r.Estado</span></td>
+                    <td><span class="badge @(r.Estado == EstadoResidente.Activo ? "bg-success" : "bg-secondary")">@EtiquetaEstadoResidente(r.Estado)</span></td>
                     <td class="chevron">&rsaquo;</td>
                 </tr>
             }
         </tbody>
     </table>
-    <p id="residentesSinResultados" class="text-muted" hidden>Ningún residente coincide con la búsqueda.</p>
+    <p id="residentesSinResultados" class="text-muted" hidden>@Localizer["Ningún residente coincide con la búsqueda."]</p>
 </div>
 
 @section Scripts {

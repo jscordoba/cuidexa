@@ -8,9 +8,10 @@
     var cedidosHoy = Model.PersonalHoy.Where(p => p.Cedido).ToList();
     var organizacionDashboard = await OrganizacionService.ObtenerAsync();
     var nombreCentroDashboard = string.IsNullOrWhiteSpace(organizacionDashboard.Nombre) ? "Cuidexa" : organizacionDashboard.Nombre;
+    var culturaActual = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }
 <!DOCTYPE html>
-<html lang="es">
+<html lang="@culturaActual">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,10 +47,10 @@
             <div class="avatar-rol @claseColor"><i class="bi @icono"></i></div>
             <div>
                 <div class="fw-bold fs-5">@Model.NombreDispositivo</div>
-                <div class="small" style="opacity:.8">@etiqueta &middot; se actualiza solo cada minuto</div>
+                <div class="small" style="opacity:.8">@etiqueta &middot; @Localizer["se actualiza solo cada minuto"]</div>
             </div>
         </div>
-        <a href="/Tablet/Salir" class="btn btn-outline-light btn-sm">Salir</a>
+        <a href="/Tablet/Salir" class="btn btn-outline-light btn-sm">@Localizer["Salir"]</a>
     </div>
 
     <div class="contenedor-tablet">
@@ -59,7 +60,7 @@
                     <div class="icono-dashboard i-rosa"><i class="bi bi-bell-fill"></i></div>
                     <div>
                         <div class="cifra">@Model.AvisosPendientesCount</div>
-                        <div class="etiqueta">Avisos pendientes</div>
+                        <div class="etiqueta">@Localizer["Avisos pendientes"]</div>
                     </div>
                 </div>
             </div>
@@ -68,7 +69,7 @@
                     <div class="icono-dashboard i-morado"><i class="bi bi-people-fill"></i></div>
                     <div>
                         <div class="cifra">@trabajandoHoy.Count</div>
-                        <div class="etiqueta">Personal en turno hoy</div>
+                        <div class="etiqueta">@Localizer["Personal en turno hoy"]</div>
                     </div>
                 </div>
             </div>
@@ -79,7 +80,7 @@
                         <div class="icono-dashboard i-cian"><i class="bi bi-cup-hot-fill"></i></div>
                         <div>
                             <div class="cifra">@Model.ComensalesHoy.TotalComensales</div>
-                            <div class="etiqueta">Comensales hoy</div>
+                            <div class="etiqueta">@Localizer["Comensales hoy"]</div>
                         </div>
                     </div>
                 </div>
@@ -91,7 +92,7 @@
                         <div class="icono-dashboard i-verde"><i class="bi bi-capsule"></i></div>
                         <div>
                             <div class="cifra">@Model.MedicacionPendienteHoy</div>
-                            <div class="etiqueta">Medicación pendiente hoy</div>
+                            <div class="etiqueta">@Localizer["Medicación pendiente hoy"]</div>
                         </div>
                     </div>
                 </div>
@@ -101,10 +102,10 @@
         <div class="row g-3">
             <div class="col-lg-6">
                 <div class="card p-3 panel-tablet">
-                    <h5 class="mb-3"><i class="bi bi-bell-fill me-1"></i> Últimos avisos pendientes</h5>
+                    <h5 class="mb-3"><i class="bi bi-bell-fill me-1"></i> @Localizer["Últimos avisos pendientes"]</h5>
                     @if (!Model.AvisosPendientes.Any())
                     {
-                        <p class="text-muted mb-0">Sin avisos pendientes.</p>
+                        <p class="text-muted mb-0">@Localizer["Sin avisos pendientes."]</p>
                     }
                     else
                     {
@@ -113,10 +114,10 @@
                             {
                                 <div class="item">
                                     <div class="fw-semibold">
-                                        @(a.Residente?.Nombre ?? "Puesto de trabajo")
+                                        @(a.Residente?.Nombre ?? Localizer["Puesto de trabajo"].Value)
                                         @if (a.Urgente)
                                         {
-                                            <span class="badge bg-danger ms-1">Urgente</span>
+                                            <span class="badge bg-danger ms-1">@Localizer["Urgente"]</span>
                                         }
                                     </div>
                                     <div>@a.Descripcion</div>
@@ -129,10 +130,10 @@
             </div>
             <div class="col-lg-6">
                 <div class="card p-3 panel-tablet">
-                    <h5 class="mb-3"><i class="bi bi-people-fill me-1"></i> Personal en turno hoy</h5>
+                    <h5 class="mb-3"><i class="bi bi-people-fill me-1"></i> @Localizer["Personal en turno hoy"]</h5>
                     @if (!trabajandoHoy.Any() && !cedidosHoy.Any())
                     {
-                        <p class="text-muted mb-0">Sin personal asignado hoy.</p>
+                        <p class="text-muted mb-0">@Localizer["Sin personal asignado hoy."]</p>
                     }
                     else
                     {
@@ -151,7 +152,7 @@
                             @foreach (var t in cedidosHoy)
                             {
                                 <div class="item text-muted">
-                                    <del>@t.EmpleadoNombre</del> &mdash; cedido a @t.CedidoA
+                                    <del>@t.EmpleadoNombre</del> &mdash; @Localizer["cedido a"] @t.CedidoA
                                 </div>
                             }
                         </div>
@@ -163,7 +164,7 @@
         @if (Model.ComensalesHoy is not null && Model.ComensalesHoy.PorDieta.Any())
         {
             <div class="card p-3 mt-3 panel-tablet">
-                <h5 class="mb-3"><i class="bi bi-cup-hot-fill me-1"></i> Comensales por dieta</h5>
+                <h5 class="mb-3"><i class="bi bi-cup-hot-fill me-1"></i> @Localizer["Comensales por dieta"]</h5>
                 <div class="d-flex flex-wrap gap-2">
                     @foreach (var (dieta, cantidad) in Model.ComensalesHoy.PorDieta)
                     {
