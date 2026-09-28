@@ -17,15 +17,15 @@
 @await Html.PartialAsync("_SubNav")
 
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-    <h4 class="mb-0">Calendario de turnos</h4>
+    <h4 class="mb-0">@Localizer["Calendario de turnos"]</h4>
     <div class="d-flex align-items-center gap-2 flex-wrap">
         <form method="get" class="d-flex align-items-center gap-2">
             <input type="hidden" name="desde" value="@inicioSemana.ToString("yyyy-MM-dd")" />
             <select name="rol" class="form-select form-select-sm" onchange="this.form.submit()">
-                <option value="">Todos los departamentos</option>
+                <option value="">@Localizer["Todos los departamentos"]</option>
                 @foreach (var rol in Enum.GetValues<RolEmpleado>().Where(r => r != RolEmpleado.Admin && r != RolEmpleado.Direccion && r != RolEmpleado.DirectorOrganizacion))
                 {
-                    <option value="@rol" selected="@(rol == rolFiltro)">@rol</option>
+                    <option value="@rol" selected="@(rol == rolFiltro)">@RolPresentacion.Obtener(rol).Etiqueta</option>
                 }
             </select>
         </form>
@@ -35,11 +35,11 @@
     </div>
 </div>
 
-<p class="text-muted small">Cada celda muestra el turno por defecto de cada persona (gris). Los días con un reemplazo o un cambio de turno aprobado se resaltan en color, con el icono del tipo de cambio; si a alguien le cubrieron su turno ese día, aparece como "Cedido".</p>
+<p class="text-muted small">@Localizer["Cada celda muestra el turno por defecto de cada persona (gris). Los días con un reemplazo o un cambio de turno aprobado se resaltan en color, con el icono del tipo de cambio; si a alguien le cubrieron su turno ese día, aparece como \"Cedido\"."]</p>
 
 @if (!empleados.Any())
 {
-    <p class="text-muted">No hay personal activo para este filtro.</p>
+    <p class="text-muted">@Localizer["No hay personal activo para este filtro."]</p>
 }
 else
 {
@@ -47,11 +47,11 @@ else
         <table class="table table-bordered bg-white align-middle mb-0" style="min-width: 900px;">
             <thead>
                 <tr>
-                    <th style="min-width: 160px;">Empleado</th>
+                    <th style="min-width: 160px;">@Localizer["Empleado"]</th>
                     @foreach (var dia in dias)
                     {
                         <th class="text-center @(dia == DateOnly.FromDateTime(DateTime.Today) ? "table-active" : "")">
-                            @dia.ToString("ddd", System.Globalization.CultureInfo.GetCultureInfo("es-ES"))<br />
+                            @dia.ToString("ddd", System.Globalization.CultureInfo.CurrentUICulture)<br />
                             <span class="fw-normal small">@dia.ToString("dd/MM")</span>
                         </th>
                     }
@@ -78,8 +78,8 @@ else
                                     }
                                     else if (t.Cedido)
                                     {
-                                        <div class="chip-turno chip-cedido" title="Turno cedido a @t.CedidoA">
-                                            Cedido a @t.CedidoA
+                                        <div class="chip-turno chip-cedido" title="@Localizer["Turno cedido a"] @t.CedidoA">
+                                            @Localizer["cedido a"] @t.CedidoA
                                         </div>
                                     }
                                     else if (t.EsExcepcion)
@@ -88,11 +88,11 @@ else
                                             @t.HoraInicio.ToString("HH:mm")–@t.HoraFin.ToString("HH:mm")
                                             @if (t.TipoExcepcion == "Reemplazo")
                                             {
-                                                <i class="bi bi-arrow-repeat ms-1" title="Reemplazo"></i>
+                                                <i class="bi bi-arrow-repeat ms-1" title="@Localizer["Reemplazo"]"></i>
                                             }
                                             else if (t.TipoExcepcion == "Cambio")
                                             {
-                                                <i class="bi bi-arrow-left-right ms-1" title="Cambio de turno"></i>
+                                                <i class="bi bi-arrow-left-right ms-1" title="@Localizer["Cambio de turno"]"></i>
                                             }
                                         </div>
                                     }
@@ -114,12 +114,12 @@ else
 
 @if (externos.Any())
 {
-    <h6 class="text-muted mt-4 mb-2">Cubiertos por personal externo esta semana</h6>
+    <h6 class="text-muted mt-4 mb-2">@Localizer["Cubiertos por personal externo esta semana"]</h6>
     @foreach (var t in externos)
     {
         <div class="card mb-2">
             <div class="card-body py-2">
-                <strong>@t.Rol</strong> — @t.EmpleadoNombre
+                <strong>@RolPresentacion.Obtener(t.Rol).Etiqueta</strong> — @t.EmpleadoNombre
                 <span class="text-muted small ms-2">@t.Fecha.ToString("dd/MM/yyyy") @t.HoraInicio.ToString("HH:mm")–@t.HoraFin.ToString("HH:mm")</span>
             </div>
         </div>

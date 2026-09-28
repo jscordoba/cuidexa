@@ -434,4 +434,119 @@
   <data name="se actualiza solo cada minuto" xml:space="preserve"><value>refreshes automatically every minute</value></data>
   <data name="¿No tienes acceso todavía? Pide al centro que te dé de alta desde la ficha de tu familiar." xml:space="preserve"><value>Don't have access yet? Ask the center to set it up from your family member's profile.</value></data>
   <data name="Últimos avisos pendientes" xml:space="preserve"><value>Latest pending notices</value></data>
+  <data name="Activar" xml:space="preserve"><value>Enable</value></data>
+  <data name="Aprobar" xml:space="preserve"><value>Approve</value></data>
+  <data name="Asignar reemplazo" xml:space="preserve"><value>Assign replacement</value></data>
+  <data name="Asignar reemplazo por ausencia" xml:space="preserve"><value>Assign replacement for an absence</value></data>
+  <data name="Ausente (opcional, solo para contexto)" xml:space="preserve"><value>Absent employee (optional, for context only)</value></data>
+  <data name="Añadir festivo" xml:space="preserve"><value>Add holiday</value></data>
+  <data name="Buscar por empleado, estado..." xml:space="preserve"><value>Search by employee, status...</value></data>
+  <data name="Calendario" xml:space="preserve"><value>Calendar</value></data>
+  <data name="Calendario de turnos" xml:space="preserve"><value>Shift calendar</value></data>
+  <data name="Cambio" xml:space="preserve"><value>Swap</value></data>
+  <data name="Cambio de turno" xml:space="preserve"><value>Shift swap</value></data>
+  <data name="Cambios" xml:space="preserve"><value>Changes</value></data>
+  <data name="Cancelado" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="Completado" xml:space="preserve"><value>Completed</value></data>
+  <data name="Comunidad autónoma del centro" xml:space="preserve"><value>Center's autonomous community</value></data>
+  <data name="Contar el rango completo (incluir fines de semana y festivos)" xml:space="preserve"><value>Count the full range (include weekends and holidays)</value></data>
+  <data name="Crear plantilla" xml:space="preserve"><value>Create template</value></data>
+  <data name="Crear turno" xml:space="preserve"><value>Create shift</value></data>
+  <data name="Cubierto por personal externo" xml:space="preserve"><value>Covered by external staff</value></data>
+  <data name="Cubiertos por personal externo esta semana" xml:space="preserve"><value>Covered by external staff this week</value></data>
+  <data name="Define la comunidad autónoma del centro para poder importar su calendario laboral." xml:space="preserve"><value>Set the center's autonomous community to import its work calendar.</value></data>
+  <data name="Departamento" xml:space="preserve"><value>Department</value></data>
+  <data name="Departamento (rol)" xml:space="preserve"><value>Department (role)</value></data>
+  <data name="Departamento (rol) a cubrir" xml:space="preserve"><value>Department (role) to cover</value></data>
+  <data name="Desactivar" xml:space="preserve"><value>Disable</value></data>
+  <data name="Días" xml:space="preserve"><value>Days</value></data>
+  <data name="Días disfrutados" xml:space="preserve"><value>Days taken</value></data>
+  <data name="Días solicitados (pendientes)" xml:space="preserve"><value>Days requested (pending)</value></data>
+  <data name="Editar" xml:space="preserve"><value>Edit</value></data>
+  <data name="Editar plantilla" xml:space="preserve"><value>Edit template</value></data>
+  <data name="Editar turno" xml:space="preserve"><value>Edit shift</value></data>
+  <data name="Ej. Agencia López - María Ruiz" xml:space="preserve"><value>E.g. López Agency - María Ruiz</value></data>
+  <data name="Ej. Baja médica, ausencia imprevista..." xml:space="preserve"><value>E.g. Sick leave, unexpected absence...</value></data>
+  <data name="Ej. Mañana, Noche fin de semana..." xml:space="preserve"><value>E.g. Morning, Weekend night...</value></data>
+  <data name="Ej. Navidad" xml:space="preserve"><value>E.g. Christmas</value></data>
+  <data name="Elegir empleado" xml:space="preserve"><value>Choose employee</value></data>
+  <data name="Elegir sustituto" xml:space="preserve"><value>Choose substitute</value></data>
+  <data name="Eliminar" xml:space="preserve"><value>Delete</value></data>
+  <data name="Empleado" xml:space="preserve"><value>Employee</value></data>
+  <data name="Empleado que cubre el reemplazo" xml:space="preserve"><value>Employee covering the replacement</value></data>
+  <data name="Festivo" xml:space="preserve"><value>Holiday</value></data>
+  <data name="Filtrar por departamento" xml:space="preserve"><value>Filter by department</value></data>
+  <data name="Fin" xml:space="preserve"><value>End</value></data>
+  <data name="Fin de semana" xml:space="preserve"><value>Weekend</value></data>
+  <data name="Fuente: calendariosnacionales.com (agrega BOE y boletines autonómicos oficiales, no es una API del gobierno) — revisa siempre el resultado tras importar." xml:space="preserve"><value>Source: calendariosnacionales.com (aggregates official BOE and regional bulletins, not a government API) — always review the result after importing.</value></data>
+  <data name="Gestionar festivos del centro" xml:space="preserve"><value>Manage the center's holidays</value></data>
+  <data name="Guardar" xml:space="preserve"><value>Save</value></data>
+  <data name="Historial completo" xml:space="preserve"><value>Full history</value></data>
+  <data name="Historial del turno" xml:space="preserve"><value>Shift history</value></data>
+  <data name="Hora fin" xml:space="preserve"><value>End time</value></data>
+  <data name="Hora inicio" xml:space="preserve"><value>Start time</value></data>
+  <data name="Horario libre" xml:space="preserve"><value>Custom hours</value></data>
+  <data name="Importar" xml:space="preserve"><value>Import</value></data>
+  <data name="Importar festivos oficiales del año" xml:space="preserve"><value>Import official holidays for the year</value></data>
+  <data name="Inactiva" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Incluir fin de semana/festivos" xml:space="preserve"><value>Include weekend/holidays</value></data>
+  <data name="Incluye fines de semana y festivos" xml:space="preserve"><value>Includes weekends and holidays</value></data>
+  <data name="Inicio" xml:space="preserve"><value>Start</value></data>
+  <data name="Laborable" xml:space="preserve"><value>Weekday</value></data>
+  <data name="Motivo:" xml:space="preserve"><value>Reason:</value></data>
+  <data name="Ningún departamento" xml:space="preserve"><value>No department</value></data>
+  <data name="Ningún turno coincide con la búsqueda." xml:space="preserve"><value>No shifts match the search.</value></data>
+  <data name="No hay festivos registrados." xml:space="preserve"><value>No holidays recorded.</value></data>
+  <data name="No hay personal activo para este filtro." xml:space="preserve"><value>No active staff for this filter.</value></data>
+  <data name="No hay plantillas configuradas." xml:space="preserve"><value>No templates configured.</value></data>
+  <data name="No hay solicitudes pendientes." xml:space="preserve"><value>No pending requests.</value></data>
+  <data name="No se ha asignado ningún reemplazo todavía." xml:space="preserve"><value>No replacement assigned yet.</value></data>
+  <data name="Nombre (opcional)" xml:space="preserve"><value>Name (optional)</value></data>
+  <data name="Nombre de quien cubre el turno" xml:space="preserve"><value>Name of who is covering the shift</value></data>
+  <data name="Nombre de quien está ausente" xml:space="preserve"><value>Name of who is absent</value></data>
+  <data name="Notas" xml:space="preserve"><value>Notes</value></data>
+  <data name="Nueva plantilla" xml:space="preserve"><value>New template</value></data>
+  <data name="Nueva plantilla de turno" xml:space="preserve"><value>New shift template</value></data>
+  <data name="Nuevo turno" xml:space="preserve"><value>New shift</value></data>
+  <data name="Opcional" xml:space="preserve"><value>Optional</value></data>
+  <data name="Plantilla de franja (opcional)" xml:space="preserve"><value>Time-slot template (optional)</value></data>
+  <data name="Plantillas" xml:space="preserve"><value>Templates</value></data>
+  <data name="Plantillas de turno" xml:space="preserve"><value>Shift templates</value></data>
+  <data name="Por:" xml:space="preserve"><value>By:</value></data>
+  <data name="Programado" xml:space="preserve"><value>Scheduled</value></data>
+  <data name="Rechazar" xml:space="preserve"><value>Reject</value></data>
+  <data name="Reemplazo" xml:space="preserve"><value>Replacement</value></data>
+  <data name="Reemplazos" xml:space="preserve"><value>Replacements</value></data>
+  <data name="Reemplazos por ausencia" xml:space="preserve"><value>Replacements for absence</value></data>
+  <data name="Registrar" xml:space="preserve"><value>Register</value></data>
+  <data name="Registrar vacaciones" xml:space="preserve"><value>Register time off</value></data>
+  <data name="Resumen por empleado" xml:space="preserve"><value>Summary by employee</value></data>
+  <data name="Rol" xml:space="preserve"><value>Role</value></data>
+  <data name="Si se deja sin marcar, solo se cuentan los días laborables del rango." xml:space="preserve"><value>If left unchecked, only weekdays in the range are counted.</value></data>
+  <data name="Sin definir" xml:space="preserve"><value>Not set</value></data>
+  <data name="Sin registros de auditoría todavía." xml:space="preserve"><value>No audit records yet.</value></data>
+  <data name="Sin registros." xml:space="preserve"><value>No records.</value></data>
+  <data name="Sin vacaciones registradas todavía." xml:space="preserve"><value>No time off recorded yet.</value></data>
+  <data name="Solicita:" xml:space="preserve"><value>Requested by:</value></data>
+  <data name="Solicitado el" xml:space="preserve"><value>Requested on</value></data>
+  <data name="Solicitudes pendientes" xml:space="preserve"><value>Pending requests</value></data>
+  <data name="Solo hace falta si el turno lo cubre personal externo — si eliges un empleado, se usa el centro de ese empleado." xml:space="preserve"><value>Only needed if the shift is covered by external staff — if you choose an employee, that employee's center is used.</value></data>
+  <data name="Sustituto propuesto:" xml:space="preserve"><value>Proposed substitute:</value></data>
+  <data name="Tipo de día" xml:space="preserve"><value>Day type</value></data>
+  <data name="Titular" xml:space="preserve"><value>Assignee</value></data>
+  <data name="Titular del turno" xml:space="preserve"><value>Shift assignee</value></data>
+  <data name="Todos los departamentos" xml:space="preserve"><value>All departments</value></data>
+  <data name="Turno cedido a" xml:space="preserve"><value>Shift covered by</value></data>
+  <data name="Vacaciones" xml:space="preserve"><value>Time off</value></data>
+  <data name="Ver historial" xml:space="preserve"><value>View history</value></data>
+  <data name="Volver a Plantillas" xml:space="preserve"><value>Back to Templates</value></data>
+  <data name="Volver a Reemplazos" xml:space="preserve"><value>Back to Replacements</value></data>
+  <data name="Volver a Turnos" xml:space="preserve"><value>Back to Shifts</value></data>
+  <data name="Volver a Vacaciones" xml:space="preserve"><value>Back to Time Off</value></data>
+  <data name="a" xml:space="preserve"><value>to</value></data>
+  <data name="días laborables" xml:space="preserve"><value>weekdays</value></data>
+  <data name="externo" xml:space="preserve"><value>external</value></data>
+  <data name="sin titular" xml:space="preserve"><value>no assignee</value></data>
+  <data name="¿Cancelar este turno?" xml:space="preserve"><value>Cancel this shift?</value></data>
+  <data name="¿Eliminar este festivo?" xml:space="preserve"><value>Delete this holiday?</value></data>
 </root>

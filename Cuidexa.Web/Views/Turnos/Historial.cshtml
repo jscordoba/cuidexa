@@ -2,16 +2,16 @@
 @{
     var turno = (Turno)ViewBag.Turno;
 }
-<a href="/Turnos" class="d-inline-block mb-2 text-decoration-none">&larr; Volver a Turnos</a>
-<h4 class="mb-1">Historial del turno</h4>
+<a href="/Turnos" class="d-inline-block mb-2 text-decoration-none">&larr; @Localizer["Volver a Turnos"]</a>
+<h4 class="mb-1">@Localizer["Historial del turno"]</h4>
 <p class="text-muted mb-3">
-    @turno.Rol — @turno.FechaInicio.ToString("dd/MM/yyyy HH:mm") a @turno.FechaFin.ToString("HH:mm")
-    (@(turno.Empleado?.Nombre ?? turno.NombreExterno ?? "sin titular"))
+    @RolPresentacion.Obtener(turno.Rol).Etiqueta — @turno.FechaInicio.ToString("dd/MM/yyyy HH:mm") @Localizer["a"] @turno.FechaFin.ToString("HH:mm")
+    (@(turno.Empleado?.Nombre ?? turno.NombreExterno ?? Localizer["sin titular"].Value))
 </p>
 
 @if (!Model.Any())
 {
-    <p class="text-muted">Sin registros de auditoría todavía.</p>
+    <p class="text-muted">@Localizer["Sin registros de auditoría todavía."]</p>
 }
 else
 {
@@ -26,7 +26,7 @@ else
                 <p class="mb-1 mt-1">@log.Detalle</p>
                 @if (log.Empleado != null)
                 {
-                    <small class="text-muted">Por: @log.Empleado.Nombre</small>
+                    <small class="text-muted">@Localizer["Por:"] @log.Empleado.Nombre</small>
                 }
             </div>
         </div>

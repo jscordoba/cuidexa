@@ -2,19 +2,27 @@
 @{
     ViewBag.SeccionActual = "Turnos";
     var mostrarCentro = (bool)ViewBag.MostrarCentro;
+
+    string EtiquetaEstadoTurno(EstadoTurno e) => e switch
+    {
+        EstadoTurno.Programado => Localizer["Programado"],
+        EstadoTurno.Completado => Localizer["Completado"],
+        EstadoTurno.Cancelado => Localizer["Cancelado"],
+        _ => e.ToString()
+    };
 }
 @await Html.PartialAsync("_SubNav")
 
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
-    <h4 class="mb-0">Turnos</h4>
-    <a class="btn btn-primary" href="/Turnos/Create">+ Nuevo turno</a>
+    <h4 class="mb-0">@Localizer["Turnos"]</h4>
+    <a class="btn btn-primary" href="/Turnos/Create">+ @Localizer["Nuevo turno"]</a>
 </div>
 
 <div class="mb-3">
-    <label class="text-muted small d-block mb-1">Filtrar por departamento</label>
+    <label class="text-muted small d-block mb-1">@Localizer["Filtrar por departamento"]</label>
     <div class="dropdown">
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filtroRolesBtn" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-            <span id="filtroRolesResumen">Todos los departamentos</span>
+            <span id="filtroRolesResumen">@Localizer["Todos los departamentos"]</span>
         </button>
         <ul class="dropdown-menu p-2" aria-labelledby="filtroRolesBtn">
             @foreach (var rol in Enum.GetValues<RolEmpleado>().Where(r => r != RolEmpleado.Admin && r != RolEmpleado.Direccion && r != RolEmpleado.DirectorOrganizacion))
@@ -30,33 +38,33 @@
         </ul>
     </div>
 </div>
-<input type="search" id="filtroTurnos" class="form-control mb-3" placeholder="Buscar por empleado, estado..." />
+<input type="search" id="filtroTurnos" class="form-control mb-3" placeholder="@Localizer["Buscar por empleado, estado..."]" />
 <div class="table-responsive">
     <table class="table table-bordered bg-white">
         <thead>
             <tr>
-                <th>Rol</th><th>Titular</th><th>Inicio</th><th>Fin</th>
+                <th>@Localizer["Rol"]</th><th>@Localizer["Titular"]</th><th>@Localizer["Inicio"]</th><th>@Localizer["Fin"]</th>
                 @if (mostrarCentro)
                 {
-                    <th>Centro</th>
+                    <th>@Localizer["Centro"]</th>
                 }
-                <th>Estado</th><th></th>
+                <th>@Localizer["Estado"]</th><th></th>
             </tr>
         </thead>
         <tbody id="listaTurnos">
             @foreach (var t in Model)
             {
                 <tr data-rol="@t.Rol">
-                    <td>@t.Rol</td>
+                    <td>@RolPresentacion.Obtener(t.Rol).Etiqueta</td>
                     <td>
-                        @(t.Empleado?.Nombre ?? t.NombreExterno ?? "-") @(t.EmpleadoId is null && !string.IsNullOrWhiteSpace(t.NombreExterno) ? "(externo)" : "")
+                        @(t.Empleado?.Nombre ?? t.NombreExterno ?? "-") @(t.EmpleadoId is null && !string.IsNullOrWhiteSpace(t.NombreExterno) ? $"({Localizer["externo"]})" : "")
                         @if (t.EsReemplazo)
                         {
-                            <span class="badge bg-info text-dark ms-1">Reemplazo</span>
+                            <span class="badge bg-info text-dark ms-1">@Localizer["Reemplazo"]</span>
                         }
                         @if (t.EsCambio)
                         {
-                            <span class="badge bg-warning text-dark ms-1">Cambio</span>
+                            <span class="badge bg-warning text-dark ms-1">@Localizer["Cambio"]</span>
                         }
                     </td>
                     <td>@t.FechaInicio.ToString("dd/MM/yyyy HH:mm")</td>
@@ -66,17 +74,17 @@
                         <td>@t.Centro?.Nombre</td>
                     }
                     <td>
-                        <span class="badge @(t.Estado == EstadoTurno.Programado ? "bg-success" : t.Estado == EstadoTurno.Completado ? "bg-secondary" : "bg-danger")">@t.Estado</span>
+                        <span class="badge @(t.Estado == EstadoTurno.Programado ? "bg-success" : t.Estado == EstadoTurno.Completado ? "bg-secondary" : "bg-danger")">@EtiquetaEstadoTurno(t.Estado)</span>
                     </td>
                     <td class="d-flex flex-column flex-sm-row gap-1">
-                        <a href="/Turnos/Editar/@t.Id" class="btn btn-sm btn-outline-secondary text-nowrap">Editar</a>
-                        <a href="/Turnos/Historial?turnoId=@t.Id" class="btn btn-sm btn-outline-secondary text-nowrap">Historial</a>
+                        <a href="/Turnos/Editar/@t.Id" class="btn btn-sm btn-outline-secondary text-nowrap">@Localizer["Editar"]</a>
+                        <a href="/Turnos/Historial?turnoId=@t.Id" class="btn btn-sm btn-outline-secondary text-nowrap">@Localizer["Historial"]</a>
                         @if (t.Estado == EstadoTurno.Programado)
                         {
-                            <form method="post" action="/Turnos/Cancelar" onsubmit="return confirm('¿Cancelar este turno?');">
+                            <form method="post" action="/Turnos/Cancelar" onsubmit="return confirm('@Localizer["¿Cancelar este turno?"]');">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@t.Id" />
-                                <button class="btn btn-sm btn-outline-danger text-nowrap">Cancelar</button>
+                                <button class="btn btn-sm btn-outline-danger text-nowrap">@Localizer["Cancelar"]</button>
                             </form>
                         }
                     </td>
@@ -84,7 +92,7 @@
             }
         </tbody>
     </table>
-    <p id="turnosSinResultados" class="text-muted" hidden>Ningún turno coincide con la búsqueda.</p>
+    <p id="turnosSinResultados" class="text-muted" hidden>@Localizer["Ningún turno coincide con la búsqueda."]</p>
 </div>
 
 @section Scripts {
@@ -97,9 +105,9 @@
 
         function actualizarResumenRoles(marcados) {
             if (marcados.length === checksRol.length) {
-                resumenRoles.textContent = 'Todos los departamentos';
+                resumenRoles.textContent = '@Localizer["Todos los departamentos"]';
             } else if (marcados.length === 0) {
-                resumenRoles.textContent = 'Ningún departamento';
+                resumenRoles.textContent = '@Localizer["Ningún departamento"]';
             } else {
                 resumenRoles.textContent = marcados.map(c => c.nextElementSibling.textContent).join(', ');
             }
